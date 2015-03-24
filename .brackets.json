@@ -1,0 +1,38 @@
+{
+	"jscompiler": {
+		"outputs": [
+			{
+				"inputs": [
+					"features/jquery.min.js",
+					"features/slidebars.min.js",
+					"features/ion.rangeSlider.min.js",
+					"features/colorbox.min.js",
+					"features/icheck.min.js",
+					"features/cypress.core.js",
+					"features/cypress.retrieval-dev.js"
+				],
+				"output": "features/cypress.retrieval.js",
+				"generateMap": false,
+				"mangle": true,
+				"isolate": false
+			},
+			{
+				"inputs": [
+					"features/jquery.min.js",
+					"features/slidebars.min.js",
+					"features/icheck.min.js",
+					"features/cypress.core.js",
+					"features/cypress.counting-dev.js"
+				],
+				"output": "features/cypress.counting.js",
+				"generateMap": false,
+				"mangle": true,
+				"isolate": false
+			}
+		]
+	},
+	"less": [
+		"styles/cypress-retrieval.less",
+		"styles/cypress-counting.less"
+	]
+}

@@ -1,0 +1,109 @@
+@import "normalize";
+
+@PANTONE10345C: #796734;
+@PANTONE10381C: #604b3e;
+
+@PANTONE7686CP: rgb( 34, 77, 143 );
+@PANTONEBlackCP: rgb( 54, 52, 50 );
+@PANTONE2905CP: #92ccea;
+
+@themeColor: @PANTONE10381C;
+@accentColor: @PANTONE10345C;
+@headerBackground: fade( @PANTONE7686CP, 40% );
+@headerShadow: fade( @PANTONEBlackCP, 30% );
+
+@baseForegroundColor: #ffffff;
+@horizonLineColor: #d0d0d0;
+@linkColor: @PANTONE2905CP;
+
+@headerHeight: 50px;
+@normalLineHeight: 17px;
+@normalFontSize: 12px;
+
+@font-face {
+	font-family: Lato;
+	src: url( "../styles/Lato-Regular.ttf" ) format( "truetype" );
+}
+
+#cypress {
+	.background();
+	font-size: @normalFontSize;
+	font-family: Meiryo, "メオリオ", sans-serif;
+	color: @baseForegroundColor;
+}
+
+header {
+	top: 0;
+	left: 0;
+	height: @headerHeight;
+	position: fixed;
+	width: 100%;
+	background-color: @headerBackground;
+	box-shadow: 0 1px 4px @headerShadow;
+	z-index: 1000;
+	overflow: hidden;
+	.userSelect( none );
+}
+
+	#logo {
+		float: left;
+		margin-top: 7px;
+		margin-left: 5px;
+	}
+
+#container {
+	padding-top: @headerHeight;
+}
+
+	h4 {
+		font-weight: bold;
+		margin-top: 10px;
+		margin-bottom: 0;
+	}
+
+	ul {
+		margin: 0;
+		list-style-image: url( "../images/list-item.png" );
+	}
+
+	a {
+		color: @linkColor;
+		text-decoration: none;
+	}
+
+	footer {
+		position: fixed;
+		left: 10px;
+		bottom: 0;
+		line-height: 1.4;
+		font-size: 8px;
+		font-family: Lato, Meiryo, "メオリオ", sans-serif;
+		z-index: -1;
+	}
+
+.background() {
+	.cypressGradient( 0% 0%, @accentColor 0%, @themeColor 40% );
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+.parentBox() {
+	overflow: hidden;
+	height: 100%;
+	display: block;
+}
+
+.userSelect( @keyword ) {
+	-webkit-user-select: @keyword;
+	   -moz-user-select: @keyword;
+		-ms-user-select: @keyword;
+			user-select: @keyword;
+}
+
+.cypressGradient( @position, @color1, @color2 ) {
+	background: -webkit-radial-gradient( @position, circle, @color1, @color2 );
+	background:    -moz-radial-gradient( @position, circle, @color1, @color2 );
+	background:     -ms-radial-gradient( @position, circle, @color1, @color2 );
+	background:         radial-gradient( @position, circle, @color1, @color2 );
+}
