@@ -30,9 +30,5 @@
 				"isolate": false
 			}
 		]
-	},
-	"less": [
-		"styles/cypress-retrieval.less",
-		"styles/cypress-counting.less"
-	]
+	}
 }

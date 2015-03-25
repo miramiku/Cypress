@@ -1,8 +1,8 @@
 /*jshint browser:true, jquery:true */
 
-/**
- * Cypress の中核コード。
- */
+/** Cypress の中核コード。 */
+
+/** Package のつもり */
 var CYPRESS = {};
 
 /** CYPRESS で利用する定数 */
@@ -28,8 +28,6 @@ CYPRESS.CONSTS = {
 	ALL_RECORDS: 0 /** 全装備レコード数 */
 };
 
-// @changes 入手先項目
-// @changes 装備自身のコメントと備考としてのコメントを分離
 /** 装備レコード（配列）の添え字とコラム名の対応 */
 CYPRESS.COLUMN = {
 	TYPE:           0,
@@ -104,11 +102,12 @@ CYPRESS.COLUMN = {
 CYPRESS.EQUIPMENT = ( function () {
 	"use strict";
 
-	var _equipment = {};
+	var DB_URL = "https://dl.dropboxusercontent.com/u/6164477/wizon/cypress/equipment.json",
+		_equipment = {};
 
 	$.ajax( {
 		type: "GET",
-		url: "equipment.json",
+		url: DB_URL,
 		dataType: "json",
 		async: false,
 		success: function( data ) {

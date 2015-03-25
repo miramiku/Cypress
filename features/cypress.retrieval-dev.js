@@ -1,11 +1,6 @@
 /*jshint browser:true, jquery:true */
 /*global CYPRESS */
 
-// @fixme test
-// @todo test
-// @changes test
-// @note test
-
 /* tasks */
 // @future 入手先項目の追加
 // @future 検索結果のソート
@@ -1106,10 +1101,3 @@ $( document ).ready( function () { /** boot Cypress */
 
 	$( "#equipment-name" ).prop( "placeholder", "例：" + CYPRESS.Manager.getEquipmentName() );
 } );
-
-// finished task
-// @changes [x] 使い方カードの挿入
-// @changes [x] 状態異常項目の2色対応
-// @changes [x] ブール値項目のスリム化
-// @changes [x] 矢・弾への対応とデータ追加
-// @fixme [x] 装飾品の装備データに耐久・硬度の項目が表示されている
