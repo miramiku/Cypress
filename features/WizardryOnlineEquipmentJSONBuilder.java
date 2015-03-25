@@ -14,7 +14,7 @@ public class WizardryOnlineEquipmentJSONBuilder {
 	/** 出力する JSON ファイル名 */
 	public static final File OUTPUT_JSON_FILE = new File( "C:\\Users\\miku\\Dropbox\\Public\\wizon\\cypress\\equipment.json" );
 	/** 生データが格納されているワークブックパス */
-	public static final String INPUT_WORKBOOK_PATH = "C:\\Users\\miku\\Dropbox\\wizon\\equipment.db.xlsm";
+	public static final String INPUT_WORKBOOK_PATH = "C:\\Users\\miku\\SkyDrive\\wizon\\equipment.db.xlsm";
 	/** 生データが格納されているシート名 */
 	public static final String DETABASE_WORKSHEET_NAME = "master";
 	/** JSON の区切り文字定義 */
