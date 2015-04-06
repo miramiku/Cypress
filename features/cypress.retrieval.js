@@ -142,7 +142,7 @@ CYPRESS.getEquipmentCard = ( function () {
 			var equipment = CYPRESS.EQUIPMENT[ catalog ],
 
 				buildCard = {
-					card: "<div class=\"equipment-card\" data-eqcat=\"" + catalog + "\">",
+					card: "<div class=\"equipment-card\" data-catalog=\"" + catalog + "\" data-forging=\"0\">",
 
 					isTypeContains: function ( list ) {
 						var type = equipment[ COLUMN.TYPE ];
@@ -530,6 +530,10 @@ CYPRESS.getEquipmentCard = ( function () {
 						}
 
 						return this;
+					},
+					toolbox: function () {
+						this.card += "<div class=\"toolbox\"><div class=\"tool-buttons\"></div></div>";
+						return this;
 					}
 				};
 
@@ -560,6 +564,7 @@ CYPRESS.getEquipmentCard = ( function () {
 					.otherDataLine()
 					.notesLine()
 				.end() // .equipment-card-inner
+				.toolbox()
 			.end();
 
 			return buildCard.card;
@@ -853,7 +858,8 @@ $( document ).ready( function () { /** boot Cypress */
 				return false;
 			} );
 
-			mySlidebars.slidebars.open( "right" );
+			// @todo: debug
+			// mySlidebars.slidebars.open( "right" );
 		} () );
 
 		// initialize ionRangeSlider
@@ -1097,7 +1103,10 @@ $( document ).ready( function () { /** boot Cypress */
 
 	// initialize UIs
 	$( "#reqiest-reset-button" ).click();
-	$( "#usage-button" ).click();
+	// @todo release
+//	$( "#usage-button" ).click();
+	// @todo debug
+	CYPRESS.displayEquipmentCard( [201400,801000,1001404,2101000,2505101,3002102,3501000,3606100,4201102,5205100] );
 
 	$( "#equipment-name" ).prop( "placeholder", "例：" + CYPRESS.Manager.getEquipmentName() );
 } );

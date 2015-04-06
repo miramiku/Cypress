@@ -267,7 +267,7 @@
 					color: @negativeColor;
 				}
 			}
-		}
+		} // .basic-information
 
 		.capabilities {
 			.parentBox();
@@ -305,7 +305,7 @@
 					content: " ";
 				}
 			}
-		}
+		} // .capabilities
 
 		.special-properties {
 			.parentBox();
@@ -334,7 +334,7 @@
 			:after {
 				content: " ";
 			}
-		}
+		} // .special-properties
 
 		.class-restriction {
 			.parentBox();
@@ -362,7 +362,7 @@
 				border: 1px solid @nonActive;
 				color: @nonActive;
 			}
-		}
+		} // .class-restriction
 
 		.special-effects {
 			.parentBox();
@@ -380,7 +380,7 @@
 			:after {
 				content: " ";
 			}
-		}
+		} // .special-effects
 
 		.resistance {
 			.parentBox();
@@ -399,7 +399,7 @@
 			:after {
 				content: " ";
 			}
-		}
+		} // .resistance
 
 		.magic-attributes {
 			.parentBox();
@@ -419,7 +419,7 @@
 			:after {
 				content: " ";
 			}
-		}
+		} // .magic-attributes
 
 		.other-data {
 			.parentBox();
@@ -444,9 +444,28 @@
 			.status-change.zero:before {
 				content: "";
 			}
+		} // .other-data
+
+		.toolbox {
+			display: block;
+			position: absolute;
+			left: 0;
+			top: 0;
+			border: 1px solid pink;
+			width: 50px;
+			height: 50px;
+			.tool-buttons {
+				left: -50px;
+				top: 0;
+				width: 50px;
+				height: 50px;
+				background: white;
+				position: relative;
+				overflow: visible;
+			}
 		}
-	}
-}
+	} // .equipment-card
+} // #equipments
 
 	#landing-title {
 		position: relative;
