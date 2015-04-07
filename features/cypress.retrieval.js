@@ -231,10 +231,7 @@ CYPRESS.getEquipmentCard = ( function () {
 
 					// concrete: special
 					rarity: function () {
-						var rarity = equipment[ COLUMN.RARITY ];
-
-						this.card += "<span class=\"ribbon " + rarity.toLowerCase() + "\"></span><span class=\"rarity\">" + rarity + "</span>";
-
+						this.card += "<span class=\"rarity\">" + equipment[ COLUMN.RARITY ] + "</span>";
 						return this;
 					},
 					level: function () {
@@ -532,13 +529,17 @@ CYPRESS.getEquipmentCard = ( function () {
 						return this;
 					},
 					toolbox: function () {
-						this.card += "<div class=\"toolbox\"><div class=\"tool-buttons\"></div></div>";
+						this.card += "<div class=\"toolbox\"><div class=\"tool-buttons\">" +
+									 "<span class=\"tool-button forging-plus\">+1</span>" +
+									 "<span class=\"tool-button forging-minus\">-1</span>" +
+									 "<span class=\"tool-button data-copy\"><img src=\"images/law-images/copy-icon-law.png\" alt=\"copy equipment data\"></span>" +
+									 "</div></div>";
 						return this;
 					}
 				};
 
 			buildCard
-				.group( "equipment-card-inner" )
+				.group( "equipment-card-inner " + equipment[ COLUMN.RARITY ].toLowerCase() )
 					.group( "basic-information" )
 						.group( "property" )
 							.rarity().type().transfarTags()
@@ -1098,6 +1099,38 @@ $( document ).ready( function () { /** boot Cypress */
 
 				$( "#usage-button" ).prop( "disabled", true );
 			} );
+		} () );
+
+		( function () {
+			$( "#equipments" ).on( {
+				"mouseenter": function () {
+					$( "#tool-commentary" ).text( "forging-plus" );
+				},
+				"mouseleave": function () {
+					$( "#tool-commentary" ).text( "" );
+				}
+			}, ".forging-plus" );
+
+			$( "#equipments" ).on( {
+				"mouseenter": function () {
+					$( "#tool-commentary" ).text( "forging-minus" );
+				},
+				"mouseleave": function () {
+					$( "#tool-commentary" ).text( "" );
+				}
+			}, ".forging-minus" );
+
+			$( "#equipments" ).on( {
+				"click": function () {
+					$( "#tool-commentary" ).text( "copied!" );
+				},
+				"mouseenter": function () {
+					$( "#tool-commentary" ).text( "copy" );
+				},
+				"mouseleave": function () {
+					$( "#tool-commentary" ).text( "" );
+				}
+			}, ".data-copy" );
 		} () );
 	} () );
 
