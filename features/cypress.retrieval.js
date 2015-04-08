@@ -271,7 +271,7 @@ CYPRESS.getEquipmentCard = ( function () {
 						var type = this.isTypeContains( WEAPONS ) ? "weapons" : "guards";
 
 						this.card += "<span class=\"physical " + type + "\">" + equipment[ COLUMN.PHYSICAL ] + "</span>" +
-									 "<span class=\"magical " + type + "\">" + equipment[ COLUMN.MAGIC ] + "</span>";
+									 "<span class=\"magical " + type + "\">" + equipment[ COLUMN.MAGICAL ] + "</span>";
 
 						return this;
 					},
@@ -817,79 +817,48 @@ CYPRESS.forging = ( function () {
 			FORGING_DATA = CYPRESS.CONSTS.FORGING_DATA,
 			EQUIPMENT_RECORD = CYPRESS.EQUIPMENT[ $card.data( "catalog" ) ],
 			forgeValue = $card.data( "forge" ),
-			forging = {
-				name: function () {
-					var $name = $card.find( ".name" );
-					if ( 0 < forgeValue ) {
-						$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] + "+" + forgeValue );
-					} else {
-						$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] );
-					}
-				},
-				quality: function () {
-					var $physical = $card.find( ".physical" ),
-						$magical = $card.find( ".magical" );
+			type = EQUIPMENT_RECORD[ COLUMN.TYPE ];
 
-					$physical.text( Math.floor( EQUIPMENT_RECORD[ COLUMN.PHYSICAL ] * FORGING_DATA.QUALITY[ forgeValue ] ) );
-					$magical.text( Math.floor( EQUIPMENT_RECORD[ COLUMN.MAGIC ] * FORGING_DATA.QUALITY[ forgeValue ] ) );
-				},
-				durability: function () {
-					var $durability = $card.find( ".durability" );
 
-					$durability.text( Math.floor( EQUIPMENT_RECORD[ COLUMN.DURABILITY ] * ( 1 + ( forgeValue / 10 ) ) ) );
-				},
-				hardness: function () {
-					var $hardness = $card.find( ".hardness" );
-
-					$hardness.text( EQUIPMENT_RECORD[ COLUMN.HARDNESS ] + Math.floor( forgeValue / 5 ) );
-				},
-				gp: function () {
-					var $gp = $card.find( ".gp" );
-
-					$gp.text( EQUIPMENT_RECORD[ COLUMN.QUALITY ] + forgeValue * FORGING_DATA.GP[ EQUIPMENT_RECORD[ COLUMN.TYPE ] ] );
-				},
-				weight: function () {
-					var $weight = $card.find( ".weight" ),
-						weight = EQUIPMENT_RECORD[ COLUMN.WEIGHT ],
-						weightClass = ( function () {
-							       if ( weight < 0.20 ) {
-								return 0;
-							} else if ( weight < 0.40 ) {
-								return 1;
-							} else if ( weight < 1.00 ) {
-								return 2;
-							} else if ( weight < 2.00 ) {
-								return 3;
-							} else if ( weight < 4.00 ) {
-								return 4;
-							} else {
-								return 5;
-							}
-						} () );
-
-					$weight.text ( ( weight - FORGING_DATA.WEIGHT[ weightClass ][ forgeValue ] ).toFixed( 2 ) );
-				},
-				range: function () {
-					var $range = $card.find( ".range" );
-
-					$range.text( EQUIPMENT_RECORD[ COLUMN.RANGE ] +  FORGING_DATA.RANGE[ forgeValue ] );
-				},
-				specialQuality: function () {
-					var $quality = $card.find( ".quality" );
-
-					$quality.text( EQUIPMENT_RECORD[ COLUMN.QUALITY ] + FORGING_DATA.SPECIAL_QUALITY[ EQUIPMENT_RECORD[ COLUMN.TYPE ] ][ forgeValue ] );
+		var $name = $card.find( ".name" ),
+			weight = EQUIPMENT_RECORD[ COLUMN.WEIGHT ],
+			weightClass = ( function () {
+					   if ( weight < 0.20 ) {
+					return 0;
+				} else if ( weight < 0.40 ) {
+					return 1;
+				} else if ( weight < 1.00 ) {
+					return 2;
+				} else if ( weight < 2.00 ) {
+					return 3;
+				} else if ( weight < 4.00 ) {
+					return 4;
+				} else {
+					return 5;
 				}
-			};
+			} () );
 
-		forging.name();
-		forging.quality();
-		forging.durability();
-		forging.hardness();
-		forging.gp();
-		forging.weight();
-		forging.range();
-		forging.specialQuality();
+		if ( 0 < forgeValue ) {
+			$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] + "+" + forgeValue );
+		} else {
+			$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] );
+		}
+		$card.find( ".physical" ).text( Math.floor( EQUIPMENT_RECORD[ COLUMN.PHYSICAL ] * FORGING_DATA.QUALITY[ forgeValue ] ) );
+		$card.find( ".magical" ) .text( Math.floor( EQUIPMENT_RECORD[ COLUMN.MAGICAL ]  * FORGING_DATA.QUALITY[ forgeValue ] ) );
+		$card.find( ".weight" )  .text( ( weight - FORGING_DATA.WEIGHT[ weightClass ][ forgeValue ] ).toFixed( 2 ) );
 
+		if ( !/^指輪$|^耳飾り$|^首飾り$|^ベルト$/.test( type ) ) {
+			$card.find( ".durability" ).text( Math.floor( EQUIPMENT_RECORD[ COLUMN.DURABILITY ] * ( 1 + ( forgeValue / 10 ) ) ) );
+			$card.find( ".hardness" )  .text( EQUIPMENT_RECORD[ COLUMN.HARDNESS ] + Math.floor( forgeValue / 5 ) );
+		}
+
+		// 排他的な条件なので else if を利用
+		if ( /^[大中小]型盾$/.test( type ) ) {
+			$card.find( ".gp" ).text( EQUIPMENT_RECORD[ COLUMN.QUALITY ] + forgeValue * FORGING_DATA.GP[ type ] );
+		} else if ( /^弓$|^銃$/.test( type ) ) {
+			$card.find( ".range" )  .text( EQUIPMENT_RECORD[ COLUMN.RANGE ]   + FORGING_DATA.RANGE[ forgeValue ] );
+			$card.find( ".quality" ).text( EQUIPMENT_RECORD[ COLUMN.QUALITY ] + FORGING_DATA.SPECIAL_QUALITY[ type ][ forgeValue ] );
+		}
 	};
 } () );
 

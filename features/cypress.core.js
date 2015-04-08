@@ -35,7 +35,7 @@ CYPRESS.COLUMN = {
 	RARITY:         2,
 	GRADE:          3,
 	PHYSICAL:       4,
-	MAGIC:          5,
+	MAGICAL:        5,
 	RANGE:          6,
 	QUALITY:        7,
 	CHARGE_WEIGHT:  8,
