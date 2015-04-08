@@ -126,8 +126,8 @@ CYPRESS.CONSTS.FORGING_DATA = {
 
 /**
  * EquipmentCardの内容 (HTML) を取得するする。
- * @param equipment 装備レコード
- * @return HTML EquipmentCard
+ * @param caralog Number 装備の整理番号
+ * @return HTML 装備データカード
  */
 CYPRESS.getEquipmentCard = function ( catalog ) {
 		// dependence
@@ -602,9 +602,15 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 };
 
 /**
+ * 装備データの文字列表現を返す（コピーテキスト用）
+ * @param record （鍛錬済）装備のレコード
+ * @return string 装備データの文字列表現
  */
 CYPRESS.getEquipmentString = function ( record ) {
-	return "getEquipmentString";
+	var COLUMN = CYPRESS.COLUMN,
+		equipmentString = record[ COLUMN.NAME ];
+
+	return equipmentString;
 };
 
 /**
@@ -1273,7 +1279,7 @@ $( document ).ready( function () { /** boot Cypress */
 						forgingValue = $card.data( "forge" );
 
 					e.clipboardData.clearData();
-					e.clipboardData.setData( "text/plain", CYPRESS.getEquipmentString( CYPRESS.Forging.getForgedEquipment( catalog, forgingValue ) ) );
+					e.clipboardData.setData( "text/plain", CYPRESS.getEquipmentString( CYPRESS.Forging.getForgedEquipment( catalog, forgingValue ).equipmentRecord ) );
 					e.preventDefault();
 
 					$( "#tool-commentary" ).text( "copied!" );
