@@ -129,21 +129,21 @@ CYPRESS.CONSTS.FORGING_DATA = {
  * @param equipment 装備レコード
  * @return HTML EquipmentCard
  */
-CYPRESS.getEquipmentCard = ( function () {
-	"use strict";
-
+CYPRESS.getEquipmentCard = function ( catalog ) {
+		// dependence
 	var COLUMN = CYPRESS.COLUMN,
 		CLASSMASK = CYPRESS.CONSTS.CLASSMASK,
 		STANDARD_LEVEL_FLOOR = CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR,
 
+		// consts
 		// 種別定義（攻撃力が上がる or 防御力が上がる）
 		WEAPONS = [ "暗器", "短剣", "片手剣", "両手剣", "刀", "片手斧", "両手斧", "槍", "片手鈍器", "両手鈍器", "両手杖", "弓", "矢", "銃", "銃弾", "双刃" ],
-	//    GUARDS = [ "兜", "帽子", "頭巾", "鎧", "上衣", "外衣", "手甲", "手袋", "腕輪", "脚鎧", "衣服", "下衣", "鉄靴", "革靴", "靴", "小型盾", "中型盾", "大型盾", "外套", "指輪", "耳飾り", "首飾り", "ベルト" ],
+	//  GUARDS  = [ "兜", "帽子", "頭巾", "鎧", "上衣", "外衣", "手甲", "手袋", "腕輪", "脚鎧", "衣服", "下衣", "鉄靴", "革靴", "靴", "小型盾", "中型盾", "大型盾", "外套", "指輪", "耳飾り", "首飾り", "ベルト" ],
 		// ↑未使用
 
 		// 表示順序定義
 		CLASS_ORDER                 = [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO" ],
-	//    CLASS_ORDER                 = [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO", "ALC" ],
+	//  CLASS_ORDER                 = [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO", "ALC" ],
 		PHYSICAL_ATTRIBUTES_ORDER   = [ "SLASH", "STRIKE", "PIERCE" ],
 		SPECIAL_EFFECTS_ORDER       = [ "hp", "mp", "str", "vit", "dex", "agi", "int", "pie", "luk" ],
 		RESISTANCE_ORDER            = [ "poison", "paralyze", "petrify", "faint", "blind", "sleep", "silence", "charm", "confusion", "fear" ],
@@ -155,452 +155,457 @@ CYPRESS.getEquipmentCard = ( function () {
 		SHOTS                       = [ "矢", "銃弾" ],
 		ACCESSORIES                 = [ "指輪", "耳飾り", "首飾り", "ベルト" ],
 
-		_equipmentCard = function ( catalog ) {
-			var equipment = CYPRESS.EQUIPMENT[ catalog ],
+		// field
+		equipment = CYPRESS.EQUIPMENT[ catalog ],
 
-				buildCard = {
-					card: "<div class=\"equipment-card\" data-catalog=\"" + catalog + "\" data-forge=\"0\">" +
-						  "<button class=\"data-copy\"><img src=\"images/copy-icon.png\" alt=\"copy equipment data\"></button>",
+		// method
+		buildCard = {
+			card: "<div class=\"equipment-card\" data-catalog=\"" + catalog + "\" data-forge=\"0\">" +
+				  "<button class=\"data-copy\"><img src=\"images/copy-icon.png\" alt=\"copy equipment data\"></button>",
 
-					isTypeContains: function ( list ) {
-						var type = equipment[ COLUMN.TYPE ];
+			isTypeContains: function ( list ) {
+				var type = equipment[ COLUMN.TYPE ];
 
-						for ( var i = 0, listLength = list.length; i < listLength; i += 1 ) {
-							if ( type === list[ i ] ) {
-								return true;
-							}
-						}
-						return false;
+				for ( var i = 0, listLength = list.length; i < listLength; i += 1 ) {
+					if ( type === list[ i ] ) {
+						return true;
+					}
+				}
+				return false;
+			},
+			buildTransfarTagData: function ( column, content ) {
+				this.card += "<span class=\"" + column + "\">" + ( equipment[ COLUMN[ column.toUpperCase() ] ] ? "" : content ) + "</span>";
+			},
+			buildSupplimentTagData: function ( column, text ) {
+				if ( equipment[ COLUMN[ column.toUpperCase() ] ] ) {
+					this.card += "<span class=\"" + column + "\"><img src=\"images/" + column + ".png\" alt=\"\">" + text + "</span>";
+				}
+			},
+
+			// structure
+			label: function ( label ) {
+				this.card += "<span class=\"label\">" + label + "：</span>";
+				return this;
+			},
+			sectionDivider: function () {
+				this.card += "<div class=\"section-divider\"></div>";
+				return this;
+			},
+			group: function ( groupName ) {
+				this.card += "<div class=\"" + groupName + "\">";
+				return this;
+			},
+			end: function () {
+				this.card += "</div>";
+				return this;
+			},
+
+			// generic
+			unsignedInteger: function ( className, column ) {
+				var value = equipment[ column ];
+
+				this.card += "<span class=\"" + className + ( value === 0 ? " zero" : " positive" ) + "\">" + value + "</span>";
+
+				return this;
+			},
+			signedInteger: function ( className, column ) {
+				var value = equipment[ column ],
+					sign = "zero",
+					data = 0;
+
+				if ( value < 0 ) {
+					sign = "negative";
+					data = value;
+				} else if ( 0 < value ) {
+					sign = "positive";
+					data = "+" + value;
+				}
+
+				this.card += "<span class=\"" + className + " " + sign + "\">" + data + "</span>";
+
+				return this;
+			},
+			direct: function ( className, column ) {
+				this.card += "<span class=\"" + className + "\">" + equipment[ column ] + "</span>";
+				return this;
+			},
+
+			// concrete: generic
+			type: function () {
+				this.direct( "type", COLUMN.TYPE );
+				return this;
+			},
+			grade: function () {
+				this.direct( "grade", COLUMN.GRADE );
+				return this;
+			},
+			restriction: function () {
+				this.direct( "restriction", COLUMN.RESTRICTION );
+				return this;
+			},
+			name: function () {
+				this.direct( "name", COLUMN.NAME );
+				return this;
+			},
+
+			// concrete: special
+			rarity: function () {
+				this.card += "<span class=\"rarity\">" + equipment[ COLUMN.RARITY ] + "</span>";
+				return this;
+			},
+			level: function () {
+				var STDLVF = STANDARD_LEVEL_FLOOR[ equipment[ COLUMN.GRADE ] - 1 ],
+					floor  = equipment[ COLUMN.LEVEL_FLOOR ],
+					ceil   = equipment[ COLUMN.LEVEL_CEIL ],
+
+					floorText = "Lv " + equipment[ COLUMN.LEVEL_FLOOR ],
+					ceilText  = ceil === -1 ? "" : "Lv " + ceil,
+					sign      = "normal";
+
+				if ( ceil !== -1 || STDLVF < floor ) {
+					sign = "negative";
+				} else if ( floor < STDLVF ) {
+					sign = "positive";
+				}
+
+				this.card += "<span class=\"level " + sign + "\">" + floorText + "～" + ceilText + "</span>";
+
+				return this;
+			},
+			powers: function () {
+				var type = this.isTypeContains( WEAPONS ) ? "weapons" : "guards";
+
+				this.card += "<span class=\"physical " + type + "\">" + equipment[ COLUMN.PHYSICAL ] + "</span>" +
+							 "<span class=\"magical " + type + "\">" + equipment[ COLUMN.MAGICAL ] + "</span>";
+
+				return this;
+			},
+			whenEquipped: function () {
+				this.card += equipment[ COLUMN.WHEN_EQUIPPED ] === "" ?
+					"<span class=\"when-equipped zero\"></span>" :
+					( "<span class=\"when-equipped " + ( equipment[ COLUMN.WEPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.WHEN_EQUIPPED ] + "</span>" );
+				return this;
+			},
+			statusChange: function () {
+				this.card += 0 < equipment[ COLUMN.PERCENT ] ?
+					( "<span class=\"status-change " + ( equipment[ COLUMN.SCPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.STATUS_CHANGE ] + " (" + equipment[ COLUMN.PERCENT ] + "%)</span>" ) :
+					"<span class=\"status-change zero\"></span>";
+				return this;
+			},
+			classRestriction: function () {
+				var cr = equipment[ COLUMN.CLASS ],
+					buildClassIcon = function ( cls ) {
+						return "<span class=\"" + cls.toLowerCase() + " " + ( cr & CLASSMASK[ cls ] ? "equipable" : "non-equipable" ) + "\">" + cls + "</span>";
 					},
-					buildTransfarTagData: function ( column, content ) {
-						this.card += "<span class=\"" + column + "\">" + ( equipment[ COLUMN[ column.toUpperCase() ] ] ? "" : content ) + "</span>";
+					that = this;
+
+				this.group( "class-restriction" );
+				$.each( CLASS_ORDER, function () {
+					that.card += buildClassIcon( this );
+				} );
+				this.end();
+
+				return this;
+			},
+
+			// complex
+			transfarTags: function () {
+				this.buildTransfarTagData( "sell", "[売却不可]" );
+				this.buildTransfarTagData( "trade", "[トレード不可]" );
+				this.buildTransfarTagData( "stolen", "<img src=\"images/stolen.png\" alt=\"略奪されない\">略奪されない" );
+				this.buildSupplimentTagData( "used", "使用後トレード不可" );
+
+				return this;
+			},
+			supplimentTags: function () {
+				this.buildSupplimentTagData( "blessed", "祝福されている" );
+				this.buildSupplimentTagData( "cursed", "呪われている" );
+
+				return this;
+			},
+			physicalAttributes: function () {
+				var that = this;
+
+				if ( !( this.isTypeContains( WITHOUT_PHYSICAL_ATTRIBUTES ) ) ) {
+					this.group( "physical-attributes" );
+					this.label( "物理属性" );
+					$.each( PHYSICAL_ATTRIBUTES_ORDER, function () {
+						that.card += "<span class=\"" + this.toLowerCase() + "\">" + equipment[ COLUMN[ this ] ] + "</span>";
+					} );
+					this.end();
+				}
+
+				return this;
+			},
+			properties: function () {
+				if ( this.isTypeContains( ACCESSORIES ) ) {
+					this.card += "<span class=\"weight\">"     + equipment[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>";
+				} else if ( this.isTypeContains( SHOTS ) ) {
+					this.card += "<span class=\"weight\">"     + equipment[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>" +
+								 "<span class=\"hardness\">"   + equipment[ COLUMN.HARDNESS ]            + "</span>";
+				} else {
+					this.card += "<span class=\"durability\">" + equipment[ COLUMN.DURABILITY ]          + "</span>" +
+								 "<span class=\"weight\">"     + equipment[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>" +
+								 "<span class=\"hardness\">"   + equipment[ COLUMN.HARDNESS ]            + "</span>";
+				}
+
+				return this;
+			},
+			specialPropertiesLine: function () {
+				var content = {
+					"弓": function () {
+						return "<span class=\"range\">"             + equipment[ COLUMN.RANGE ]         + "</span>" +
+							   "<span class=\"quality bows\">"      + equipment[ COLUMN.QUALITY ]       + "</span>";
 					},
-					buildSupplimentTagData: function ( column, text ) {
-						if ( equipment[ COLUMN[ column.toUpperCase() ] ] ) {
-							this.card += "<span class=\"" + column + "\"><img src=\"images/" + column + ".png\" alt=\"\">" + text + "</span>";
-						}
+					"矢": function () {
+						return "<span class=\"range-rate\">"        + equipment[ COLUMN.RANGE ]         + "%</span>" +
+							   "<span class=\"quality-rate bows\">" + equipment[ COLUMN.QUALITY ]       + "%</span>";
 					},
-
-					// structure
-					label: function ( label ) {
-						this.card += "<span class=\"label\">" + label + "：</span>";
-						return this;
+					"銃": function () {
+						return "<span class=\"range\">"             + equipment[ COLUMN.RANGE ]         + "</span>" +
+							   "<span class=\"quality guns\">"      + equipment[ COLUMN.QUALITY ]       + "</span>" +
+							   "<span class=\"charge-weight\">"     + equipment[ COLUMN.CHARGE_WEIGHT ] + "</span>";
 					},
-					sectionDivider: function () {
-						this.card += "<div class=\"section-divider\"></div>";
-						return this;
+					"銃弾": function () {
+						return "<span class=\"range-rate\">"        + equipment[ COLUMN.RANGE ]         + "%</span>" +
+							   "<span class=\"quality-rate guns\">" + equipment[ COLUMN.QUALITY ]       + "%</span>";
 					},
-					group: function ( groupName ) {
-						this.card += "<div class=\"" + groupName + "\">";
-						return this;
+					"小型盾": function () {
+						return "<span class=\"quality gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
 					},
-					end: function () {
-						this.card += "</div>";
-						return this;
+					"中型盾": function () {
+						return "<span class=\"quality gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
 					},
-
-					// generic
-					unsignedInteger: function ( className, column ) {
-						var value = equipment[ column ];
-
-						this.card += "<span class=\"" + className + ( value === 0 ? " zero" : " positive" ) + "\">" + value + "</span>";
-
-						return this;
-					},
-					signedInteger: function ( className, column ) {
-						var value = equipment[ column ],
-							sign = "zero",
-							data = 0;
-
-						if ( value < 0 ) {
-							sign = "negative";
-							data = value;
-						} else if ( 0 < value ) {
-							sign = "positive";
-							data = "+" + value;
-						}
-
-						this.card += "<span class=\"" + className + " " + sign + "\">" + data + "</span>";
-
-						return this;
-					},
-					direct: function ( className, column ) {
-						this.card += "<span class=\"" + className + "\">" + equipment[ column ] + "</span>";
-						return this;
-					},
-
-					// concrete: generic
-					type: function () {
-						this.direct( "type", COLUMN.TYPE );
-						return this;
-					},
-					grade: function () {
-						this.direct( "grade", COLUMN.GRADE );
-						return this;
-					},
-					restriction: function () {
-						this.direct( "restriction", COLUMN.RESTRICTION );
-						return this;
-					},
-					name: function () {
-						this.direct( "name", COLUMN.NAME );
-						return this;
-					},
-
-					// concrete: special
-					rarity: function () {
-						this.card += "<span class=\"rarity\">" + equipment[ COLUMN.RARITY ] + "</span>";
-						return this;
-					},
-					level: function () {
-						var STDLVF = STANDARD_LEVEL_FLOOR[ equipment[ COLUMN.GRADE ] - 1 ],
-							floor  = equipment[ COLUMN.LEVEL_FLOOR ],
-							ceil   = equipment[ COLUMN.LEVEL_CEIL ],
-
-							floorText = "Lv " + equipment[ COLUMN.LEVEL_FLOOR ],
-							ceilText  = ceil === -1 ? "" : "Lv " + ceil,
-							sign      = "normal";
-
-						if ( ceil !== -1 || STDLVF < floor ) {
-							sign = "negative";
-						} else if ( floor < STDLVF ) {
-							sign = "positive";
-						}
-
-						this.card += "<span class=\"level " + sign + "\">" + floorText + "～" + ceilText + "</span>";
-
-						return this;
-					},
-					powers: function () {
-						var type = this.isTypeContains( WEAPONS ) ? "weapons" : "guards";
-
-						this.card += "<span class=\"physical " + type + "\">" + equipment[ COLUMN.PHYSICAL ] + "</span>" +
-									 "<span class=\"magical " + type + "\">" + equipment[ COLUMN.MAGICAL ] + "</span>";
-
-						return this;
-					},
-					whenEquipped: function () {
-						this.card += equipment[ COLUMN.WHEN_EQUIPPED ] === "" ?
-							"<span class=\"when-equipped zero\"></span>" :
-							( "<span class=\"when-equipped " + ( equipment[ COLUMN.WEPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.WHEN_EQUIPPED ] + "</span>" );
-						return this;
-					},
-					statusChange: function () {
-						this.card += 0 < equipment[ COLUMN.PERCENT ] ?
-							( "<span class=\"status-change " + ( equipment[ COLUMN.SCPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.STATUS_CHANGE ] + " (" + equipment[ COLUMN.PERCENT ] + "%)</span>" ) :
-							"<span class=\"status-change zero\"></span>";
-						return this;
-					},
-					classRestriction: function () {
-						var cr = equipment[ COLUMN.CLASS ],
-							buildClassIcon = function ( cls ) {
-								return "<span class=\"" + cls.toLowerCase() + " " + ( cr & CLASSMASK[ cls ] ? "equipable" : "non-equipable" ) + "\">" + cls + "</span>";
-							},
-							that = this;
-
-						this.group( "class-restriction" );
-						$.each( CLASS_ORDER, function () {
-							that.card += buildClassIcon( this );
-						} );
-						this.end();
-
-						return this;
-					},
-
-					// complex
-					transfarTags: function () {
-						this.buildTransfarTagData( "sell", "[売却不可]" );
-						this.buildTransfarTagData( "trade", "[トレード不可]" );
-						this.buildTransfarTagData( "stolen", "<img src=\"images/stolen.png\" alt=\"略奪されない\">略奪されない" );
-						this.buildSupplimentTagData( "used", "使用後トレード不可" );
-
-						return this;
-					},
-					supplimentTags: function () {
-						this.buildSupplimentTagData( "blessed", "祝福されている" );
-						this.buildSupplimentTagData( "cursed", "呪われている" );
-
-						return this;
-					},
-					physicalAttributes: function () {
-						var that = this;
-
-						if ( !( this.isTypeContains( WITHOUT_PHYSICAL_ATTRIBUTES ) ) ) {
-							this.group( "physical-attributes" );
-							this.label( "物理属性" );
-							$.each( PHYSICAL_ATTRIBUTES_ORDER, function () {
-								that.card += "<span class=\"" + this.toLowerCase() + "\">" + equipment[ COLUMN[ this ] ] + "</span>";
-							} );
-							this.end();
-						}
-
-						return this;
-					},
-					properties: function () {
-						if ( this.isTypeContains( ACCESSORIES ) ) {
-							this.card += "<span class=\"weight\">"     + equipment[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>";
-						} else if ( this.isTypeContains( SHOTS ) ) {
-							this.card += "<span class=\"weight\">"     + equipment[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>" +
-										 "<span class=\"hardness\">"   + equipment[ COLUMN.HARDNESS ]            + "</span>";
-						} else {
-							this.card += "<span class=\"durability\">" + equipment[ COLUMN.DURABILITY ]          + "</span>" +
-										 "<span class=\"weight\">"     + equipment[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>" +
-										 "<span class=\"hardness\">"   + equipment[ COLUMN.HARDNESS ]            + "</span>";
-						}
-
-						return this;
-					},
-					specialPropertiesLine: function () {
-						var content = {
-							"弓": function () {
-								return "<span class=\"range\">"             + equipment[ COLUMN.RANGE ]         + "</span>" +
-									   "<span class=\"quality bows\">"      + equipment[ COLUMN.QUALITY ]       + "</span>";
-							},
-							"矢": function () {
-								return "<span class=\"range-rate\">"        + equipment[ COLUMN.RANGE ]         + "%</span>" +
-									   "<span class=\"quality-rate bows\">" + equipment[ COLUMN.QUALITY ]       + "%</span>";
-							},
-							"銃": function () {
-								return "<span class=\"range\">"             + equipment[ COLUMN.RANGE ]         + "</span>" +
-									   "<span class=\"quality guns\">"      + equipment[ COLUMN.QUALITY ]       + "</span>" +
-									   "<span class=\"charge-weight\">"     + equipment[ COLUMN.CHARGE_WEIGHT ] + "</span>";
-							},
-							"銃弾": function () {
-								return "<span class=\"range-rate\">"        + equipment[ COLUMN.RANGE ]         + "%</span>" +
-									   "<span class=\"quality-rate guns\">" + equipment[ COLUMN.QUALITY ]       + "%</span>";
-							},
-							"小型盾": function () {
-								return "<span class=\"quality gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
-							},
-							"中型盾": function () {
-								return "<span class=\"quality gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
-							},
-							"大型盾": function () {
-								return "<span class=\"quality gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
-							}
-						};
-
-						if ( this.isTypeContains( WITH_SPECIAL_PROPERTIES ) ) {
-							this.group( "special-properties" );
-							this.card += content[ equipment[ COLUMN.TYPE ] ]();
-							this.end();
-						}
-
-						return this;
-					},
-					specialEffectsLine: function () {
-						var specialEffects = ( function () {
-									var obj = {};
-
-									$.each( SPECIAL_EFFECTS_ORDER, function () {
-										obj[ this ] = equipment[ COLUMN[ this.toUpperCase() ] ];
-									} );
-
-									return obj;
-								} () ),
-							isAllZero = ( function () {
-									for ( var se in specialEffects ) {
-										if ( specialEffects[ se ] !== 0 ) {
-											return false;
-										}
-									}
-									return true;
-								} () ),
-							that = this;
-
-						if ( !isAllZero ) {
-							this.group( "special-effects" );
-							this.label( "特殊効果" );
-							$.each( SPECIAL_EFFECTS_ORDER, function () {
-								that.signedInteger( this, COLUMN[ this.toUpperCase() ] );
-							} );
-							this.end();
-						}
-
-						return this;
-					},
-					resistanceLine: function () {
-						var resistance = ( function () {
-									var obj = {};
-
-									$.each( RESISTANCE_ORDER, function () {
-										obj[ this ] = equipment[ COLUMN[ this.toUpperCase() ] ];
-									} );
-
-									return obj;
-								} () ),
-							isAllZero = ( function () {
-									for ( var rst in resistance ) {
-										if ( resistance[ rst ] !== 0 ) {
-											return false;
-										}
-									}
-									return true;
-								} () ),
-							that = this;
-
-						if ( !isAllZero ) {
-							this.group( "resistance" );
-							this.label( "状態異常耐性" );
-							$.each( RESISTANCE_ORDER, function () {
-								that.unsignedInteger( this, COLUMN[ this.toUpperCase() ] );
-							} );
-							this.end();
-						}
-
-						return this;
-					},
-					magicAttributesLine: function () {
-						var label = {
-								attack: "魔攻属性",
-								resist: "魔防属性"
-							},
-							that = this,
-							checkAllZero= function ( type ) {
-								for ( var atr in attributes[ type ] ) {
-									if ( attributes[ type ][ atr ] !== 0 ) {
-										isAllZero[ type ] = false;
-										break;
-									}
-								}
-							},
-							attributes = ( function () {
-								var setAttributes = function ( type ) {
-										var obj = {};
-
-										$.each( ATTRIBUTES_ORDER, function () {
-											 obj[ this ] = equipment[ COLUMN[ this.toUpperCase() + "_" + type.toUpperCase() ] ];
-										} );
-
-										return obj;
-									};
-
-								return {
-									attack: setAttributes( "attack" ),
-									resist: setAttributes( "resist" )
-								};
-							} () ),
-							isAllZero = ( function () {
-								var checkAllZero= function ( type ) {
-										for ( var atr in attributes[ type ] ) {
-											if ( attributes[ type ][ atr ] !== 0 ) {
-												return false;
-											}
-										}
-										return true;
-									};
-
-								return {
-									attack: checkAllZero( "attack" ),
-									resist: checkAllZero( "resist" )
-								};
-							} () ),
-							build = function ( type ) {
-								that.group( type );
-								that.label( label[ type ] );
-								if ( !isAllZero[ type ] ) {
-									$.each( attributes[ type ], function ( atr, val ) {
-										that.signedInteger( atr, COLUMN[ atr.toUpperCase() + "_" + type.toUpperCase() ] );
-									} );
-								} else {
-									that.card += "<span class=\"allZero\">補正なし</span>";
-								}
-								that.end();
-							};
-
-						if ( !isAllZero.attack || !isAllZero.resist ) {
-							this.group( "magic-attributes" );
-							build( "attack" );
-							build( "resist" );
-							this.end();
-						}
-
-						return this;
-					},
-					otherDataLine: function () {
-						var whenEquipped = equipment[ COLUMN.WHEN_EQUIPPED ],
-							percent = equipment[ COLUMN.PERCENT ];
-
-						if ( whenEquipped !== "" || 0 < percent ) {
-							this.group( "other-data" );
-							this.card += equipment[ COLUMN.WHEN_EQUIPPED ] === "" ?
-								"<span class=\"when-equipped zero\"></span>" :
-								( "<span class=\"when-equipped " + ( equipment[ COLUMN.WEPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.WHEN_EQUIPPED ] + "</span>" );
-							this.card += 0 < equipment[ COLUMN.PERCENT ] ?
-								( "<span class=\"status-change " + ( equipment[ COLUMN.SCPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.STATUS_CHANGE ] + " (" + equipment[ COLUMN.PERCENT ] + "%)</span>" ) :
-								"<span class=\"status-change zero\"></span>";
-							this.end();
-						}
-
-						return this;
-					},
-					notesLine: function () {
-						var notes = equipment[ COLUMN.NOTES ];
-
-						if ( notes !== "" ) {
-							this.group( "note-line" );
-							this.sectionDivider();
-							this.card += "<span class=\"notes\">" + notes + "</span>";
-							this.end();
-						}
-
-						return this;
-					},
-					toolbox: function () {
-						var ableForge = ( function () {
-								var rarity = equipment[ COLUMN.RARITY ],
-									type = equipment[ COLUMN.TYPE ];
-								if ( rarity === "Legend" || rarity === "Artifact" ) {
-									return " disabled";
-								} else if ( type === "矢" || type === "銃弾" ) {
-									return " disabled";
-								}
-								return "";
-							} () );
-
-						this.card += "<div class=\"toolbox\"><div class=\"tool-buttons\">" +
-									 "<span class=\"tool-button forging-plus" + ableForge + "\">+1</span>" +
-									 "<span class=\"tool-button forging-minus disabled\">-1</span>" +
-									 "</div></div>";
-						return this;
+					"大型盾": function () {
+						return "<span class=\"quality gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
 					}
 				};
 
-			buildCard
-				.group( "equipment-card-inner " + equipment[ COLUMN.RARITY ].toLowerCase() )
-					.group( "basic-information" )
-						.group( "property" )
-							.rarity().type().transfarTags()
-						.end() // .property
-						.group( "restrictions" )
-							.level().grade()
-							.restriction()
-						.end() // .restrictions
-						.group( "name-box" )
-							.name().supplimentTags()
-						.end() // .name-box
-					.end() // .basic-information
-					.sectionDivider()
-					.classRestriction()
-					.group( "capabilities" )
-						.powers().properties()
-						.physicalAttributes()
-					.end() // .capabilities
-					.specialPropertiesLine()
-					.specialEffectsLine()
-					.resistanceLine()
-					.magicAttributesLine()
-					.otherDataLine()
-					.notesLine()
-				.end() // .equipment-card-inner
-				.toolbox()
-			.end();
+				if ( this.isTypeContains( WITH_SPECIAL_PROPERTIES ) ) {
+					this.group( "special-properties" );
+					this.card += content[ equipment[ COLUMN.TYPE ] ]();
+					this.end();
+				}
 
-			return buildCard.card;
+				return this;
+			},
+			specialEffectsLine: function () {
+				var specialEffects = ( function () {
+							var obj = {};
+
+							$.each( SPECIAL_EFFECTS_ORDER, function () {
+								obj[ this ] = equipment[ COLUMN[ this.toUpperCase() ] ];
+							} );
+
+							return obj;
+						} () ),
+					isAllZero = ( function () {
+							for ( var se in specialEffects ) {
+								if ( specialEffects[ se ] !== 0 ) {
+									return false;
+								}
+							}
+							return true;
+						} () ),
+					that = this;
+
+				if ( !isAllZero ) {
+					this.group( "special-effects" );
+					this.label( "特殊効果" );
+					$.each( SPECIAL_EFFECTS_ORDER, function () {
+						that.signedInteger( this, COLUMN[ this.toUpperCase() ] );
+					} );
+					this.end();
+				}
+
+				return this;
+			},
+			resistanceLine: function () {
+				var resistance = ( function () {
+							var obj = {};
+
+							$.each( RESISTANCE_ORDER, function () {
+								obj[ this ] = equipment[ COLUMN[ this.toUpperCase() ] ];
+							} );
+
+							return obj;
+						} () ),
+					isAllZero = ( function () {
+							for ( var rst in resistance ) {
+								if ( resistance[ rst ] !== 0 ) {
+									return false;
+								}
+							}
+							return true;
+						} () ),
+					that = this;
+
+				if ( !isAllZero ) {
+					this.group( "resistance" );
+					this.label( "状態異常耐性" );
+					$.each( RESISTANCE_ORDER, function () {
+						that.unsignedInteger( this, COLUMN[ this.toUpperCase() ] );
+					} );
+					this.end();
+				}
+
+				return this;
+			},
+			magicAttributesLine: function () {
+				var label = {
+						attack: "魔攻属性",
+						resist: "魔防属性"
+					},
+					that = this,
+					checkAllZero= function ( type ) {
+						for ( var atr in attributes[ type ] ) {
+							if ( attributes[ type ][ atr ] !== 0 ) {
+								isAllZero[ type ] = false;
+								break;
+							}
+						}
+					},
+					attributes = ( function () {
+						var setAttributes = function ( type ) {
+								var obj = {};
+
+								$.each( ATTRIBUTES_ORDER, function () {
+									 obj[ this ] = equipment[ COLUMN[ this.toUpperCase() + "_" + type.toUpperCase() ] ];
+								} );
+
+								return obj;
+							};
+
+						return {
+							attack: setAttributes( "attack" ),
+							resist: setAttributes( "resist" )
+						};
+					} () ),
+					isAllZero = ( function () {
+						var checkAllZero= function ( type ) {
+								for ( var atr in attributes[ type ] ) {
+									if ( attributes[ type ][ atr ] !== 0 ) {
+										return false;
+									}
+								}
+								return true;
+							};
+
+						return {
+							attack: checkAllZero( "attack" ),
+							resist: checkAllZero( "resist" )
+						};
+					} () ),
+					build = function ( type ) {
+						that.group( type );
+						that.label( label[ type ] );
+						if ( !isAllZero[ type ] ) {
+							$.each( attributes[ type ], function ( atr, val ) {
+								that.signedInteger( atr, COLUMN[ atr.toUpperCase() + "_" + type.toUpperCase() ] );
+							} );
+						} else {
+							that.card += "<span class=\"allZero\">補正なし</span>";
+						}
+						that.end();
+					};
+
+				if ( !isAllZero.attack || !isAllZero.resist ) {
+					this.group( "magic-attributes" );
+					build( "attack" );
+					build( "resist" );
+					this.end();
+				}
+
+				return this;
+			},
+			otherDataLine: function () {
+				var whenEquipped = equipment[ COLUMN.WHEN_EQUIPPED ],
+					percent = equipment[ COLUMN.PERCENT ];
+
+				if ( whenEquipped !== "" || 0 < percent ) {
+					this.group( "other-data" );
+					this.card += equipment[ COLUMN.WHEN_EQUIPPED ] === "" ?
+						"<span class=\"when-equipped zero\"></span>" :
+						( "<span class=\"when-equipped " + ( equipment[ COLUMN.WEPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.WHEN_EQUIPPED ] + "</span>" );
+					this.card += 0 < equipment[ COLUMN.PERCENT ] ?
+						( "<span class=\"status-change " + ( equipment[ COLUMN.SCPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.STATUS_CHANGE ] + " (" + equipment[ COLUMN.PERCENT ] + "%)</span>" ) :
+						"<span class=\"status-change zero\"></span>";
+					this.end();
+				}
+
+				return this;
+			},
+			notesLine: function () {
+				var notes = equipment[ COLUMN.NOTES ];
+
+				if ( notes !== "" ) {
+					this.group( "note-line" );
+					this.sectionDivider();
+					this.card += "<span class=\"notes\">" + notes + "</span>";
+					this.end();
+				}
+
+				return this;
+			},
+			toolbox: function () {
+				var ableForge = ( function () {
+						var rarity = equipment[ COLUMN.RARITY ],
+							type = equipment[ COLUMN.TYPE ];
+						if ( rarity === "Legend" || rarity === "Artifact" ) {
+							return " disabled";
+						} else if ( type === "矢" || type === "銃弾" ) {
+							return " disabled";
+						}
+						return "";
+					} () );
+
+				this.card += "<div class=\"toolbox\"><div class=\"tool-buttons\">" +
+							 "<span class=\"tool-button forging-plus" + ableForge + "\">+1</span>" +
+							 "<span class=\"tool-button forging-minus disabled\">-1</span>" +
+							 "</div></div>";
+				return this;
+			}
 		};
 
-	return _equipmentCard;
-} () );
+	// construct!
+	buildCard
+		.group( "equipment-card-inner " + equipment[ COLUMN.RARITY ].toLowerCase() )
+			.group( "basic-information" )
+				.group( "property" )
+					.rarity().type().transfarTags()
+				.end() // .property
+				.group( "restrictions" )
+					.level().grade()
+					.restriction()
+				.end() // .restrictions
+				.group( "name-box" )
+					.name().supplimentTags()
+				.end() // .name-box
+			.end() // .basic-information
+			.sectionDivider()
+			.classRestriction()
+			.group( "capabilities" )
+				.powers().properties()
+				.physicalAttributes()
+			.end() // .capabilities
+			.specialPropertiesLine()
+			.specialEffectsLine()
+			.resistanceLine()
+			.magicAttributesLine()
+			.otherDataLine()
+			.notesLine()
+		.end() // .equipment-card-inner
+		.toolbox()
+	.end();
+
+	return buildCard.card;
+};
+
+/**
+ */
+CYPRESS.getEquipmentString = function ( record ) {
+	return "getEquipmentString";
+};
 
 /**
  * カタログ番号からカードを表示する。
@@ -819,8 +824,8 @@ CYPRESS.Forging = ( function () {
 	var COLUMN = CYPRESS.COLUMN,
 		/**
 		 * 鍛錬をシミュレートして鍛錬後の装備データを返却する
-		 * @param Number 装備の整理番号
-		 * @param Number 鍛錬値
+		 * @param  Number 装備の整理番号
+		 * @param  Number 鍛錬値
 		 * @return Object 鍛錬後装備データオブジェクト
 		 */
 		_getForgedEquipment = function ( catalog, forgeValue ) {
@@ -1246,10 +1251,8 @@ $( document ).ready( function () { /** boot Cypress */
 
 		// Equipment Card Toolbox
 		( function () {
-			$.event.special.copy.options = {
-				hoverClass: "data-copy-hover",
-				activeClass: "data-copy-active"
-			};
+			$.event.special.copy.options.hoverClass  = "data-copy-hover";
+			$.event.special.copy.options.activeClass = "data-copy-active";
 
 			$( "#equipments" ).on( {
 				"click": function () {
@@ -1265,11 +1268,14 @@ $( document ).ready( function () { /** boot Cypress */
 
 			$( "#equipments" ).on( {
 				"copy": function ( e ) {
+					var $card = $( this ).parents( "[data-catalog]" ),
+						catalog      = $card.data( "catalog" ),
+						forgingValue = $card.data( "forge" );
+
 					e.clipboardData.clearData();
-					e.clipboardData.setData( "text/plain", "cliptest" );
+					e.clipboardData.setData( "text/plain", CYPRESS.getEquipmentString( CYPRESS.Forging.getForgedEquipment( catalog, forgingValue ) ) );
 					e.preventDefault();
-				},
-				"click": function () {
+
 					$( "#tool-commentary" ).text( "copied!" );
 				},
 				"mouseenter": function () {
