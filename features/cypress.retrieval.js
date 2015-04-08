@@ -99,8 +99,11 @@ CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR = [
 	/* Grade 20 */ 50
 ];
 
+/**
+ * 鍛錬値データ
+ * ref: https://github.com/miramiku/Cypress/wiki/Wizardy-Online-Forging-Data
+ */
 CYPRESS.CONSTS.FORGING_DATA = {
-	// ref: https://github.com/miramiku/Cypress/wiki/Wizardy-Online-Forging-Data
 	QUALITY: [ 1.00, 1.05, 1.15, 1.27, 1.39, 1.54, 1.69, 1.84, 1.99, 2.14, 2.29 ],
 	GP: { "小型盾":  5, "中型盾": 10, "大型盾": 15 },
 	WEIGHT: [
@@ -124,7 +127,7 @@ CYPRESS.CONSTS.FORGING_DATA = {
 /**
  * EquipmentCardの内容 (HTML) を取得するする。
  * @param equipment 装備レコード
- * @return EquipmentCard (HTML)
+ * @return HTML EquipmentCard
  */
 CYPRESS.getEquipmentCard = ( function () {
 	"use strict";
@@ -601,7 +604,7 @@ CYPRESS.getEquipmentCard = ( function () {
 
 /**
  * カタログ番号からカードを表示する。
- * @param catalogs カタログ番号（配列）
+ * @param array catalogs カタログ番号
  */
 CYPRESS.displayEquipmentCard = ( function () {
 	"use strict";
@@ -620,7 +623,7 @@ CYPRESS.displayEquipmentCard = ( function () {
 
 /**
  * UIから検索条件の生成。
- * @return 検索条件（関数）
+ * @return function 検索条件
  */
 CYPRESS.makeRequest = function () {
 	"use strict";
@@ -809,14 +812,17 @@ CYPRESS.makeRequest = function () {
 	return _request;
 };
 
-/**
- * 鍛錬をシミュレートに関するクラス
- * @param $card jQuery 該当する装備カード
- */
+/** 鍛錬をシミュレートに関するクラス */
 CYPRESS.Forging = ( function () {
 	"use strict";
 
 	var COLUMN = CYPRESS.COLUMN,
+		/**
+		 * 鍛錬をシミュレートして鍛錬後の装備データを返却する
+		 * @param Number 装備の整理番号
+		 * @param Number 鍛錬値
+		 * @return Object 鍛錬後装備データオブジェクト
+		 */
 		_getForgedEquipment = function ( catalog, forgeValue ) {
 			var BASE = CYPRESS.EQUIPMENT[ catalog ],
 				FORGING_DATA = CYPRESS.CONSTS.FORGING_DATA,
@@ -872,6 +878,11 @@ CYPRESS.Forging = ( function () {
 				equipmentRecord: equipmentRecord
 			};
 		},
+		/**
+		 * 鍛錬後のデータに基づいてカードを書き換える
+		 * @param $card jQuery 書きかえるカード
+		 * @param forgedEquipment Object 鍛錬後装備データオブジェクト
+		 */
 		_rewriteEquipmentCard = function ( $card, forgedEquipment ) {
 			$.each( forgedEquipment.changeColumns, function () {
 				$card.find( "." + this.toLowerCase() ).text( forgedEquipment.equipmentRecord[ COLUMN[ this ] ] );
@@ -904,9 +915,7 @@ CYPRESS.Manager = ( function () {
 				}
 			} () ) );
 		},
-		/**
-		 * 検索結果から装備一覧を描写する
-		 */
+		/** 検索結果から装備一覧を描写する */
 		_display = function () {
 			CYPRESS.displayEquipmentCard( _equipments );
 		},
@@ -944,7 +953,7 @@ CYPRESS.Manager = ( function () {
 		/**
 		 * 装備名をランダムに1つ返す。
 		 * 検索ワードのプレースホルダに入れるため
-		 * @return 装備名（文字列）
+		 * @return string 装備名
 		 */
 		_getEquipmentName = function () {
 			return CYPRESS.EQUIPMENT[ _equipments[ Math.floor( Math.random() * _equipments.length ) ] ][ CYPRESS.COLUMN.NAME ];
@@ -962,9 +971,9 @@ CYPRESS.Manager = ( function () {
 		/**
 		 * UIから操作した内容を状態保持用変数にセットする。
 		 * 各UIのイベント操作で利用
-		 * @param category 分類
-		 * @param ke       項目
-		 * @param value    セットする値
+		 * @param category string  分類
+		 * @param key      string  項目
+		 * @param value    boolean セットする値
 		 */
 		_setStatus = function ( category, key, value ) {
 			CYPRESS.STATUS[ category ][ key ] = value;
