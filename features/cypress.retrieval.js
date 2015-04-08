@@ -529,9 +529,20 @@ CYPRESS.getEquipmentCard = ( function () {
 						return this;
 					},
 					toolbox: function () {
+						var ableForge = ( function () {
+								var rarity = equipment[ COLUMN.RARITY ],
+									type = equipment[ COLUMN.TYPE ];
+								if ( rarity === "Legend" || rarity === "Artifact" ) {
+									return " disabled";
+								} else if ( type === "矢" || type === "銃弾" ) {
+									return " disabled";
+								}
+								return "";
+							} () );
+
 						this.card += "<div class=\"toolbox\"><div class=\"tool-buttons\">" +
-									 "<span class=\"tool-button forging-plus\">+1</span>" +
-									 "<span class=\"tool-button forging-minus\">-1</span>" +
+									 "<span class=\"tool-button forging-plus" + ableForge + "\">+1</span>" +
+									 "<span class=\"tool-button forging-minus disabled\">-1</span>" +
 									 "<span class=\"tool-button data-copy\"><img src=\"images/law-images/copy-icon-law.png\" alt=\"copy equipment data\"></span>" +
 									 "</div></div>";
 						return this;
@@ -782,6 +793,18 @@ CYPRESS.makeRequest = function () {
 	return _request;
 };
 
+/**
+ *
+ * @param $card jQuery
+ */
+CYPRESS.forging = ( function () {
+	var _forging = function ( $card ) {
+
+		};
+
+	return _forging;
+} () );
+
 /** Cypress 操作ファサード（クラス） */
 CYPRESS.Manager = ( function () {
 	"use strict";
@@ -807,6 +830,36 @@ CYPRESS.Manager = ( function () {
 		 */
 		_display = function () {
 			CYPRESS.displayEquipmentCard( _equipments );
+		},
+		/**
+		 * カードを鍛錬シミュレートしたデータに書き換える。
+		 * 鍛錬ボタンの利用可否の操作も行う
+		 * @param $pushButton jQuery 押されたボタンの jQuery オブジェクト
+		 * @param forging number 鍛錬の上限値 (-1 or (+)1)
+		 */
+		_forging = function ( $pushButton, forging ) {
+			/* 行頭 var 例外 */
+			if ( $pushButton.hasClass( "disabled" ) ) {
+				return;
+			}
+
+			var $card = $pushButton.parents( "[data-catalog]" ),
+				forgeValue = $card.data( "forging" ) + forging;
+
+			$card.data( "forging", forgeValue );
+
+			CYPRESS.forging( $card, forgeValue );
+
+			if ( forgeValue === 0 ) {
+				$card.find( ".forging-plus" ).removeClass( "disabled" );
+				$card.find( ".forging-minus" ).addClass( "disabled" );
+			} else if ( forgeValue === 10 ) {
+				$card.find( ".forging-plus" ).addClass( "disabled" );
+				$card.find( ".forging-minus" ).removeClass( "disabled" );
+			} else {
+				$card.find( ".forging-plus" ).removeClass( "disabled" );
+				$card.find( ".forging-minus" ).removeClass( "disabled" );
+			}
 		},
 		/**
 		 * 装備名をランダムに1つ返す。
@@ -840,6 +893,7 @@ CYPRESS.Manager = ( function () {
 	return {
 		getEquipmentName: _getEquipmentName,
 		display: _display,
+		forging: _forging,
 		search: _search,
 		setStatus: _setStatus
 	};
@@ -1101,8 +1155,12 @@ $( document ).ready( function () { /** boot Cypress */
 			} );
 		} () );
 
+		//
 		( function () {
 			$( "#equipments" ).on( {
+				"click": function () {
+					CYPRESS.Manager.forging( $( this ), 1 );
+				},
 				"mouseenter": function () {
 					$( "#tool-commentary" ).text( "forging-plus" );
 				},
@@ -1112,6 +1170,9 @@ $( document ).ready( function () { /** boot Cypress */
 			}, ".forging-plus" );
 
 			$( "#equipments" ).on( {
+				"click": function () {
+					CYPRESS.Manager.forging( $( this ), -1 );
+				},
 				"mouseenter": function () {
 					$( "#tool-commentary" ).text( "forging-minus" );
 				},

@@ -468,16 +468,18 @@
 					height: @tool-button-side;
 					border: 1px solid @standardUIColor;
 					margin-bottom: 5px;
-					img {
-						padding-top: 4px;
-					}
-
 					&.forging-plus {
 						color: @positiveColor;
 					}
 
 					&.forging-minus {
 						color: @negativeColor;
+					}
+
+					&.data-copy {
+						img {
+							padding-top: 4px;
+						}
 					}
 
 					&:hover {
@@ -487,14 +489,14 @@
 						background: fade( @standardUIColor, 50% );
 					}
 
-//					&:active {
-//						background: fade( @standardUIColor, 50% );
-//					}
-//
-//					&:disabled {
-//						border: 1px solid @nonActive;
-//						color: @nonActive;
-//					}
+					&.disabled {
+						border: 1px solid @nonActive;
+						color: @nonActive;
+						cursor: default;
+						&:hover {
+							background: none;
+						}
+					}
 				}
 			}
 		}
