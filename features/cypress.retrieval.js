@@ -142,7 +142,7 @@ CYPRESS.getEquipmentCard = ( function () {
 			var equipment = CYPRESS.EQUIPMENT[ catalog ],
 
 				buildCard = {
-					card: "<div class=\"equipment-card\" data-catalog=\"" + catalog + "\" data-forging=\"0\">",
+					card: "<div class=\"equipment-card\" data-catalog=\"" + catalog + "\" data-forge=\"0\">",
 
 					isTypeContains: function ( list ) {
 						var type = equipment[ COLUMN.TYPE ];
@@ -799,7 +799,8 @@ CYPRESS.makeRequest = function () {
  */
 CYPRESS.forging = ( function () {
 	var _forging = function ( $card ) {
-
+			var catalog = $card.data( "catalog" ),
+				forgeValue = $card.data( "forge" );
 		};
 
 	return _forging;
@@ -844,9 +845,9 @@ CYPRESS.Manager = ( function () {
 			}
 
 			var $card = $pushButton.parents( "[data-catalog]" ),
-				forgeValue = $card.data( "forging" ) + forging;
+				forgeValue = $card.data( "forge" ) + forging;
 
-			$card.data( "forging", forgeValue );
+			$card.data( "forge", forgeValue );
 
 			CYPRESS.forging( $card, forgeValue );
 
@@ -1202,20 +1203,20 @@ $( document ).ready( function () { /** boot Cypress */
 	// @todo debug
 	CYPRESS.displayEquipmentCard( [16301,319200,806201,801114,5412200,4220101,115200,1020300,317300,1120300,1301100,4503201,4618201,4707300] );
 	/* サンプル選定理由
-	16301   血色の爪                 物理攻撃 100
-	319200  シャムロック             魔法攻撃 100
-	806201  粉砕の金剛棒             耐久値 100
-	801114  マジカルラブリーステッキ 重量 <0.2
-	5412200 上質な平等主義者の帯     重量 <0.4
-	4220101 ディフツィートブーツ     重量 <1.0
-	115200  水晶石の短剣             重量 <2.0
-	1020300 ミストール               重量 <4.0
-	317300  ジオグラフバスター       重量 4.0<
-	1120300 オデッサ                 弓
-	1301100 愛の告白                 銃
-	4503201 悪霊の盾                 小型盾
-	4618201 司祭の盾                 中型盾
-	4707300 黄泉の大楯               大型盾
+	16301   血色の爪 [ 物理攻撃 100 ]
+	319200  シャムロック [ 魔法攻撃 100 ]
+	806201  粉砕の金剛棒 [ 耐久値 100 ]
+	801114  マジカルラブリーステッキ [ 重量 <0.2 ]
+	5412200 上質な平等主義者の帯 [ 重量 <0.4 ]
+	4220101 ディフツィートブーツ [ 重量 <1.0 ]
+	115200  水晶石の短剣 [ 重量 <2.0 ]
+	1020300 ミストール [ 重量 <4.0 ]
+	317300  ジオグラフバスター [ 重量 4.0< ]
+	1120300 オデッサ [ 弓 ]
+	1301100 愛の告白 [ 銃 ]
+	4503201 悪霊の盾 [ 小型盾 ]
+	4618201 司祭の盾 [ 中型盾 ]
+	4707300 黄泉の大楯 [ 大型盾 ]
 	*/
 	$( "#equipment-name" ).prop( "placeholder", "例：" + CYPRESS.Manager.getEquipmentName() );
 } );
