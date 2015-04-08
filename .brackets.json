@@ -8,6 +8,7 @@
 					"features/ion.rangeSlider.min.js",
 					"features/colorbox.min.js",
 					"features/icheck.min.js",
+					"features/zeroclipboard.min.js",
 					"features/cypress.core.js",
 					"features/cypress.retrieval.js"
 				],

@@ -1,5 +1,5 @@
 /*jshint browser:true, jquery:true */
-/*global CYPRESS */
+/*global CYPRESS, ZeroClipboard */
 
 /** 検索条件の受け渡し */
 CYPRESS.STATUS ={
@@ -156,7 +156,8 @@ CYPRESS.getEquipmentCard = ( function () {
 			var equipment = CYPRESS.EQUIPMENT[ catalog ],
 
 				buildCard = {
-					card: "<div class=\"equipment-card\" data-catalog=\"" + catalog + "\" data-forge=\"0\">",
+					card: "<div class=\"equipment-card\" data-catalog=\"" + catalog + "\" data-forge=\"0\">" +
+						  "<button class=\"data-copy\"><img src=\"images/copy-icon.png\" alt=\"copy equipment data\"></button>",
 
 					isTypeContains: function ( list ) {
 						var type = equipment[ COLUMN.TYPE ];
@@ -557,7 +558,6 @@ CYPRESS.getEquipmentCard = ( function () {
 						this.card += "<div class=\"toolbox\"><div class=\"tool-buttons\">" +
 									 "<span class=\"tool-button forging-plus" + ableForge + "\">+1</span>" +
 									 "<span class=\"tool-button forging-minus disabled\">-1</span>" +
-									 "<span class=\"tool-button data-copy\"><img src=\"images/law-images/copy-icon-law.png\" alt=\"copy equipment data\"></span>" +
 									 "</div></div>";
 						return this;
 					}
@@ -817,10 +817,8 @@ CYPRESS.forging = ( function () {
 			FORGING_DATA = CYPRESS.CONSTS.FORGING_DATA,
 			EQUIPMENT_RECORD = CYPRESS.EQUIPMENT[ $card.data( "catalog" ) ],
 			forgeValue = $card.data( "forge" ),
-			type = EQUIPMENT_RECORD[ COLUMN.TYPE ];
-
-
-		var $name = $card.find( ".name" ),
+			$name = $card.find( ".name" ),
+			type = EQUIPMENT_RECORD[ COLUMN.TYPE ],
 			weight = EQUIPMENT_RECORD[ COLUMN.WEIGHT ],
 			weightClass = ( function () {
 					   if ( weight < 0.20 ) {
@@ -1212,14 +1210,21 @@ $( document ).ready( function () { /** boot Cypress */
 			} );
 		} () );
 
-		//
+		// Equipment Card Toolbox
 		( function () {
+			$.event.special.copy.options = {
+				hoverClass: "data-copy-hover",
+				activeClass: "data-copy-active"
+			};
+
 			$( "#equipments" ).on( {
 				"click": function () {
 					CYPRESS.Manager.forging( $( this ), 1 );
 				},
 				"mouseenter": function () {
-					$( "#tool-commentary" ).text( "forging-plus" );
+					if ( !$( this ).hasClass( "disabled" ) ) {
+						$( "#tool-commentary" ).text( "forging-plus" );
+					}
 				},
 				"mouseleave": function () {
 					$( "#tool-commentary" ).text( "" );
@@ -1231,7 +1236,9 @@ $( document ).ready( function () { /** boot Cypress */
 					CYPRESS.Manager.forging( $( this ), -1 );
 				},
 				"mouseenter": function () {
-					$( "#tool-commentary" ).text( "forging-minus" );
+					if ( !$( this ).hasClass( "disabled" ) ) {
+						$( "#tool-commentary" ).text( "forging-minus" );
+					}
 				},
 				"mouseleave": function () {
 					$( "#tool-commentary" ).text( "" );
@@ -1239,14 +1246,21 @@ $( document ).ready( function () { /** boot Cypress */
 			}, ".forging-minus" );
 
 			$( "#equipments" ).on( {
+				"copy": function ( e ) {
+					e.clipboardData.clearData();
+					e.clipboardData.setData( "text/plain", "cliptest" );
+					e.preventDefault();
+				},
 				"click": function () {
 					$( "#tool-commentary" ).text( "copied!" );
 				},
 				"mouseenter": function () {
 					$( "#tool-commentary" ).text( "copy" );
+					$( this ).parents( "[data-catalog]" ).find( ".toolbox" ).css( "visibility", "visible" );
 				},
 				"mouseleave": function () {
 					$( "#tool-commentary" ).text( "" );
+					$( this ).parents( "[data-catalog]" ).find( ".toolbox" ).css( "visibility", "" );
 				}
 			}, ".data-copy" );
 		} () );

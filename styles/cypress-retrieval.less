@@ -31,6 +31,8 @@
 
 @standardUIColor: @normalColor;
 
+@tool-button-side: 25px;
+
 /* ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
  * header
  * ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== */
@@ -179,6 +181,30 @@
 
 		.positive:before, .negative:before {
 			color: @baseForegroundColor;
+		}
+
+		.data-copy {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			height: @tool-button-side;
+			width: @tool-button-side;
+			margin: 2px;
+			padding: 0;
+			border: none;
+			outline: none;
+			border-radius: 5px;
+
+			img {
+				padding-top: 4px;
+			}
+
+			&.data-copy-hover {
+				.cypressGradient( 0% 0%, @standardUIColor, transparent 100% );
+			}
+			&.data-copy-active {
+				background: fade( @standardUIColor, 50% );
+			}
 		}
 
 		.basic-information {
@@ -434,7 +460,7 @@
 		} // .other-data
 
 		@toolbox-width: 40px;
-		@toolbox-height: 102px;
+		@toolbox-height: 69px;
 
 		.toolbox {
 			.userSelect( none );
@@ -456,8 +482,6 @@
 
 				width: @toolbox-width;
 				height: @toolbox-height;
-
-				@tool-button-side: 25px;
 				.tool-button {
 					cursor: pointer;
 					display: block;
@@ -474,12 +498,6 @@
 
 					&.forging-minus {
 						color: @negativeColor;
-					}
-
-					&.data-copy {
-						img {
-							padding-top: 4px;
-						}
 					}
 
 					&:hover {
@@ -499,6 +517,7 @@
 					}
 				}
 			}
+
 		}
 
 		&:hover .toolbox {
