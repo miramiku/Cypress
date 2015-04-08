@@ -1,14 +1,6 @@
 /*jshint browser:true, jquery:true */
 /*global CYPRESS */
 
-/* tasks */
-// @future 入手先項目の追加
-// @future 検索結果のソート
-// @future カードの削除とドラッグによる並べ替え
-// @future 検索条件・ソート結果の URL 生成
-// @future 詳細データ検索
-// @future 鍛錬シミュレーション
-
 /** 検索条件の受け渡し */
 CYPRESS.STATUS ={
 	"rarity": {
@@ -106,6 +98,28 @@ CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR = [
 	/* Grade 19 */ 48,
 	/* Grade 20 */ 50
 ];
+
+CYPRESS.CONSTS.FORGING_DATA = {
+	// ref: https://github.com/miramiku/Cypress/wiki/Wizardy-Online-Forging-Data
+	QUALITY: [ 1.00, 1.05, 1.15, 1.27, 1.39, 1.54, 1.69, 1.84, 1.99, 2.14, 2.29 ],
+	GP: { "小型盾":  5, "中型盾": 10, "大型盾": 15 },
+	WEIGHT: [
+		//              0   +1   +2   +3   +4   +5   +6   +7   +8   +9  +10
+		/* < 0.2 */ [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+		/* < 0.4 */ [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.1 ],
+		/* < 1.0 */ [ 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2 ],
+		/* < 2.0 */ [ 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.2 ],
+		/* < 4.0 */ [ 0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.3, 0.4 ],
+		/* 4.0 < */ [ 0.0, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.4, 0.4, 0.5, 0.5 ]
+	],
+	//        0  +1  +2  +3  +4  +5  +6   +7   +8   +9  +10
+	LENGTH: [ 0, 10, 20, 30, 40, 60, 80, 100, 120, 120, 120 ],
+	SPECIAL_QUALITY: {
+		//      0 +1 +2 +3 +4 +5  +6  +7  +8  +9 +10
+		"弓": [ 0, 0, 0, 1, 2, 3,  4,  5,  7,  7,  7 ],
+		"銃": [ 0, 1, 2, 4, 6, 9, 12, 16, 21, 21, 21 ]
+	}
+};
 
 /**
  * EquipmentCardの内容 (HTML) を取得するする。
@@ -794,16 +808,41 @@ CYPRESS.makeRequest = function () {
 };
 
 /**
- *
- * @param $card jQuery
+ * 鍛錬をシミュレートして装備データを書き換える。
+ * @param $card jQuery 該当する装備カード
  */
 CYPRESS.forging = ( function () {
-	var _forging = function ( $card ) {
-			var catalog = $card.data( "catalog" ),
-				forgeValue = $card.data( "forge" );
-		};
+	return function ( $card ) {
+		var COLUMN = CYPRESS.COLUMN,
+			FORGING_DATA = CYPRESS.CONSTS.FORGING_DATA,
+			EQUIPMENT_RECORD = CYPRESS.EQUIPMENT[ $card.data( "catalog" ) ],
+			forgeValue = $card.data( "forge" ),
+			forging = {
+				name: function () {
+				},
+				quality: function () {
+				},
+				durability: function () {
+				},
+				hardness: function () {
+				},
+				gp: function () {
+				},
+				weight: function () {
+				},
+				length: function () {
+				},
+				specialQuality: function () {
+				}
+			},
+			$name = $card.find( ".name" );
 
-	return _forging;
+		if ( 0 < forgeValue ) {
+			$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] + "+" + forgeValue );
+		} else {
+			$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] );
+		}
+	};
 } () );
 
 /** Cypress 操作ファサード（クラス） */
