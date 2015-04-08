@@ -367,13 +367,13 @@ CYPRESS.getEquipmentCard = ( function () {
 									   "<span class=\"quality-rate guns\">" + equipment[ COLUMN.QUALITY ]       + "%</span>";
 							},
 							"小型盾": function () {
-								return "<span class=\"gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
+								return "<span class=\"quality gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
 							},
 							"中型盾": function () {
-								return "<span class=\"gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
+								return "<span class=\"quality gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
 							},
 							"大型盾": function () {
-								return "<span class=\"gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
+								return "<span class=\"quality gp\">"                + equipment[ COLUMN.QUALITY ]       + "</span>";
 							}
 						};
 
@@ -604,6 +604,8 @@ CYPRESS.getEquipmentCard = ( function () {
  * @param catalogs カタログ番号（配列）
  */
 CYPRESS.displayEquipmentCard = ( function () {
+	"use strict";
+
 	var _display = function ( catalogs ) {
 			$( "#equipments" ).empty();
 			$( "#usage-button" ).prop( "disabled", false );
@@ -808,55 +810,77 @@ CYPRESS.makeRequest = function () {
 };
 
 /**
- * 鍛錬をシミュレートして装備データを書き換える。
+ * 鍛錬をシミュレートに関するクラス
  * @param $card jQuery 該当する装備カード
  */
-CYPRESS.forging = ( function () {
-	return function ( $card ) {
-		var COLUMN = CYPRESS.COLUMN,
-			FORGING_DATA = CYPRESS.CONSTS.FORGING_DATA,
-			EQUIPMENT_RECORD = CYPRESS.EQUIPMENT[ $card.data( "catalog" ) ],
-			forgeValue = $card.data( "forge" ),
-			$name = $card.find( ".name" ),
-			type = EQUIPMENT_RECORD[ COLUMN.TYPE ],
-			weight = EQUIPMENT_RECORD[ COLUMN.WEIGHT ],
-			weightClass = ( function () {
-					   if ( weight < 0.20 ) {
-					return 0;
-				} else if ( weight < 0.40 ) {
-					return 1;
-				} else if ( weight < 1.00 ) {
-					return 2;
-				} else if ( weight < 2.00 ) {
-					return 3;
-				} else if ( weight < 4.00 ) {
-					return 4;
-				} else {
-					return 5;
-				}
-			} () );
+CYPRESS.Forging = ( function () {
+	"use strict";
 
-		if ( 0 < forgeValue ) {
-			$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] + "+" + forgeValue );
-		} else {
-			$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] );
-		}
-		$card.find( ".physical" ).text( Math.floor( EQUIPMENT_RECORD[ COLUMN.PHYSICAL ] * FORGING_DATA.QUALITY[ forgeValue ] ) );
-		$card.find( ".magical" ) .text( Math.floor( EQUIPMENT_RECORD[ COLUMN.MAGICAL ]  * FORGING_DATA.QUALITY[ forgeValue ] ) );
-		$card.find( ".weight" )  .text( ( weight - FORGING_DATA.WEIGHT[ weightClass ][ forgeValue ] ).toFixed( 2 ) );
+	var COLUMN = CYPRESS.COLUMN,
+		_getForgedEquipment = function ( catalog, forgeValue ) {
+			var BASE = CYPRESS.EQUIPMENT[ catalog ],
+				FORGING_DATA = CYPRESS.CONSTS.FORGING_DATA,
+				equipmentRecord = [].concat( BASE ),
+				type = BASE[ COLUMN.TYPE ],
+				weight = BASE[ COLUMN.WEIGHT ],
+				weightClass = ( function () {
+						   if ( weight < 0.20 ) {
+						return 0;
+					} else if ( weight < 0.40 ) {
+						return 1;
+					} else if ( weight < 1.00 ) {
+						return 2;
+					} else if ( weight < 2.00 ) {
+						return 3;
+					} else if ( weight < 4.00 ) {
+						return 4;
+					} else {
+						return 5;
+					}
+				} () ),
+				changeColumns = [ "NAME", "PHYSICAL", "MAGICAL", "WEIGHT" ];
 
-		if ( !/^指輪$|^耳飾り$|^首飾り$|^ベルト$/.test( type ) ) {
-			$card.find( ".durability" ).text( Math.floor( EQUIPMENT_RECORD[ COLUMN.DURABILITY ] * ( 1 + ( forgeValue / 10 ) ) ) );
-			$card.find( ".hardness" )  .text( EQUIPMENT_RECORD[ COLUMN.HARDNESS ] + Math.floor( forgeValue / 5 ) );
-		}
+			equipmentRecord[ COLUMN.NAME ]     = BASE[ COLUMN.NAME ] + ( 0 < forgeValue ? "+" + forgeValue : "" );
+			equipmentRecord[ COLUMN.PHYSICAL ] = Math.floor( BASE[ COLUMN.PHYSICAL ] * FORGING_DATA.QUALITY[ forgeValue ] );
+			equipmentRecord[ COLUMN.MAGICAL ]  = Math.floor( BASE[ COLUMN.MAGICAL ]  * FORGING_DATA.QUALITY[ forgeValue ] );
+			equipmentRecord[ COLUMN.WEIGHT ]   = ( weight - FORGING_DATA.WEIGHT[ weightClass ][ forgeValue ] ).toFixed( 2 );
 
-		// 排他的な条件なので else if を利用
-		if ( /^[大中小]型盾$/.test( type ) ) {
-			$card.find( ".gp" ).text( EQUIPMENT_RECORD[ COLUMN.QUALITY ] + forgeValue * FORGING_DATA.GP[ type ] );
-		} else if ( /^弓$|^銃$/.test( type ) ) {
-			$card.find( ".range" )  .text( EQUIPMENT_RECORD[ COLUMN.RANGE ]   + FORGING_DATA.RANGE[ forgeValue ] );
-			$card.find( ".quality" ).text( EQUIPMENT_RECORD[ COLUMN.QUALITY ] + FORGING_DATA.SPECIAL_QUALITY[ type ][ forgeValue ] );
-		}
+			if ( !/^指輪$|^耳飾り$|^首飾り$|^ベルト$/.test( type ) ) {
+				equipmentRecord[ COLUMN.DURABILITY ] = Math.floor( BASE[ COLUMN.DURABILITY ] * ( 1 + ( forgeValue / 10 ) ) );
+				equipmentRecord[ COLUMN.HARDNESS ]   = BASE[ COLUMN.HARDNESS ] + Math.floor( forgeValue / 5 );
+
+				changeColumns.push( "DURABILITY" );
+				changeColumns.push( "HARDNESS" );
+			}
+
+			// 排他的な条件なので else if を利用
+			if ( /^[大中小]型盾$/.test( type ) ) {
+				equipmentRecord[ COLUMN.QUALITY ] = BASE[ COLUMN.QUALITY ] + forgeValue * FORGING_DATA.GP[ type ];
+
+				changeColumns.push( "QUALITY" );
+
+			} else if ( /^弓$|^銃$/.test( type ) ) {
+				equipmentRecord[ COLUMN.RANGE ]   = BASE[ COLUMN.RANGE ]   + FORGING_DATA.RANGE[ forgeValue ];
+				equipmentRecord[ COLUMN.QUALITY ] = BASE[ COLUMN.QUALITY ] + FORGING_DATA.SPECIAL_QUALITY[ type ][ forgeValue ];
+
+				changeColumns.push( "RANGE" );
+				changeColumns.push( "QUALITY" );
+			}
+
+			return {
+				changeColumns: changeColumns,
+				equipmentRecord: equipmentRecord
+			};
+		},
+		_rewriteEquipmentCard = function ( $card, forgedEquipment ) {
+			$.each( forgedEquipment.changeColumns, function () {
+				$card.find( "." + this.toLowerCase() ).text( forgedEquipment.equipmentRecord[ COLUMN[ this ] ] );
+			} );
+		};
+
+	return {
+		getForgedEquipment:   _getForgedEquipment,
+		rewriteEquipmentCard: _rewriteEquipmentCard
 	};
 } () );
 
@@ -898,12 +922,13 @@ CYPRESS.Manager = ( function () {
 				return;
 			}
 
-			var $card = $pushButton.parents( "[data-catalog]" ),
+			var Forging = CYPRESS.Forging,
+				$card = $pushButton.parents( "[data-catalog]" ),
 				forgeValue = $card.data( "forge" ) + forging;
 
 			$card.data( "forge", forgeValue );
 
-			CYPRESS.forging( $card, forgeValue );
+			Forging.rewriteEquipmentCard( $card, Forging.getForgedEquipment( $card.data( "catalog" ), forgeValue ) );
 
 			if ( forgeValue === 0 ) {
 				$card.find( ".forging-plus" ).removeClass( "disabled" );
@@ -1220,28 +1245,12 @@ $( document ).ready( function () { /** boot Cypress */
 			$( "#equipments" ).on( {
 				"click": function () {
 					CYPRESS.Manager.forging( $( this ), 1 );
-				},
-				"mouseenter": function () {
-					if ( !$( this ).hasClass( "disabled" ) ) {
-						$( "#tool-commentary" ).text( "forging-plus" );
-					}
-				},
-				"mouseleave": function () {
-					$( "#tool-commentary" ).text( "" );
 				}
 			}, ".forging-plus" );
 
 			$( "#equipments" ).on( {
 				"click": function () {
 					CYPRESS.Manager.forging( $( this ), -1 );
-				},
-				"mouseenter": function () {
-					if ( !$( this ).hasClass( "disabled" ) ) {
-						$( "#tool-commentary" ).text( "forging-minus" );
-					}
-				},
-				"mouseleave": function () {
-					$( "#tool-commentary" ).text( "" );
 				}
 			}, ".forging-minus" );
 
