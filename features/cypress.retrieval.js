@@ -112,8 +112,8 @@ CYPRESS.CONSTS.FORGING_DATA = {
 		/* < 4.0 */ [ 0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.3, 0.4 ],
 		/* 4.0 < */ [ 0.0, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.4, 0.4, 0.5, 0.5 ]
 	],
-	//        0  +1  +2  +3  +4  +5  +6   +7   +8   +9  +10
-	LENGTH: [ 0, 10, 20, 30, 40, 60, 80, 100, 120, 120, 120 ],
+	//       0  +1  +2  +3  +4  +5  +6   +7   +8   +9  +10
+	RANGE: [ 0, 10, 20, 30, 40, 60, 80, 100, 120, 120, 120 ],
 	SPECIAL_QUALITY: {
 		//      0 +1 +2 +3 +4 +5  +6  +7  +8  +9 +10
 		"弓": [ 0, 0, 0, 1, 2, 3,  4,  5,  7,  7,  7 ],
@@ -819,29 +819,77 @@ CYPRESS.forging = ( function () {
 			forgeValue = $card.data( "forge" ),
 			forging = {
 				name: function () {
+					var $name = $card.find( ".name" );
+					if ( 0 < forgeValue ) {
+						$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] + "+" + forgeValue );
+					} else {
+						$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] );
+					}
 				},
 				quality: function () {
+					var $physical = $card.find( ".physical" ),
+						$magical = $card.find( ".magical" );
+
+					$physical.text( Math.floor( EQUIPMENT_RECORD[ COLUMN.PHYSICAL ] * FORGING_DATA.QUALITY[ forgeValue ] ) );
+					$magical.text( Math.floor( EQUIPMENT_RECORD[ COLUMN.MAGIC ] * FORGING_DATA.QUALITY[ forgeValue ] ) );
 				},
 				durability: function () {
+					var $durability = $card.find( ".durability" );
+
+					$durability.text( Math.floor( EQUIPMENT_RECORD[ COLUMN.DURABILITY ] * ( 1 + ( forgeValue / 10 ) ) ) );
 				},
 				hardness: function () {
+					var $hardness = $card.find( ".hardness" );
+
+					$hardness.text( EQUIPMENT_RECORD[ COLUMN.HARDNESS ] + Math.floor( forgeValue / 5 ) );
 				},
 				gp: function () {
+					var $gp = $card.find( ".gp" );
+
+					$gp.text( EQUIPMENT_RECORD[ COLUMN.QUALITY ] + forgeValue * FORGING_DATA.GP[ EQUIPMENT_RECORD[ COLUMN.TYPE ] ] );
 				},
 				weight: function () {
+					var $weight = $card.find( ".weight" ),
+						weight = EQUIPMENT_RECORD[ COLUMN.WEIGHT ],
+						weightClass = ( function () {
+							       if ( weight < 0.20 ) {
+								return 0;
+							} else if ( weight < 0.40 ) {
+								return 1;
+							} else if ( weight < 1.00 ) {
+								return 2;
+							} else if ( weight < 2.00 ) {
+								return 3;
+							} else if ( weight < 4.00 ) {
+								return 4;
+							} else {
+								return 5;
+							}
+						} () );
+
+					$weight.text ( ( weight - FORGING_DATA.WEIGHT[ weightClass ][ forgeValue ] ).toFixed( 2 ) );
 				},
-				length: function () {
+				range: function () {
+					var $range = $card.find( ".range" );
+
+					$range.text( EQUIPMENT_RECORD[ COLUMN.RANGE ] +  FORGING_DATA.RANGE[ forgeValue ] );
 				},
 				specialQuality: function () {
-				}
-			},
-			$name = $card.find( ".name" );
+					var $quality = $card.find( ".quality" );
 
-		if ( 0 < forgeValue ) {
-			$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] + "+" + forgeValue );
-		} else {
-			$name.text( EQUIPMENT_RECORD[ COLUMN.NAME ] );
-		}
+					$quality.text( EQUIPMENT_RECORD[ COLUMN.QUALITY ] + FORGING_DATA.SPECIAL_QUALITY[ EQUIPMENT_RECORD[ COLUMN.TYPE ] ][ forgeValue ] );
+				}
+			};
+
+		forging.name();
+		forging.quality();
+		forging.durability();
+		forging.hardness();
+		forging.gp();
+		forging.weight();
+		forging.range();
+		forging.specialQuality();
+
 	};
 } () );
 
