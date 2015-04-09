@@ -709,9 +709,9 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 				if ( 0 < data.length ) {
 					this.string += " ステータス補正：";
 					$.each( data, function () {
-						that.string += this + ", ";
+						that.string += this + " ";
 					} );
-					this.string = this.string.slice( 0, -2 );
+					this.string = this.string.slice( 0, -1 );
 				}
 
 				return this;
@@ -756,17 +756,17 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 				if ( 0 < resist.length ) {
 					this.string += " 魔法防御属性：";
 					$.each( resist, function () {
-						that.string += this + ", ";
+						that.string += this + " ";
 					} );
-					this.string = this.string.slice( 0, -2 );
+					this.string = this.string.slice( 0, -1 );
 				}
 
 				if ( 0 < attack.length ) {
 					this.string += " 魔法攻撃属性：";
 					$.each( attack, function () {
-						that.string += this + ", ";
+						that.string += this + " ";
 					} );
-					this.string = this.string.slice( 0, -2 );
+					this.string = this.string.slice( 0, -1 );
 				}
 
 				return this;
@@ -802,9 +802,9 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 				if ( 0 < data.length ) {
 					this.string += " 状態異常耐性：";
 					$.each( data, function () {
-						that.string += this + ", ";
+						that.string += this + " ";
 					} );
-					this.string = this.string.slice( 0, -2 );
+					this.string = this.string.slice( 0, -1 );
 				}
 
 				return this;
