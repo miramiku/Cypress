@@ -8,10 +8,11 @@
 					"features/ion.rangeSlider.min.js",
 					"features/colorbox.min.js",
 					"features/icheck.min.js",
+					"features/zeroclipboard.min.js",
 					"features/cypress.core.js",
-					"features/cypress.retrieval-dev.js"
+					"features/cypress.retrieval.js"
 				],
-				"output": "features/cypress.retrieval.js",
+				"output": "features/cypress.retrieval.min.js",
 				"generateMap": false,
 				"mangle": true,
 				"isolate": false

@@ -31,9 +31,18 @@
 
 @standardUIColor: @normalColor;
 
+@tool-button-side: 25px;
+
 /* ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
  * header
  * ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== */
+#tool-commentary {
+	float: right;
+	display: block;
+	line-height: @headerHeight;
+	margin-right: 20px;
+}
+
 #search-request-title {
 	float: right;
 	display: block;
@@ -122,7 +131,7 @@
 
 		position: relative;
 		display: block;
-		overflow: hidden;
+		overflow: visible;
 		margin: 10px auto 0;
 		width: 640px;
 		box-shadow: 1px 1px 2px @cardBackgroundB;
@@ -133,6 +142,16 @@
 
 		.equipment-card-inner {
 			padding: 8px 10px;
+			overflow: hidden;
+			background-repeat: no-repeat;
+
+			&.poor     { background-image: url( "../images/poor.png" );     }
+			&.normal   { background-image: url( "../images/normal.png" );   }
+			&.good     { background-image: url( "../images/good.png" );     }
+			&.master   { background-image: url( "../images/master.png" );   }
+			&.legend   { background-image: url( "../images/legend.png" );   }
+			&.artifact { background-image: url( "../images/artifact.png" ); }
+			&.usage    { background-image: url( "../images/usage.png" );    }
 		}
 
 		.section-divider {
@@ -164,23 +183,28 @@
 			color: @baseForegroundColor;
 		}
 
-		.ribbon {
+		.data-copy {
 			position: absolute;
-			display: inline-block;
-			top: 10px;
-			left: -12px;
-			height: 6px;
-			width: 30px;
-			box-shadow: 0px 0px 1px rgba( 0, 0, 0, 0.2 ),
-						inset 0px 2px 3px rgba( 255, 255, 255, 0.2 );
-			padding: 2px 10px;
-			-webkit-transform: rotate(-45deg);
-			-moz-transform: rotate(-45deg);
-			-ms-transform: rotate(-45deg);
-			z-index: 0;
-		}
-		.usage {
-			background: fade( @usageColor, 60% );
+			bottom: 0;
+			right: 0;
+			height: @tool-button-side;
+			width: @tool-button-side;
+			margin: 2px;
+			padding: 0;
+			border: none;
+			outline: none;
+			border-radius: 5px;
+
+			img {
+				padding-top: 4px;
+			}
+
+			&.data-copy-hover {
+				.cypressGradient( 0% 0%, @standardUIColor, transparent 100% );
+			}
+			&.data-copy-active {
+				background: fade( @standardUIColor, 50% );
+			}
 		}
 
 		.basic-information {
@@ -190,17 +214,6 @@
 				display: block;
 				float: left;
 				width: 480px;
-
-				.poor     { .setColor( @poorColor );     }
-				.normal   { .setColor( @normalColor );   }
-				.good     { .setColor( @goodColor );     }
-				.master   { .setColor( @masterColor );   }
-				.legend   { .setColor( @legendColor );   }
-				.artifact { .setColor( @artifactColor ); }
-
-				.setColor( @color ) {
-					background: fade( @color, 70% );
-				}
 
 				.rarity {
 					position: relative;
@@ -267,7 +280,7 @@
 					color: @negativeColor;
 				}
 			}
-		}
+		} // .basic-information
 
 		.capabilities {
 			.parentBox();
@@ -305,7 +318,7 @@
 					content: " ";
 				}
 			}
-		}
+		} // .capabilities
 
 		.special-properties {
 			.parentBox();
@@ -334,7 +347,7 @@
 			:after {
 				content: " ";
 			}
-		}
+		} // .special-properties
 
 		.class-restriction {
 			.parentBox();
@@ -362,7 +375,7 @@
 				border: 1px solid @nonActive;
 				color: @nonActive;
 			}
-		}
+		} // .class-restriction
 
 		.special-effects {
 			.parentBox();
@@ -380,7 +393,7 @@
 			:after {
 				content: " ";
 			}
-		}
+		} // .special-effects
 
 		.resistance {
 			.parentBox();
@@ -399,7 +412,7 @@
 			:after {
 				content: " ";
 			}
-		}
+		} // .resistance
 
 		.magic-attributes {
 			.parentBox();
@@ -419,7 +432,7 @@
 			:after {
 				content: " ";
 			}
-		}
+		} // .magic-attributes
 
 		.other-data {
 			.parentBox();
@@ -444,9 +457,74 @@
 			.status-change.zero:before {
 				content: "";
 			}
+		} // .other-data
+
+		@toolbox-width: 40px;
+		@toolbox-height: 69px;
+
+		.toolbox {
+			.userSelect( none );
+			display: block;
+			position: absolute;
+			overflow: hidden;
+			visibility: hidden;
+			border-radius: 0 3px 3px 0;
+
+			top: 2px;
+			right: -1 * @toolbox-width;
+			width: @toolbox-width;
+			height: @toolbox-height;
+
+			.tool-buttons {
+				position: relative;
+				background: @cardBackgroundB;
+				padding: 5px 0 0 7px;
+
+				width: @toolbox-width;
+				height: @toolbox-height;
+				.tool-button {
+					cursor: pointer;
+					display: block;
+					position: relative;
+					line-height: @tool-button-side;
+					text-align: center;
+					width: @tool-button-side;
+					height: @tool-button-side;
+					border: 1px solid @standardUIColor;
+					margin-bottom: 5px;
+					&.forging-plus {
+						color: @positiveColor;
+					}
+
+					&.forging-minus {
+						color: @negativeColor;
+					}
+
+					&:hover {
+						.cypressGradient( 0% 0%, @standardUIColor, transparent 100% );
+					}
+					&:active {
+						background: fade( @standardUIColor, 50% );
+					}
+
+					&.disabled {
+						border: 1px solid @nonActive;
+						color: @nonActive;
+						cursor: default;
+						&:hover {
+							background: none;
+						}
+					}
+				}
+			}
+
 		}
-	}
-}
+
+		&:hover .toolbox {
+			visibility: visible;
+		}
+	} // .equipment-card
+} // #equipments
 
 	#landing-title {
 		position: relative;
