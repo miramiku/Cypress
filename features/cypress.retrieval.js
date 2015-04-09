@@ -1014,7 +1014,7 @@ CYPRESS.makeRequest = function () {
 				};
 			} else {
 				return function ( record ) {
-					return requireMask & record[ COLUMN.CLASSES ];
+					return requireMask & record[ COLUMN.CLASS ];
 				};
 			}
 		} () ),
