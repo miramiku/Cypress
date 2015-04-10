@@ -285,10 +285,10 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 				return this;
 			},
 			powers: function () {
-				var type = BuilderUtils.isWeapon( type ) ? "weapons" : "guards";
+				var offenseOrDefense = BuilderUtils.isWeapon( type ) ? "weapons" : "guards";
 
-				this.card += "<span class=\"physical " + type + "\">" + equipment[ COLUMN.PHYSICAL ] + "</span>" +
-							 "<span class=\"magical " + type + "\">" + equipment[ COLUMN.MAGICAL ] + "</span>";
+				this.card += "<span class=\"physical " + offenseOrDefense + "\">" + equipment[ COLUMN.PHYSICAL ] + "</span>" +
+							 "<span class=\"magical "  + offenseOrDefense + "\">" + equipment[ COLUMN.MAGICAL ] + "</span>";
 
 				return this;
 			},
