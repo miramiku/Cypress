@@ -632,9 +632,16 @@
 				.cypressGradient( 100% 100%, fade( @standardUIColor, 80% ), transparent 40% );
 			}
 
+			&::-ms-input-placeholder {
+				color: @standardUIColor;
+			}
+			&::-moz-placeholder {
+				color: @standardUIColor;
+			}
 			&::-webkit-input-placeholder {
 				color: @standardUIColor;
 			}
+
 		}
 
 		#query-level {
