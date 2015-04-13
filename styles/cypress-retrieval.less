@@ -459,6 +459,24 @@
 			}
 		} // .other-data
 
+		.notes-line {
+			.parentBox();
+
+			.comments, .sources, .notes {
+				.parentBox();
+			}
+			.comments-label, .sources-label, .notes-label {
+				display: block;
+				float: left;
+				width: 60px;
+			}
+			.comments-text, .sources-text, .notes-text {
+				display: block;
+				float: left;
+				width: 540px;
+			}
+		} // .note-line
+
 		@toolbox-width: 40px;
 		@toolbox-height: 69px;
 
