@@ -548,12 +548,25 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 				return this;
 			},
 			notesLine: function () {
-				var notes = equipment[ COLUMN.NOTES ];
+				var LABEL = 0,
+					TEXT = 1,
+					lines = {
+						comments: [ "コメント", equipment[ COLUMN.COMMENTS ] ],
+						sources:  [ "入手経路", equipment[ COLUMN.SOURCES ] ],
+						notes:    [ "ノート",  equipment[ COLUMN.NOTES ] ]
+					},
+					that = this;
 
-				if ( notes !== "" ) {
-					this.group( "note-line" );
+				if ( lines.comments[ TEXT ] + lines.sources[ TEXT ] + lines.notes[ TEXT ] !== "" ) {
+					this.group( "notes-line" );
 					this.sectionDivider();
-					this.card += "<span class=\"notes\">" + notes + "</span>";
+
+					$.each( [ "comments", "sources", "notes" ], function () {
+						if ( lines[ this ][ TEXT ] !== "" ) {
+							that.card += "<div class=\"" + this + "\"><span class=\"" + this + "-label\">" + lines[ this ][ LABEL ] + "：</span><span class=\"" + this + "-text\">" + lines[ this ][ TEXT ] + "</span></div>";
+						}
+					} );
+
 					this.end();
 				}
 
