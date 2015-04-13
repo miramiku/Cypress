@@ -12,7 +12,7 @@ import org.apache.poi.ss.usermodel.*;
  */
 public class WizardryOnlineEquipmentJSONBuilder {
 	/** 出力する JSON ファイル名 */
-	public static final File OUTPUT_JSON_FILE = new File( "C:\\Users\\miku\\Dropbox\\Public\\wizon\\cypress\\equipment.json" );
+	public static final File OUTPUT_JSON_FILE = new File( "C:\\Users\\miku\\Dropbox\\Public\\wizon\\equipment.json" );
 	/** 生データが格納されているワークブックパス */
 	public static final String INPUT_WORKBOOK_PATH = "C:\\Users\\miku\\SkyDrive\\wizon\\equipment.db.xlsm";
 	/** 生データが格納されているシート名 */
@@ -92,28 +92,28 @@ public class WizardryOnlineEquipmentJSONBuilder {
 		int EARTH_RESIST = 51;
 		int LIGHT_RESIST = 52;
 		int DARK_RESIST = 53;
-		int NIL_RESIST = 54;
-		int FIRE_ATTACK = 55;
-		int WATER_ATTACK = 56;
-		int WIND_ATTACK = 57;
-		int EARTH_ATTACK = 58;
-		int LIGHT_ATTACK = 59;
-		int DARK_ATTACK = 60;
-		int NIL_ATTACK = 61;
-		int SELL = 62;
-		int TRADE = 63;
-		int STOLEN = 64;
-		int BLESSED = 65;
-		int CURSED = 66;
-		int USED = 67;
-		int LEVEL_FLOOR = 68;
-		int LEVEL_CEIL = 69;
-		int RESTRICTION = 70;
-		int WHEN_EQUIPPED = 71;
-		int WEPN = 72;
-		int STATUS_CHANGE = 73;
-		int PERCENT = 74;
-		int SCPN = 75;
+		int FIRE_ATTACK = 54;
+		int WATER_ATTACK = 55;
+		int WIND_ATTACK = 56;
+		int EARTH_ATTACK = 57;
+		int LIGHT_ATTACK = 58;
+		int DARK_ATTACK = 59;
+		int SELL = 60;
+		int TRADE = 61;
+		int STOLEN = 62;
+		int BLESSED = 63;
+		int CURSED = 64;
+		int USED = 65;
+		int LEVEL_FLOOR = 66;
+		int LEVEL_CEIL = 67;
+		int RESTRICTION = 68;
+		int WHEN_EQUIPPED = 69;
+		int WEPN = 70;
+		int STATUS_CHANGE = 71;
+		int PERCENT = 72;
+		int SCPN = 73;
+		int COMMENT = 74;
+		int SOURCE = 75;
 		int NOTES = 76;
 		int CHECKUP = 77;
 		int EVIDENCE = 78;
@@ -267,7 +267,6 @@ public class WizardryOnlineEquipmentJSONBuilder {
 			buildIntegerData( Column.EARTH_RESIST );
 			buildIntegerData( Column.LIGHT_RESIST );
 			buildIntegerData( Column.DARK_RESIST );
-			buildIntegerData( Column.NIL_RESIST );
 
 			// magic attributes (attack)
 			buildIntegerData( Column.FIRE_ATTACK );
@@ -276,7 +275,6 @@ public class WizardryOnlineEquipmentJSONBuilder {
 			buildIntegerData( Column.EARTH_ATTACK );
 			buildIntegerData( Column.LIGHT_ATTACK );
 			buildIntegerData( Column.DARK_ATTACK );
-			buildIntegerData( Column.NIL_ATTACK );
 
 			// flags
 			buildBooleanData( Column.SELL );
@@ -303,6 +301,8 @@ public class WizardryOnlineEquipmentJSONBuilder {
 			buildBooleanData( Column.SCPN );
 
 			// note
+			buildStringData( Column.COMMENT );
+			buildStringData( Column.SOURCE );
 			buildStringData( Column.NOTES );
 
 			// checkup
@@ -326,7 +326,7 @@ public class WizardryOnlineEquipmentJSONBuilder {
 			writer.write( json.toString() );
 		} catch ( IOException e ) {
 		}
-		System.out.println( "successed (" + ( numberOfRecords - 1 ) + " records)" );
+		System.out.println( "successed (" + numberOfRecords + " records)" );
 	}
 
 	/**
