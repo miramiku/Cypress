@@ -69,7 +69,7 @@ CYPRESS.STATUS ={
 		"blessed":       "all",
 		"cursed":        "all",
 		"used":          "all",
-		"sell":             "all",
+		"sell":          "all",
 		"trade":         "all",
 		"stolen":        "all"
 	}
@@ -101,7 +101,7 @@ CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR = [
 
 /**
  * 鍛錬値データ
- * ref: https://github.com/miramiku/Cypress/wiki/Wizardy-Online-Forging-Data
+ * ref: https://github.com/miramiku/Cypress/wiki/Forging-Data
  */
 CYPRESS.CONSTS.FORGING_DATA = {
 	QUALITY: [ 1.00, 1.05, 1.15, 1.27, 1.39, 1.54, 1.69, 1.84, 1.99, 2.14, 2.29 ],
