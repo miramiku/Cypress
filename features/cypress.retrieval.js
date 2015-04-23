@@ -373,8 +373,11 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 							   "<span class=\"quality bows\">"      + equipment[ COLUMN.QUALITY ]       + "</span>";
 					},
 					"矢": function () {
-						return "<span class=\"range-rate\">"        + equipment[ COLUMN.RANGE ]         + "%</span>" +
-							   "<span class=\"quality-rate bows\">" + equipment[ COLUMN.QUALITY ]       + "%</span>";
+						var range     = equipment[ COLUMN.RANGE ],
+							quality   = equipment[ COLUMN.QUALITY ];
+
+						return "<span class=\"range-rate" +        (range   !== 100 ? range   < 100 ? " negative" : " positive" : "") + "\">" + range   + "%</span>" +
+							   "<span class=\"quality-rate bows" + (quality !== 100 ? quality < 100 ? " negative" : " positive" : "") + "\">" + quality + "%</span>";
 					},
 					"銃": function () {
 						return "<span class=\"range\">"             + equipment[ COLUMN.RANGE ]         + "</span>" +
@@ -382,8 +385,11 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 							   "<span class=\"charge-weight\">"     + equipment[ COLUMN.CHARGE_WEIGHT ] + "</span>";
 					},
 					"銃弾": function () {
-						return "<span class=\"range-rate\">"        + equipment[ COLUMN.RANGE ]         + "%</span>" +
-							   "<span class=\"quality-rate guns\">" + equipment[ COLUMN.QUALITY ]       + "%</span>";
+						var range     = equipment[ COLUMN.RANGE ],
+							quality   = equipment[ COLUMN.QUALITY ];
+
+						return "<span class=\"range-rate" +        (range   !== 100 ? range   < 100 ? " negative" : " positive" : "") + "\">" + range   + "%</span>" +
+							   "<span class=\"quality-rate guns" + (quality !== 100 ? quality < 100 ? " negative" : " positive" : "") + "\">" + quality + "%</span>";
 					},
 					"小型盾": function () {
 						return "<span class=\"quality gp\">"        + equipment[ COLUMN.QUALITY ]       + "</span>";
@@ -472,14 +478,6 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 						resist: "魔防属性"
 					},
 					that = this,
-					checkAllZero= function ( type ) {
-						for ( var atr in attributes[ type ] ) {
-							if ( attributes[ type ][ atr ] !== 0 ) {
-								isAllZero[ type ] = false;
-								break;
-							}
-						}
-					},
 					attributes = ( function () {
 						var setAttributes = function ( type ) {
 								var obj = {};
@@ -640,7 +638,6 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 		CLASSMASK            = CYPRESS.CONSTS.CLASSMASK,
 		ORDERS               = CYPRESS.EQUIPMENT_STYLE.ORDERS,
 		REGEXP               = CYPRESS.EQUIPMENT_STYLE.REGEXP,
-		STANDARD_LEVEL_FLOOR = CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR,
 
 		// dependence
 		BuilderUtils = CYPRESS.BuilderUtils,

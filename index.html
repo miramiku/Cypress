@@ -12,7 +12,7 @@
 
 	<!-- scripts -->
 <!--
-	<script src="features/cypress.retrieval.min.js?ver=1.2.4"></script>
+	<script src="features/cypress.retrieval.min.js?ver=1.2.5"></script>
 -->
 	<script src="features/jquery.min.js"></script>
 	<script src="features/slidebars.min.js"></script>
@@ -55,7 +55,7 @@
 					<div id="landing">
 						<h4>Overview: 概要</h4>
 						<ul>
-							<li>Wizardry Online の装備品データを検索・抽出するシステムです</li>
+							<li>Wizardry Online の装備品データを抽出・検索するシステムです</li>
 							<li>装備品データにはできる限り注意を払っていますが誤りのあるデータも混入していると思います</li>
 							<li>誤りのあるデータを見つけたらご一報いただけると幸いです。早急に修正します</li>
 							<li>質問や要望、提案などありましたらコンタクトの方までお願いします</li>
@@ -94,24 +94,14 @@
 						</ul>
 						<h4>Changelog: 変更履歴</h4>
 						<ul>
+							<li>[2015-04-24] [v1.2.5] 矢・銃弾の効率に関する項目に色付けしました</li>
 							<li>[2015-04-14] [v1.2.4] 装備データベースの仕様を一部変更しました</li>
 							<li>[2015-04-09] [v1.2.0] 鍛錬シミュレートと装備データのコピー機能を追加</li>
-							<li>もっと見る：<a href="https://github.com/miramiku/Cypress/wiki/Changelog">(GitHub) Cypress wiki 主な変更履歴</a></li>
+							<li>もっと見る：<a href="https://github.com/miramiku/Cypress/wiki/Changelog">(GitHub) Cypress wiki 変更履歴</a></li>
 						</ul>
-						<h4>Advanced usage: 高度な使い方（かなり高度です＞＜；）</h4>
+						<h4>Advanced usage: 右のパネルではできない詳細な検索</h4>
 						<ul>
-							<li>パネル（ページ右側）では指定できない細かな条件での検索</li>
-							<li>Google Chrome では JavaScript コンソール[Ctrl + Shift + J]（Internet Explorer では開発者ツール、Mozilla Firefox では Firebug プラグインなど）を使って Cypress の公開 API を直接操作すると極めて細かな検索が可能になります
-							<li class="newline">以下の API を利用します</li>
-							<li>CYPRESS.search( request ) ：装備データベースのレコードを受け取りそのレコードが条件に一致するか否かをブール値で返却する関数を引数に装備の整理番号の配列を生成します</li>
-							<li>CYPRESS.displayEquipmentCard( catalogs ) ：（データベースに内部的に利用している）整理番号の配列を引数に装備を表示します</li>
-							<li>CYPRESS.COLUMN ：装備データベースのレコードとコラム名の対応オブジェクト</li>
-							<li class="newline">以下に検索例を示します（コンソールにコピー＆ペーストすると実際に実行できます）</li>
-							<li>サンプル1： HP のステータス補正が 300 以上の装備</li>
-							<li>CYPRESS.displayEquipmentCard( CYPRESS.search( function ( r ) { return 300 &lt;= r[ CYPRESS.COLUMN.HP ] ? true : false; } ) );</li>
-							<li>サンプル2： 装備時の付与効果に "キラー" が含まれる装備</li>
-							<li>CYPRESS.displayEquipmentCard( CYPRESS.search( function ( r ) { return r[ CYPRESS.COLUMN.WHEN_EQUIPPED ].match( "キラー" ) ? true : false; } ) );</li>
-							<li class="newline">いずれは Cypress のドキュメントを用意したいと思います…</li>
+							<li><a href="https://github.com/miramiku/Cypress/wiki/Advanced-Usage">(GitHub) Cypress wiki 高度な検索</a></li>
 						</ul>
 					</div><!-- #landing -->
 				</div><!-- .equipment-card-inner -->
