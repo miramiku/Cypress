@@ -914,20 +914,16 @@ CYPRESS.getEquipmentString = function ( equipment ) {
  * カタログ番号からカードを表示する。
  * @param array catalogs カタログ番号
  */
-CYPRESS.displayEquipmentCard = ( function () {
+CYPRESS.displayEquipmentCard = function ( catalogs ) {
 	"use strict";
 
-	var _display = function ( catalogs ) {
-			$( "#equipments" ).empty();
-			$( "#usage-button" ).prop( "disabled", false );
+	$( "#equipments" ).empty();
+	$( "#usage-button" ).prop( "disabled", false );
 
-			$.each( catalogs, function () {
-				$( "#equipments" ).append( CYPRESS.getEquipmentCard( this ) );
-			} );
-		};
-
-	return _display;
-} () );
+	$.each( catalogs, function () {
+		$( "#equipments" ).append( CYPRESS.getEquipmentCard( this ) );
+	} );
+};
 
 /**
  * UIから検索条件の生成。
