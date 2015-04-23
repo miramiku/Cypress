@@ -1,5 +1,4 @@
-/*jshint browser:true, jquery:true */
-/*global CYPRESS, ZeroClipboard */
+/*global CYPRESS */
 
 /** 検索条件の受け渡し */
 CYPRESS.STATUS ={
@@ -148,6 +147,8 @@ CYPRESS.EQUIPMENT_STYLE = {
 /** データ構築に共通する処理をまとめたクラス */
 CYPRESS.BuilderUtils = {
 	isWeapon: function ( type ) {
+		"use strict";
+
 		var WEAPONS = [ "暗器", "短剣", "片手剣", "両手剣", "刀", "片手斧", "両手斧", "槍", "片手鈍器", "両手鈍器", "両手杖", "弓", "矢", "銃", "銃弾", "双刃" ];
 	//  GUARDS:  [ "兜", "帽子", "頭巾", "鎧", "上衣", "外衣", "手甲", "手袋", "腕輪", "脚鎧", "衣服", "下衣", "鉄靴", "革靴", "靴", "小型盾", "中型盾", "大型盾", "外套", "指輪", "耳飾り", "首飾り", "ベルト" ]
 		// ↑未使用
@@ -166,6 +167,8 @@ CYPRESS.BuilderUtils = {
  * @return HTML 装備データカード
  */
 CYPRESS.getEquipmentCard = function ( catalog ) {
+	"use strict";
+
 		// consts
 	var COLUMN               = CYPRESS.COLUMN,
 		CLASSMASK            = CYPRESS.CONSTS.CLASSMASK,
@@ -630,6 +633,8 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
  * @return string 装備データの文字列表現
  */
 CYPRESS.getEquipmentString = function ( equipment ) {
+	"use strict";
+
 		// consts
 	var COLUMN               = CYPRESS.COLUMN,
 		CLASSMASK            = CYPRESS.CONSTS.CLASSMASK,
@@ -949,8 +954,8 @@ CYPRESS.makeRequest = function () {
 		/** グレード範囲フィルタ */
 		_containsGradeRange = ( function () {
 			var range = $( "#grade-range" ).prop( "value" ).split( ";" ),
-				floor = parseInt( range[ 0 ] ),
-				ceil = parseInt( range[ 1 ] );
+				floor = parseInt( range[ 0 ], 10 ),
+				ceil = parseInt( range[ 1 ], 10 );
 
 			if ( floor === 1 ) {
 				if ( ceil === CYPRESS.CONSTS.CAP.GRADE ) {
@@ -978,8 +983,8 @@ CYPRESS.makeRequest = function () {
 		/** レベル範囲フィルタ */
 		_containsLevelRange = ( function () {
 			var range = $( "#level-range" ).prop( "value" ).split( ";" ),
-				floor = parseInt( range[ 0 ] ),
-				ceil = parseInt( range[ 1 ] );
+				floor = parseInt( range[ 0 ], 10 ),
+				ceil = parseInt( range[ 1 ], 10 );
 
 			if ( floor === 1 ) {
 				if ( ceil === CYPRESS.CONSTS.CAP.LEVEL ) {
@@ -1312,42 +1317,42 @@ $( document ).ready( function () { /** boot Cypress */
 		// initialize ionRangeSlider
 		( function () {
 			$( "#grade-range" ).ionRangeSlider( {
-				type: "double",
-				min: 1,
-				max: CYPRESS.CONSTS.CAP.GRADE,
-				hide_min_max: true,
-				values_separator: "-",
-				onFinish: CYPRESS.Manager.search
+				"type": "double",
+				"min": 1,
+				"max": CYPRESS.CONSTS.CAP.GRADE,
+				"hide_min_max": true,
+				"values_separator": "-",
+				"onFinish": CYPRESS.Manager.search
 			} );
 
 			$( "#level-range" ).ionRangeSlider( {
-				type: "double",
-				min: 1,
-				max: CYPRESS.CONSTS.CAP.LEVEL,
-				hide_min_max: true,
-				values_separator: "-",
-				onFinish: CYPRESS.Manager.search
+				"type": "double",
+				"min": 1,
+				"max": CYPRESS.CONSTS.CAP.LEVEL,
+				"hide_min_max": true,
+				"values_separator": "-",
+				"onFinish": CYPRESS.Manager.search
 			} );
 		} () );
 
 		// initialize colorbox
 		( function () {
 			$( "#choice-types" ).colorbox( {
-				inline: true,
-				href: "#dialog-types",
-				closeButton: false,
-				transition: "none",
-				onClosed: function () {
+				"inline": true,
+				"href": "#dialog-types",
+				"closeButton": false,
+				"transition": "none",
+				"onClosed": function () {
 					CYPRESS.Manager.search();
 				}
 			} );
 
 			$( "#choice-flags" ).colorbox( {
-				inline: true,
-				href: "#dialog-flags",
-				closeButton: false,
-				transition: "none",
-				onClosed: function () {
+				"inline": true,
+				"href": "#dialog-flags",
+				"closeButton": false,
+				"transition": "none",
+				"onClosed": function () {
 					CYPRESS.Manager.search();
 				}
 			} );
@@ -1360,9 +1365,9 @@ $( document ).ready( function () { /** boot Cypress */
 						label = $self.data( "label" );
 
 					$self.iCheck( {
-						checkboxClass: "icheckbox",
-						radioClass: "icheckbox",
-						insert: "<div class=\"icheck-icon\"></div>" + label
+						"checkboxClass": "icheckbox",
+						"radioClass": "icheckbox",
+						"insert": "<div class=\"icheck-icon\"></div>" + label
 					} );
 				},
 				iCheckInitializeRarities = function () {
@@ -1370,8 +1375,8 @@ $( document ).ready( function () { /** boot Cypress */
 						label = $self.data( "label" );
 
 					$self.iCheck( {
-						checkboxClass: "icheckbox " + label.toLowerCase(),
-						insert: "<div class=\"icheck-icon\"></div>" + label
+						"checkboxClass": "icheckbox " + label.toLowerCase(),
+						"insert": "<div class=\"icheck-icon\"></div>" + label
 					} );
 				},
 				statusChange = function ( category ) {

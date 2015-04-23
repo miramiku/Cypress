@@ -1,5 +1,3 @@
-/*jshint browser:true, jquery:true */
-
 /** Cypress の中核コード。 */
 
 /** Package のつもり */
