@@ -6,12 +6,12 @@ var CYPRESS = {};
 /** CYPRESS で利用する定数 */
 CYPRESS.CONSTS = {
 	/** 現状キャップ */
-	CAP: {
+	CAPS: {
 		GRADE: 20,
 		LEVEL: 70
 	},
 	/** 職業マスク */
-	CLASSMASK: {
+	CLASSMASKS: {
 		FIG:   1,
 		THI:   2,
 		MAG:   4,

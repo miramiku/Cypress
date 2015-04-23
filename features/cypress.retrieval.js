@@ -1,6 +1,83 @@
 /*global CYPRESS */
 
-/** 検索条件の受け渡し */
+/**
+ * Documents: Cypress.Retrieval APIs
+ * url: https://github.com/miramiku/Cypress/wiki/Retrieval-APIs
+ */
+
+/* Global Consts */
+/**
+ * 鍛錬値データ
+ * ref: https://github.com/miramiku/Cypress/wiki/Forging-Data
+ */
+CYPRESS.CONSTS.FORGING_DATA = {
+	QUALITY: [ 1.00, 1.05, 1.15, 1.27, 1.39, 1.54, 1.69, 1.84, 1.99, 2.14, 2.29 ],
+	GP: { "小型盾":  5, "中型盾": 10, "大型盾": 15 },
+	WEIGHT: [
+		//              0   +1   +2   +3   +4   +5   +6   +7   +8   +9  +10
+		/* < 0.2 */ [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+		/* < 0.4 */ [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.1 ],
+		/* < 1.0 */ [ 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2 ],
+		/* < 2.0 */ [ 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.2 ],
+		/* < 4.0 */ [ 0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.3, 0.4 ],
+		/* 4.0 < */ [ 0.0, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.4, 0.4, 0.5, 0.5 ]
+	],
+	//       0  +1  +2  +3  +4  +5  +6   +7   +8   +9  +10
+	RANGE: [ 0, 10, 20, 30, 40, 60, 80, 100, 120, 120, 120 ],
+	SPECIAL_QUALITY: {
+		//      0 +1 +2 +3 +4 +5  +6  +7  +8  +9 +10
+		"弓": [ 0, 0, 0, 1, 2, 3,  4,  5,  7,  7,  7 ],
+		"銃": [ 0, 1, 2, 4, 6, 9, 12, 16, 21, 21, 21 ]
+	}
+};
+
+/** 標準装備下限レベル（定数） */
+CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR = [
+	/* no-Grade */  1,
+	/* Grade  1 */  1,
+	/* Grade  2 */  1,
+	/* Grade  3 */  1,
+	/* Grade  4 */  1,
+	/* Grade  5 */  1,
+	/* Grade  6 */  1,
+	/* Grade  7 */  1,
+	/* Grade  8 */  1,
+	/* Grade  9 */ 24,
+	/* Grade 10 */ 27,
+	/* Grade 11 */ 30,
+	/* Grade 12 */ 33,
+	/* Grade 13 */ 36,
+	/* Grade 14 */ 38,
+	/* Grade 15 */ 40,
+	/* Grade 16 */ 42,
+	/* Grade 17 */ 44,
+	/* Grade 18 */ 46,
+	/* Grade 19 */ 48,
+	/* Grade 20 */ 50
+];
+
+/** 表示用装備データ生成に関する集合・ベクトル */
+CYPRESS.EQUIPMENT_STYLE = {
+	ORDERS: {// 表示順序定義
+		CLASSES:             [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO" ],
+	//  CLASSES:             [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO", "ALC" ],
+		PHYSICAL_ATTRIBUTES: [ "SLASH", "STRIKE", "PIERCE" ],
+		SPECIAL_EFFECTS:     [ "hp", "mp", "str", "vit", "dex", "agi", "int", "pie", "luk" ],
+		RESISTANCE:          [ "poison", "paralyze", "petrify", "faint", "blind", "sleep", "silence", "charm", "confusion", "fear" ],
+		ATTRIBUTES:          [ "fire", "water", "wind", "earth", "light", "dark" ],
+		FLAGS:               [ "SELL", "TRADE", "STOLEN", "BLESSED", "CURSED", "USED" ]
+	},
+	REGEXP: { // 条件分岐用正規表現
+		RANGED_WEAPONS:              /^弓$|^銃$/,
+		SHOTS:                       /^矢$|^銃弾$/,
+		ACCESSORIES:                 /^指輪$|^耳飾り$|^首飾り$|^ベルト$/,
+		SHIELDS:                     /^[大中小]型盾$/,
+		WITHOUT_PHYSICAL_ATTRIBUTES: /^弓$|^銃$|^指輪$|^耳飾り$|^首飾り$|^ベルト$/, // RANGED_WEAPONS + ACCESSORIES
+		WITH_SPECIAL_PROPERTIES:     /^弓$|^銃$|^矢$|^銃弾$|^[大中小]型盾$/        // RANGED_WEAPONS + SHOTS + SHIELDS
+	}
+};
+
+/* Global Fields */
 CYPRESS.STATUS ={
 	"rarity": {
 		"Poor":     false,
@@ -74,76 +151,6 @@ CYPRESS.STATUS ={
 	}
 };
 
-/** 標準装備下限レベル（定数） */
-CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR = [
-	/* Grade  1 */  1,
-	/* Grade  2 */  1,
-	/* Grade  3 */  1,
-	/* Grade  4 */  1,
-	/* Grade  5 */  1,
-	/* Grade  6 */  1,
-	/* Grade  7 */  1,
-	/* Grade  8 */  1,
-	/* Grade  9 */ 24,
-	/* Grade 10 */ 27,
-	/* Grade 11 */ 30,
-	/* Grade 12 */ 33,
-	/* Grade 13 */ 36,
-	/* Grade 14 */ 38,
-	/* Grade 15 */ 40,
-	/* Grade 16 */ 42,
-	/* Grade 17 */ 44,
-	/* Grade 18 */ 46,
-	/* Grade 19 */ 48,
-	/* Grade 20 */ 50
-];
-
-/**
- * 鍛錬値データ
- * ref: https://github.com/miramiku/Cypress/wiki/Forging-Data
- */
-CYPRESS.CONSTS.FORGING_DATA = {
-	QUALITY: [ 1.00, 1.05, 1.15, 1.27, 1.39, 1.54, 1.69, 1.84, 1.99, 2.14, 2.29 ],
-	GP: { "小型盾":  5, "中型盾": 10, "大型盾": 15 },
-	WEIGHT: [
-		//              0   +1   +2   +3   +4   +5   +6   +7   +8   +9  +10
-		/* < 0.2 */ [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
-		/* < 0.4 */ [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.1 ],
-		/* < 1.0 */ [ 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2 ],
-		/* < 2.0 */ [ 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.2 ],
-		/* < 4.0 */ [ 0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.3, 0.4 ],
-		/* 4.0 < */ [ 0.0, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.4, 0.4, 0.5, 0.5 ]
-	],
-	//       0  +1  +2  +3  +4  +5  +6   +7   +8   +9  +10
-	RANGE: [ 0, 10, 20, 30, 40, 60, 80, 100, 120, 120, 120 ],
-	SPECIAL_QUALITY: {
-		//      0 +1 +2 +3 +4 +5  +6  +7  +8  +9 +10
-		"弓": [ 0, 0, 0, 1, 2, 3,  4,  5,  7,  7,  7 ],
-		"銃": [ 0, 1, 2, 4, 6, 9, 12, 16, 21, 21, 21 ]
-	}
-};
-
-/** 表示用装備データ生成に関する集合・ベクトル */
-CYPRESS.EQUIPMENT_STYLE = {
-	ORDERS: {// 表示順序定義
-		CLASSES:             [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO" ],
-	//  CLASSES:             [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO", "ALC" ],
-		PHYSICAL_ATTRIBUTES: [ "SLASH", "STRIKE", "PIERCE" ],
-		SPECIAL_EFFECTS:     [ "hp", "mp", "str", "vit", "dex", "agi", "int", "pie", "luk" ],
-		RESISTANCE:          [ "poison", "paralyze", "petrify", "faint", "blind", "sleep", "silence", "charm", "confusion", "fear" ],
-		ATTRIBUTES:          [ "fire", "water", "wind", "earth", "light", "dark" ],
-		FLAGS:               [ "SELL", "TRADE", "STOLEN", "BLESSED", "CURSED", "USED" ]
-	},
-	REGEXP: { // 条件分岐用正規表現
-		RANGED_WEAPONS:              /^弓$|^銃$/,
-		SHOTS:                       /^矢$|^銃弾$/,
-		ACCESSORIES:                 /^指輪$|^耳飾り$|^首飾り$|^ベルト$/,
-		SHIELDS:                     /^[大中小]型盾$/,
-		WITHOUT_PHYSICAL_ATTRIBUTES: /^弓$|^銃$|^指輪$|^耳飾り$|^首飾り$|^ベルト$/, // RANGED_WEAPONS + ACCESSORIES
-		WITH_SPECIAL_PROPERTIES:     /^弓$|^銃$|^矢$|^銃弾$|^[大中小]型盾$/        // RANGED_WEAPONS + SHOTS + SHIELDS
-	}
-};
-
 /** データ構築に共通する処理をまとめたクラス */
 CYPRESS.BuilderUtils = {
 	isWeapon: function ( type ) {
@@ -171,7 +178,7 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 
 		// consts
 	var COLUMN               = CYPRESS.COLUMN,
-		CLASSMASK            = CYPRESS.CONSTS.CLASSMASK,
+		CLASSMASKS           = CYPRESS.CONSTS.CLASSMASKS,
 		ORDERS               = CYPRESS.EQUIPMENT_STYLE.ORDERS,
 		REGEXP               = CYPRESS.EQUIPMENT_STYLE.REGEXP,
 		STANDARD_LEVEL_FLOOR = CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR,
@@ -269,7 +276,7 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 				return this;
 			},
 			level: function () {
-				var STDLVF = STANDARD_LEVEL_FLOOR[ equipment[ COLUMN.GRADE ] - 1 ],
+				var STDLVF = STANDARD_LEVEL_FLOOR[ equipment[ COLUMN.GRADE ] ],
 					floor  = equipment[ COLUMN.LEVEL_FLOOR ],
 					ceil   = equipment[ COLUMN.LEVEL_CEIL ],
 
@@ -310,7 +317,7 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 			classRestriction: function () {
 				var cr = equipment[ COLUMN.CLASS ],
 					buildClassIcon = function ( cls ) {
-						return "<span class=\"" + cls.toLowerCase() + " " + ( cr & CLASSMASK[ cls ] ? "equipable" : "non-equipable" ) + "\">" + cls + "</span>";
+						return "<span class=\"" + cls.toLowerCase() + " " + ( cr & CLASSMASKS[ cls ] ? "equipable" : "non-equipable" ) + "\">" + cls + "</span>";
 					},
 					that = this;
 
@@ -635,7 +642,7 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 
 		// consts
 	var COLUMN               = CYPRESS.COLUMN,
-		CLASSMASK            = CYPRESS.CONSTS.CLASSMASK,
+		CLASSMASKS           = CYPRESS.CONSTS.CLASSMASKS,
 		ORDERS               = CYPRESS.EQUIPMENT_STYLE.ORDERS,
 		REGEXP               = CYPRESS.EQUIPMENT_STYLE.REGEXP,
 
@@ -852,7 +859,7 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 							return "全職業 ";
 						} else {
 							$.each( ORDERS.CLASSES, function () {
-								classRestrictionText += cr & CLASSMASK[ this ] ? this + " " : "";
+								classRestrictionText += cr & CLASSMASKS[ this ] ? this + " " : "";
 							} );
 							return classRestrictionText;
 						}
@@ -951,7 +958,7 @@ CYPRESS.makeRequest = function () {
 				ceil = parseInt( range[ 1 ], 10 );
 
 			if ( floor === 1 ) {
-				if ( ceil === CYPRESS.CONSTS.CAP.GRADE ) {
+				if ( ceil === CYPRESS.CONSTS.CAPS.GRADE ) {
 					return function ( record ) { // case 1: 全範囲
 						return true;
 					};
@@ -961,7 +968,7 @@ CYPRESS.makeRequest = function () {
 					};
 				}
 			} else {
-				if ( ceil === CYPRESS.CONSTS.CAP.GRADE ) {
+				if ( ceil === CYPRESS.CONSTS.CAPS.GRADE ) {
 					return function ( record ) { // case 3: 下限を変更
 						return floor <= record[ COLUMN.GRADE ];
 					};
@@ -980,7 +987,7 @@ CYPRESS.makeRequest = function () {
 				ceil = parseInt( range[ 1 ], 10 );
 
 			if ( floor === 1 ) {
-				if ( ceil === CYPRESS.CONSTS.CAP.LEVEL ) {
+				if ( ceil === CYPRESS.CONSTS.CAPS.LEVEL ) {
 					return function ( record ) { // case 1: 全範囲
 						return true;
 					};
@@ -990,24 +997,24 @@ CYPRESS.makeRequest = function () {
 					};
 				}
 			} else {
-				if ( ceil === CYPRESS.CONSTS.CAP.LEVEL ) {
+				if ( ceil === CYPRESS.CONSTS.CAPS.LEVEL ) {
 					return function ( record ) { // case 3: 下限を変更
 						var equipmentCeil = record[ COLUMN.LEVEL_CEIL ];
 
-						return floor <= ( equipmentCeil === -1 ? CYPRESS.CONSTS.CAP.LEVEL : equipmentCeil );
+						return floor <= ( equipmentCeil === -1 ? CYPRESS.CONSTS.CAPS.LEVEL : equipmentCeil );
 					};
 				} else {
 					return function ( record ) { // case 4: 下限・上限とも変更
 						var equipmentCeil = record[ COLUMN.LEVEL_CEIL ];
 
-						return floor <= ( equipmentCeil === -1 ? CYPRESS.CONSTS.CAP.LEVEL : equipmentCeil ) && record[ COLUMN.LEVEL_FLOOR ] <= ceil;
+						return floor <= ( equipmentCeil === -1 ? CYPRESS.CONSTS.CAPS.LEVEL : equipmentCeil ) && record[ COLUMN.LEVEL_FLOOR ] <= ceil;
 					};
 				}
 			}
 		} () ),
 		/** 職業フィルタ */
 		_containsClasses = ( function () {
-			var classMask = CYPRESS.CONSTS.CLASSMASK,
+			var classMask = CYPRESS.CONSTS.CLASSMASKS,
 				requireMask = ( function () {
 					var mask = 0;
 
@@ -1290,7 +1297,8 @@ CYPRESS.Manager = ( function () {
 	};
 } () );
 
-$( document ).ready( function () { /** boot Cypress */
+/** boot Cypress */
+$( document ).ready( function () {
 	"use strict";
 
 	var mySlidebars = new $.slidebars();
@@ -1312,7 +1320,7 @@ $( document ).ready( function () { /** boot Cypress */
 			$( "#grade-range" ).ionRangeSlider( {
 				"type": "double",
 				"min": 1,
-				"max": CYPRESS.CONSTS.CAP.GRADE,
+				"max": CYPRESS.CONSTS.CAPS.GRADE,
 				"hide_min_max": true,
 				"values_separator": "-",
 				"onFinish": CYPRESS.Manager.search
@@ -1321,7 +1329,7 @@ $( document ).ready( function () { /** boot Cypress */
 			$( "#level-range" ).ionRangeSlider( {
 				"type": "double",
 				"min": 1,
-				"max": CYPRESS.CONSTS.CAP.LEVEL,
+				"max": CYPRESS.CONSTS.CAPS.LEVEL,
 				"hide_min_max": true,
 				"values_separator": "-",
 				"onFinish": CYPRESS.Manager.search
