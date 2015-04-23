@@ -1,5 +1,4 @@
-/*jshint browser:true, jquery:true */
-/*global CYPRESS, ZeroClipboard */
+/*global CYPRESS */
 
 /** 検索条件の受け渡し */
 CYPRESS.STATUS ={
@@ -148,6 +147,8 @@ CYPRESS.EQUIPMENT_STYLE = {
 /** データ構築に共通する処理をまとめたクラス */
 CYPRESS.BuilderUtils = {
 	isWeapon: function ( type ) {
+		"use strict";
+
 		var WEAPONS = [ "暗器", "短剣", "片手剣", "両手剣", "刀", "片手斧", "両手斧", "槍", "片手鈍器", "両手鈍器", "両手杖", "弓", "矢", "銃", "銃弾", "双刃" ];
 	//  GUARDS:  [ "兜", "帽子", "頭巾", "鎧", "上衣", "外衣", "手甲", "手袋", "腕輪", "脚鎧", "衣服", "下衣", "鉄靴", "革靴", "靴", "小型盾", "中型盾", "大型盾", "外套", "指輪", "耳飾り", "首飾り", "ベルト" ]
 		// ↑未使用
@@ -166,6 +167,8 @@ CYPRESS.BuilderUtils = {
  * @return HTML 装備データカード
  */
 CYPRESS.getEquipmentCard = function ( catalog ) {
+	"use strict";
+
 		// consts
 	var COLUMN               = CYPRESS.COLUMN,
 		CLASSMASK            = CYPRESS.CONSTS.CLASSMASK,
@@ -370,8 +373,11 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 							   "<span class=\"quality bows\">"      + equipment[ COLUMN.QUALITY ]       + "</span>";
 					},
 					"矢": function () {
-						return "<span class=\"range-rate\">"        + equipment[ COLUMN.RANGE ]         + "%</span>" +
-							   "<span class=\"quality-rate bows\">" + equipment[ COLUMN.QUALITY ]       + "%</span>";
+						var range     = equipment[ COLUMN.RANGE ],
+							quality   = equipment[ COLUMN.QUALITY ];
+
+						return "<span class=\"range-rate" +        (range   !== 100 ? range   < 100 ? " negative" : " positive" : "") + "\">" + range   + "%</span>" +
+							   "<span class=\"quality-rate bows" + (quality !== 100 ? quality < 100 ? " negative" : " positive" : "") + "\">" + quality + "%</span>";
 					},
 					"銃": function () {
 						return "<span class=\"range\">"             + equipment[ COLUMN.RANGE ]         + "</span>" +
@@ -379,8 +385,11 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 							   "<span class=\"charge-weight\">"     + equipment[ COLUMN.CHARGE_WEIGHT ] + "</span>";
 					},
 					"銃弾": function () {
-						return "<span class=\"range-rate\">"        + equipment[ COLUMN.RANGE ]         + "%</span>" +
-							   "<span class=\"quality-rate guns\">" + equipment[ COLUMN.QUALITY ]       + "%</span>";
+						var range     = equipment[ COLUMN.RANGE ],
+							quality   = equipment[ COLUMN.QUALITY ];
+
+						return "<span class=\"range-rate" +        (range   !== 100 ? range   < 100 ? " negative" : " positive" : "") + "\">" + range   + "%</span>" +
+							   "<span class=\"quality-rate guns" + (quality !== 100 ? quality < 100 ? " negative" : " positive" : "") + "\">" + quality + "%</span>";
 					},
 					"小型盾": function () {
 						return "<span class=\"quality gp\">"        + equipment[ COLUMN.QUALITY ]       + "</span>";
@@ -469,14 +478,6 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 						resist: "魔防属性"
 					},
 					that = this,
-					checkAllZero= function ( type ) {
-						for ( var atr in attributes[ type ] ) {
-							if ( attributes[ type ][ atr ] !== 0 ) {
-								isAllZero[ type ] = false;
-								break;
-							}
-						}
-					},
 					attributes = ( function () {
 						var setAttributes = function ( type ) {
 								var obj = {};
@@ -630,12 +631,13 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
  * @return string 装備データの文字列表現
  */
 CYPRESS.getEquipmentString = function ( equipment ) {
+	"use strict";
+
 		// consts
 	var COLUMN               = CYPRESS.COLUMN,
 		CLASSMASK            = CYPRESS.CONSTS.CLASSMASK,
 		ORDERS               = CYPRESS.EQUIPMENT_STYLE.ORDERS,
 		REGEXP               = CYPRESS.EQUIPMENT_STYLE.REGEXP,
-		STANDARD_LEVEL_FLOOR = CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR,
 
 		// dependence
 		BuilderUtils = CYPRESS.BuilderUtils,
@@ -909,20 +911,16 @@ CYPRESS.getEquipmentString = function ( equipment ) {
  * カタログ番号からカードを表示する。
  * @param array catalogs カタログ番号
  */
-CYPRESS.displayEquipmentCard = ( function () {
+CYPRESS.displayEquipmentCard = function ( catalogs ) {
 	"use strict";
 
-	var _display = function ( catalogs ) {
-			$( "#equipments" ).empty();
-			$( "#usage-button" ).prop( "disabled", false );
+	$( "#equipments" ).empty();
+	$( "#usage-button" ).prop( "disabled", false );
 
-			$.each( catalogs, function () {
-				$( "#equipments" ).append( CYPRESS.getEquipmentCard( this ) );
-			} );
-		};
-
-	return _display;
-} () );
+	$.each( catalogs, function () {
+		$( "#equipments" ).append( CYPRESS.getEquipmentCard( this ) );
+	} );
+};
 
 /**
  * UIから検索条件の生成。
@@ -949,8 +947,8 @@ CYPRESS.makeRequest = function () {
 		/** グレード範囲フィルタ */
 		_containsGradeRange = ( function () {
 			var range = $( "#grade-range" ).prop( "value" ).split( ";" ),
-				floor = parseInt( range[ 0 ] ),
-				ceil = parseInt( range[ 1 ] );
+				floor = parseInt( range[ 0 ], 10 ),
+				ceil = parseInt( range[ 1 ], 10 );
 
 			if ( floor === 1 ) {
 				if ( ceil === CYPRESS.CONSTS.CAP.GRADE ) {
@@ -978,8 +976,8 @@ CYPRESS.makeRequest = function () {
 		/** レベル範囲フィルタ */
 		_containsLevelRange = ( function () {
 			var range = $( "#level-range" ).prop( "value" ).split( ";" ),
-				floor = parseInt( range[ 0 ] ),
-				ceil = parseInt( range[ 1 ] );
+				floor = parseInt( range[ 0 ], 10 ),
+				ceil = parseInt( range[ 1 ], 10 );
 
 			if ( floor === 1 ) {
 				if ( ceil === CYPRESS.CONSTS.CAP.LEVEL ) {
@@ -1312,42 +1310,42 @@ $( document ).ready( function () { /** boot Cypress */
 		// initialize ionRangeSlider
 		( function () {
 			$( "#grade-range" ).ionRangeSlider( {
-				type: "double",
-				min: 1,
-				max: CYPRESS.CONSTS.CAP.GRADE,
-				hide_min_max: true,
-				values_separator: "-",
-				onFinish: CYPRESS.Manager.search
+				"type": "double",
+				"min": 1,
+				"max": CYPRESS.CONSTS.CAP.GRADE,
+				"hide_min_max": true,
+				"values_separator": "-",
+				"onFinish": CYPRESS.Manager.search
 			} );
 
 			$( "#level-range" ).ionRangeSlider( {
-				type: "double",
-				min: 1,
-				max: CYPRESS.CONSTS.CAP.LEVEL,
-				hide_min_max: true,
-				values_separator: "-",
-				onFinish: CYPRESS.Manager.search
+				"type": "double",
+				"min": 1,
+				"max": CYPRESS.CONSTS.CAP.LEVEL,
+				"hide_min_max": true,
+				"values_separator": "-",
+				"onFinish": CYPRESS.Manager.search
 			} );
 		} () );
 
 		// initialize colorbox
 		( function () {
 			$( "#choice-types" ).colorbox( {
-				inline: true,
-				href: "#dialog-types",
-				closeButton: false,
-				transition: "none",
-				onClosed: function () {
+				"inline": true,
+				"href": "#dialog-types",
+				"closeButton": false,
+				"transition": "none",
+				"onClosed": function () {
 					CYPRESS.Manager.search();
 				}
 			} );
 
 			$( "#choice-flags" ).colorbox( {
-				inline: true,
-				href: "#dialog-flags",
-				closeButton: false,
-				transition: "none",
-				onClosed: function () {
+				"inline": true,
+				"href": "#dialog-flags",
+				"closeButton": false,
+				"transition": "none",
+				"onClosed": function () {
 					CYPRESS.Manager.search();
 				}
 			} );
@@ -1360,9 +1358,9 @@ $( document ).ready( function () { /** boot Cypress */
 						label = $self.data( "label" );
 
 					$self.iCheck( {
-						checkboxClass: "icheckbox",
-						radioClass: "icheckbox",
-						insert: "<div class=\"icheck-icon\"></div>" + label
+						"checkboxClass": "icheckbox",
+						"radioClass": "icheckbox",
+						"insert": "<div class=\"icheck-icon\"></div>" + label
 					} );
 				},
 				iCheckInitializeRarities = function () {
@@ -1370,8 +1368,8 @@ $( document ).ready( function () { /** boot Cypress */
 						label = $self.data( "label" );
 
 					$self.iCheck( {
-						checkboxClass: "icheckbox " + label.toLowerCase(),
-						insert: "<div class=\"icheck-icon\"></div>" + label
+						"checkboxClass": "icheckbox " + label.toLowerCase(),
+						"insert": "<div class=\"icheck-icon\"></div>" + label
 					} );
 				},
 				statusChange = function ( category ) {
