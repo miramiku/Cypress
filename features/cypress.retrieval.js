@@ -62,9 +62,9 @@ CYPRESS.EQUIPMENT_STYLE = {
 		CLASSES:             [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO" ],
 	//  CLASSES:             [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO", "ALC" ],
 		PHYSICAL_ATTRIBUTES: [ "SLASH", "STRIKE", "PIERCE" ],
-		SPECIAL_EFFECTS:     [ "hp", "mp", "str", "vit", "dex", "agi", "int", "pie", "luk" ],
-		RESISTANCE:          [ "poison", "paralyze", "petrify", "faint", "blind", "sleep", "silence", "charm", "confusion", "fear" ],
-		ATTRIBUTES:          [ "fire", "water", "wind", "earth", "light", "dark" ],
+		SPECIAL_EFFECTS:     [ "HP", "MP", "STR", "VIT", "DEX", "AGI", "INT", "PIE", "LUK" ],
+		RESISTANCE:          [ "POISON", "PARALYZE", "PETRIFY", "FAINT", "BLIND", "SLEEP", "SILENCE", "CHARM", "CONFUSION", "FEAR" ],
+		ATTRIBUTES:          [ "FIRE", "WATER", "WIND", "EARTH", "LIGHT", "DARK" ],
 		FLAGS:               [ "SELL", "TRADE", "STOLEN", "BLESSED", "CURSED", "USED" ]
 	},
 	REGEXP: { // 条件分岐用正規表現
@@ -417,7 +417,7 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 							var obj = {};
 
 							$.each( ORDERS.SPECIAL_EFFECTS, function () {
-								obj[ this ] = equipment[ COLUMN[ this.toUpperCase() ] ];
+								obj[ this ] = equipment[ COLUMN[ this ] ];
 							} );
 
 							return obj;
@@ -436,7 +436,7 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 					this.group( "special-effects" );
 					this.label( "特殊効果" );
 					$.each( ORDERS.SPECIAL_EFFECTS, function () {
-						that.signedInteger( this, COLUMN[ this.toUpperCase() ] );
+						that.signedInteger( this.toLowerCase(), COLUMN[ this ] );
 					} );
 					this.end();
 				}
@@ -448,7 +448,7 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 							var obj = {};
 
 							$.each( ORDERS.RESISTANCE, function () {
-								obj[ this ] = equipment[ COLUMN[ this.toUpperCase() ] ];
+								obj[ this ] = equipment[ COLUMN[ this ] ];
 							} );
 
 							return obj;
@@ -467,7 +467,7 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 					this.group( "resistance" );
 					this.label( "状態異常耐性" );
 					$.each( ORDERS.RESISTANCE, function () {
-						that.unsignedInteger( this, COLUMN[ this.toUpperCase() ] );
+						that.unsignedInteger( this.toLowerCase(), COLUMN[ this ] );
 					} );
 					this.end();
 				}
@@ -476,8 +476,8 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 			},
 			magicAttributesLine: function () {
 				var label = {
-						attack: "魔攻属性",
-						resist: "魔防属性"
+						ATTACK: "魔攻属性",
+						RESIST: "魔防属性"
 					},
 					that = this,
 					attributes = ( function () {
@@ -485,15 +485,15 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 								var obj = {};
 
 								$.each( ORDERS.ATTRIBUTES, function () {
-									 obj[ this ] = equipment[ COLUMN[ this.toUpperCase() + "_" + type.toUpperCase() ] ];
+									 obj[ this ] = equipment[ COLUMN[ this + "_" + type ] ];
 								} );
 
 								return obj;
 							};
 
 						return {
-							attack: setAttributes( "attack" ),
-							resist: setAttributes( "resist" )
+							ATTACK: setAttributes( "ATTACK" ),
+							RESIST: setAttributes( "RESIST" )
 						};
 					} () ),
 					isAllZero = ( function () {
@@ -507,8 +507,8 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 							};
 
 						return {
-							attack: checkAllZero( "attack" ),
-							resist: checkAllZero( "resist" )
+							ATTACK: checkAllZero( "ATTACK" ),
+							RESIST: checkAllZero( "RESIST" )
 						};
 					} () ),
 					build = function ( type ) {
@@ -516,7 +516,7 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 						that.label( label[ type ] );
 						if ( !isAllZero[ type ] ) {
 							$.each( attributes[ type ], function ( atr, val ) {
-								that.signedInteger( atr, COLUMN[ atr.toUpperCase() + "_" + type.toUpperCase() ] );
+								that.signedInteger( atr.toLowerCase(), COLUMN[ atr + "_" + type ] );
 							} );
 						} else {
 							that.card += "<span class=\"allZero\">補正なし</span>";
@@ -524,10 +524,10 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 						that.end();
 					};
 
-				if ( !isAllZero.attack || !isAllZero.resist ) {
+				if ( !isAllZero.ATTACK || !isAllZero.RESIST ) {
 					this.group( "magic-attributes" );
-					build( "attack" );
-					build( "resist" );
+					build( "ATTACK" );
+					build( "RESIST" );
 					this.end();
 				}
 
@@ -712,10 +712,9 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 						var data = [];
 
 						$.each( ORDERS.SPECIAL_EFFECTS, function () {
-							var column = this.toUpperCase(),
-								offset = equipment[ COLUMN[ column ] ];
+							var offset = equipment[ COLUMN[ this ] ];
 							if ( offset !== 0 ) {
-								data.push( column + ( 0 < offset ? "+" + offset : offset ) );
+								data.push( this.toLowerCase() + ( 0 < offset ? "+" + offset : offset ) );
 							}
 						} );
 
@@ -746,10 +745,9 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 						var data = [];
 
 						$.each( ORDERS.ATTRIBUTES, function () {
-							var column = this.toUpperCase(),
-								offset = equipment[ COLUMN[ column + "_RESIST" ] ];
+							var offset = equipment[ COLUMN[ this + "_RESIST" ] ];
 							if ( offset !== 0 ) {
-								data.push( ATTRIBUTES_J[ column ] + ( 0 < offset ? "+" + offset : offset ) );
+								data.push( ATTRIBUTES_J[ this ] + ( 0 < offset ? "+" + offset : offset ) );
 							}
 						} );
 
@@ -759,10 +757,9 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 						var data = [];
 
 						$.each( ORDERS.ATTRIBUTES, function () {
-							var column = this.toUpperCase(),
-								offset = equipment[ COLUMN[ column + "_ATTACK" ] ];
+							var offset = equipment[ COLUMN[ this + "_ATTACK" ] ];
 							if ( offset !== 0 ) {
-								data.push( ATTRIBUTES_J[ column ] + ( 0 < offset ? "+" + offset : offset ) );
+								data.push( ATTRIBUTES_J[ this ] + ( 0 < offset ? "+" + offset : offset ) );
 							}
 						} );
 
@@ -805,10 +802,9 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 							};
 
 						$.each( ORDERS.RESISTANCE, function () {
-							var column = this.toUpperCase(),
-								offset = equipment[ COLUMN[ column ] ];
+							var offset = equipment[ COLUMN[ this ] ];
 							if ( offset !== 0 ) {
-								data.push( RESISTANCE_J[ column ] + offset );
+								data.push( RESISTANCE_J[ this ] + offset );
 							}
 						} );
 
