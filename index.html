@@ -11,17 +11,7 @@
 	<meta name="description" content="Wizardry Online の装備品データを検索・抽出するシステムです。また、簡単な装備のん鍛錬シミュレート機能などもできます。">
 
 	<!-- scripts -->
-	<script src="features/cypress.retrieval.min.js?ver=1.2.5"></script>
-<!--
-	<script src="features/jquery.min.js"></script>
-	<script src="features/slidebars.min.js"></script>
-	<script src="features/ion.rangeSlider.min.js"></script>
-	<script src="features/colorbox.min.js"></script>
-	<script src="features/icheck.min.js"></script>
-	<script src="features/zeroclipboard.min.js"></script>
-	<script src="features/cypress.core.js"></script>
-	<script src="features/cypress.retrieval.js"></script>
--->
+	<script src="features/cypress.retrieval.min.js?ver=1.2.6"></script>
 
 	<!-- styles -->
 	<link href="styles/cypress-retrieval.css" rel="stylesheet" type="text/css">
@@ -94,6 +84,7 @@
 						</ul>
 						<h4>Changelog: 変更履歴</h4>
 						<ul>
+							<li>[2015-04-24] [v1.2.6] データベースの簡素化</li>
 							<li>[2015-04-24] [v1.2.5] 矢・銃弾の効率に関する項目に色付けしました</li>
 							<li>[2015-04-14] [v1.2.4] 装備データベースの仕様を一部変更しました</li>
 							<li>[2015-04-09] [v1.2.0] 鍛錬シミュレートと装備データのコピー機能を追加</li>
@@ -140,11 +131,11 @@
 			<div id="query-rarities">
 				<span class="query-label">品質</span>
 				<div class="control-box checkboxes">
-					<input type="checkbox" id="query-poor" data-label="Poor">
-					<input type="checkbox" id="query-normal" data-label="Normal">
-					<input type="checkbox" id="query-good" data-label="Good">
-					<input type="checkbox" id="query-master" data-label="Master">
-					<input type="checkbox" id="query-legend" data-label="Legend">
+					<input type="checkbox" id="query-poor"     data-label="Poor">
+					<input type="checkbox" id="query-normal"   data-label="Normal">
+					<input type="checkbox" id="query-good"     data-label="Good">
+					<input type="checkbox" id="query-master"   data-label="Master">
+					<input type="checkbox" id="query-legend"   data-label="Legend">
 					<input type="checkbox" id="query-artifact" data-label="Artifact">
 				</div><!-- .control-box.checkboxes -->
 			</div><!-- #query-rarities -->
