@@ -100,10 +100,10 @@ public class WizardryOnlineEquipmentJSONBuilder {
 		int DARK_ATTACK = 59;
 		int SELL = 60;
 		int TRADE = 61;
-		int STOLEN = 62;
-		int BLESSED = 63;
-		int CURSED = 64;
-		int USED = 65;
+		int USED = 62;
+		int STOLEN = 63;
+		int BLESSED = 64;
+		int CURSED = 65;
 		int LEVEL_FLOOR = 66;
 		int LEVEL_CEIL = 67;
 		int RESTRICTION = 68;
@@ -111,12 +111,11 @@ public class WizardryOnlineEquipmentJSONBuilder {
 		int WEPN = 70;
 		int STATUS_CHANGE = 71;
 		int PERCENT = 72;
-		int SCPN = 73;
-		int COMMENT = 74;
-		int SOURCE = 75;
-		int NOTES = 76;
-		int CHECKUP = 77;
-		int EVIDENCE = 78;
+		int COMMENT = 73;
+		int SOURCE = 74;
+		int NOTES = 75;
+		int CHECKUP = 76;
+		int EVIDENCE = 77;
 	}
 
 	/** 職業マスク（職業制限数値の算出に利用） */
@@ -136,30 +135,30 @@ public class WizardryOnlineEquipmentJSONBuilder {
 	/** 品質コード参照表と種別コード 対応表の構築 */
 	static {
 		// define rarity code
-		RARITY_CODE.put( "Poor", 0 );
-		RARITY_CODE.put( "Normal", 1 );
-		RARITY_CODE.put( "Good", 2 );
-		RARITY_CODE.put( "Master", 3 );
-		RARITY_CODE.put( "Legend", 4 );
-		RARITY_CODE.put( "Artifact", 5 );
+		RARITY_CODE.put( "Poor", 1 );
+		RARITY_CODE.put( "Normal", 2 );
+		RARITY_CODE.put( "Good", 3 );
+		RARITY_CODE.put( "Master", 4 );
+		RARITY_CODE.put( "Legend", 5 );
+		RARITY_CODE.put( "Artifact", 6 );
 
 		// define type code
-		TYPE_CODE.put( "暗器", 0 );
-		TYPE_CODE.put( "短剣", 1 );
-		TYPE_CODE.put( "片手剣", 2 );
-		TYPE_CODE.put( "両手剣", 3 );
-		TYPE_CODE.put( "刀", 4 );
-		TYPE_CODE.put( "片手斧", 5 );
-		TYPE_CODE.put( "両手斧", 6 );
-		TYPE_CODE.put( "槍", 7 );
-		TYPE_CODE.put( "片手鈍器", 8 );
-		TYPE_CODE.put( "両手鈍器", 9 );
-		TYPE_CODE.put( "両手杖", 10 );
-		TYPE_CODE.put( "弓", 11 );
-		TYPE_CODE.put( "矢", 12 );
-		TYPE_CODE.put( "銃", 13 );
-		TYPE_CODE.put( "銃弾", 14 );
-		TYPE_CODE.put( "双刃", 15 );
+		TYPE_CODE.put( "暗器", 1 );
+		TYPE_CODE.put( "短剣", 2 );
+		TYPE_CODE.put( "片手剣", 3 );
+		TYPE_CODE.put( "両手剣", 4 );
+		TYPE_CODE.put( "刀", 5 );
+		TYPE_CODE.put( "片手斧", 6 );
+		TYPE_CODE.put( "両手斧", 7 );
+		TYPE_CODE.put( "槍", 8 );
+		TYPE_CODE.put( "片手鈍器", 9 );
+		TYPE_CODE.put( "両手鈍器",10 );
+		TYPE_CODE.put( "両手杖", 11 );
+		TYPE_CODE.put( "弓", 12 );
+		TYPE_CODE.put( "矢", 13 );
+		TYPE_CODE.put( "銃", 14 );
+		TYPE_CODE.put( "銃弾", 15 );
+		TYPE_CODE.put( "双刃", 16 );
 		TYPE_CODE.put( "兜", 21 );
 		TYPE_CODE.put( "帽子", 22 );
 		TYPE_CODE.put( "頭巾", 23 );
@@ -216,9 +215,9 @@ public class WizardryOnlineEquipmentJSONBuilder {
 //			System.out.println( record.getCell( Column.NAME ).getStringCellValue() );
 
 			// basic information
-			buildStringData( Column.TYPE );
+			buildProcessedIntegerData( getListId( TYPE_CODE, Column.TYPE ) );
 			buildStringData( Column.NAME );
-			buildStringData( Column.RARITY );
+			buildProcessedIntegerData( getListId( RARITY_CODE, Column.RARITY ) );
 			buildIntegerData( Column.GRADE );
 
 			// capabilities
@@ -279,10 +278,10 @@ public class WizardryOnlineEquipmentJSONBuilder {
 			// flags
 			buildBooleanData( Column.SELL );
 			buildBooleanData( Column.TRADE );
+			buildBooleanData( Column.USED );
 			buildBooleanData( Column.STOLEN );
 			buildBooleanData( Column.BLESSED );
 			buildBooleanData( Column.CURSED );
-			buildBooleanData( Column.USED );
 
 			// revel restriction
 			buildIntegerData( Column.LEVEL_FLOOR );
@@ -298,7 +297,6 @@ public class WizardryOnlineEquipmentJSONBuilder {
 			// status change
 			buildStringData( Column.STATUS_CHANGE );
 			buildIntegerData( Column.PERCENT );
-			buildBooleanData( Column.SCPN );
 
 			// note
 			buildStringData( Column.COMMENT );
@@ -381,6 +379,16 @@ public class WizardryOnlineEquipmentJSONBuilder {
 		Cell cell = record.getCell( column );
 
 		json.append( "\"" ).append( cell != null ? cell.getStringCellValue() : "" ).append( "\"" ).append( DELIMITER );
+	}
+
+	/**
+	 * リスト項目の ID を取得する
+	 * @param list リスト
+	 * @param column 生データのコラム番号
+	 * @return リストID
+	 */
+	private static int getListId( HashMap< String, Integer > list, int column ) {
+		return list.get( record.getCell( column ).getStringCellValue() );
 	}
 
 	/**

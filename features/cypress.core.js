@@ -6,12 +6,12 @@ var CYPRESS = {};
 /** CYPRESS で利用する定数 */
 CYPRESS.CONSTS = {
 	/** 現状キャップ */
-	CAP: {
+	CAPS: {
 		GRADE: 20,
 		LEVEL: 70
 	},
 	/** 職業マスク */
-	CLASSMASK: {
+	CLASSMASKS: {
 		FIG:   1,
 		THI:   2,
 		MAG:   4,
@@ -77,10 +77,10 @@ CYPRESS.COLUMN = {
 	DARK_ATTACK:   46,
 	SELL:          47,
 	TRADE:         48,
-	STOLEN:        49,
-	BLESSED:       50,
-	CURSED:        51,
-	USED:          52,
+	USED:          49,
+	STOLEN:        50,
+	BLESSED:       51,
+	CURSED:        52,
 	LEVEL_FLOOR:   53,
 	LEVEL_CEIL:    54,
 	RESTRICTION:   55,
@@ -88,12 +88,11 @@ CYPRESS.COLUMN = {
 	WEPN:          57,
 	STATUS_CHANGE: 58,
 	PERCENT:       59,
-	SCPN:          60,
-	COMMENTS:      61,
-	SOURCES:       62,
-	NOTES:         63,
-	CHECKUP:       64,
-	EVIDENCE:      65
+	COMMENTS:      60,
+	SOURCES:       61,
+	NOTES:         62,
+	CHECKUP:       63,
+	EVIDENCE:      64
 };
 
 /** 装備データベース */
@@ -101,6 +100,54 @@ CYPRESS.EQUIPMENT = ( function () {
 	"use strict";
 
 	var DB_URL = "https://dl.dropboxusercontent.com/u/6164477/wizon/equipment.json",
+		RARITIES = {
+			1: "Poor",
+			2: "Normal",
+			3: "Good",
+			4: "Master",
+			5: "Legend",
+			6: "Artifact"
+		},
+		TYPES = {
+			 1: "暗器",
+			 2: "短剣",
+			 3: "片手剣",
+			 4: "両手剣",
+			 5: "刀",
+			 6: "片手斧",
+			 7: "両手斧",
+			 8: "槍",
+			 9: "片手鈍器",
+			10: "両手鈍器",
+			11: "両手杖",
+			12: "弓",
+			13: "矢",
+			14: "銃",
+			15: "銃弾",
+			16: "双刃",
+			21: "兜",
+			22: "帽子",
+			26: "鎧",
+			27: "上衣",
+			28: "外衣",
+			31: "手甲",
+			32: "手袋",
+			33: "腕輪",
+			36: "脚鎧",
+			37: "衣服",
+			38: "下衣",
+			41: "鉄靴",
+			42: "革靴",
+			43: "靴",
+			46: "小型盾",
+			47: "中型盾",
+			48: "大型盾",
+			51: "外套",
+			56: "指輪",
+			57: "耳飾り",
+			58: "首飾り",
+			59: "ベルト"
+		},
 		_equipment = {};
 
 	$.ajax( {
@@ -109,11 +156,16 @@ CYPRESS.EQUIPMENT = ( function () {
 		dataType: "json",
 		async: false,
 		success: function( data ) {
-			var records = 0;
+			var RARITY = CYPRESS.COLUMN.RARITY,
+				TYPE = CYPRESS.COLUMN.TYPE,
+				records = 0;
 
 			_equipment = data.equipment;
 
 			$.each( _equipment, function () {
+				this[ RARITY ] = RARITIES[ this[ RARITY ] ];
+				this[ TYPE ] = TYPES[ this[ TYPE ] ];
+
 				records += 1;
 			} );
 
