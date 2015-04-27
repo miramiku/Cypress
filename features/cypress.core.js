@@ -101,6 +101,54 @@ CYPRESS.EQUIPMENT = ( function () {
 
 //	var DB_URL = "https://dl.dropboxusercontent.com/u/6164477/wizon/equipment.json",
 	var DB_URL = "https://dl.dropboxusercontent.com/u/6164477/dev/equipment.json",
+		RARITIES = {
+			1: "Poor",
+			2: "Normal",
+			3: "Good",
+			4: "Master",
+			5: "Legend",
+			6: "Artifact"
+		},
+		TYPES = {
+			 1: "暗器",
+			 2: "短剣",
+			 3: "片手剣",
+			 4: "両手剣",
+			 5: "刀",
+			 6: "片手斧",
+			 7: "両手斧",
+			 8: "槍",
+			 9: "片手鈍器",
+			10: "両手鈍器",
+			11: "両手杖",
+			12: "弓",
+			13: "矢",
+			14: "銃",
+			15: "銃弾",
+			16: "双刃",
+			21: "兜",
+			22: "帽子",
+			26: "鎧",
+			27: "上衣",
+			28: "外衣",
+			31: "手甲",
+			32: "手袋",
+			33: "腕輪",
+			36: "脚鎧",
+			37: "衣服",
+			38: "下衣",
+			41: "鉄靴",
+			42: "革靴",
+			43: "靴",
+			46: "小型盾",
+			47: "中型盾",
+			48: "大型盾",
+			51: "外套",
+			56: "指輪",
+			57: "耳飾り",
+			58: "首飾り",
+			59: "ベルト"
+		},
 		_equipment = {};
 
 	$.ajax( {
@@ -109,11 +157,16 @@ CYPRESS.EQUIPMENT = ( function () {
 		dataType: "json",
 		async: false,
 		success: function( data ) {
-			var records = 0;
+			var RARITY = CYPRESS.COLUMN.RARITY,
+				TYPE = CYPRESS.COLUMN.TYPE,
+				records = 0;
 
 			_equipment = data.equipment;
 
 			$.each( _equipment, function () {
+				this[ RARITY ] = RARITIES[ this[ RARITY ] ];
+				this[ TYPE ] = TYPES[ this[ TYPE ] ];
+
 				records += 1;
 			} );
 

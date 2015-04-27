@@ -174,9 +174,9 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 		// consts
 	var COLUMN               = CYPRESS.COLUMN,
 		CLASSMASKS           = CYPRESS.CONSTS.CLASSMASKS,
+		STANDARD_LEVEL_FLOOR = CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR,
 		ORDERS               = CYPRESS.EQUIPMENT_STYLE.ORDERS,
 		REGEXP               = CYPRESS.EQUIPMENT_STYLE.REGEXP,
-		STANDARD_LEVEL_FLOOR = CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR,
 
 		// dependence
 		BuilderUtils = CYPRESS.BuilderUtils,
@@ -247,27 +247,13 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 				return this;
 			},
 
-			// concrete: generic
+			// concrete
+			rarity: function () {
+				this.direct( "rarity", COLUMN.RARITY );
+				return this;
+			},
 			type: function () {
 				this.direct( "type", COLUMN.TYPE );
-				return this;
-			},
-			grade: function () {
-				this.direct( "grade", COLUMN.GRADE );
-				return this;
-			},
-			restriction: function () {
-				this.direct( "restriction", COLUMN.RESTRICTION );
-				return this;
-			},
-			name: function () {
-				this.direct( "name", COLUMN.NAME );
-				return this;
-			},
-
-			// concrete: special
-			rarity: function () {
-				this.card += "<span class=\"rarity\">" + equipment[ COLUMN.RARITY ] + "</span>";
 				return this;
 			},
 			level: function () {
@@ -287,6 +273,18 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 
 				this.card += "<span class=\"level " + sign + "\">" + floorText + "～" + ceilText + "</span>";
 
+				return this;
+			},
+			grade: function () {
+				this.direct( "grade", COLUMN.GRADE );
+				return this;
+			},
+			name: function () {
+				this.direct( "name", COLUMN.NAME );
+				return this;
+			},
+			restriction: function () {
+				this.direct( "restriction", COLUMN.RESTRICTION );
 				return this;
 			},
 			powers: function () {
