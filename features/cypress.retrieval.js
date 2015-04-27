@@ -68,6 +68,7 @@ CYPRESS.EQUIPMENT_STYLE = {
 		FLAGS:               [ "SELL", "TRADE", "STOLEN", "BLESSED", "CURSED", "USED" ]
 	},
 	REGEXP: { // 条件分岐用正規表現
+		DISABLE_FORGE:               /^Legend$|^Artifact$/,
 		RANGED_WEAPONS:              /^弓$|^銃$/,
 		SHOTS:                       /^矢$|^銃弾$/,
 		ACCESSORIES:                 /^指輪$|^耳飾り$|^首飾り$|^ベルト$/,
@@ -575,7 +576,7 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 			},
 			toolbox: function () {
 				var ableForge = ( function () {
-						if ( /^Legend$|^Artifact$/.test( equipment[ COLUMN.RARITY ] ) ) {
+						if ( REGEXP.DISABLE_FORGE.test( equipment[ COLUMN.RARITY ] ) ) {
 							return " disabled";
 						} else if ( REGEXP.SHOTS.test( type ) ) {
 							return " disabled";
