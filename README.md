@@ -84,7 +84,7 @@ Wizardry Online の装備を検索または抽出を行います。
 		* cypress-retrieval.css - 公開用圧縮スタイルファイル。必要なすべてのスタイルを包含している
 	* jQuery プラグイン用
 		* range-slider.less - rangeSlider
-		* slidebars.less - slidebars
+		* slidebars.less - Slidebars
 * index.html - Cypress 本体ページ
 
 ## Requirement
@@ -92,11 +92,20 @@ Wizardry Online の装備を検索または抽出を行います。
 
 | jQuery plugin                                                                | 利用箇所                |
 | :--------------------------------------------------------------------------- | :--------------------- |
-| [slidebars](http://plugins.adchsm.me/slidebars/)                             | 検索条件パネル           |
-| [rangeSlider](http://ionden.com/a/plugins/ion.rangeSlider/en.html)           | グレード・レベルの範囲指定 |
+| [Slidebars](http://plugins.adchsm.me/slidebars/)                             | 検索条件パネル           |
+| [rangeSlider](http://ionden.com/a/plugins/ion.rangeSlider/)                  | グレード・レベルの範囲指定 |
 | [iCheck](http://fronteed.com/iCheck/)                                        | チェック・ラジオボックス   |
 | [Colorbox](http://www.jacklmoore.com/colorbox/)                              | ダイアログウィンドウ      |
 | [jquery.zerclipboard](https://github.com/zeroclipboard/jquery.zeroclipboard) | 装備データのコピー        |
+
+## Licenses
+
+* Colorbox: MIT license, http://www.jacklmoore.com/colorbox/
+* iCheck: MIT license, http://fronteed.com/iCheck/
+* jQuery: MIT license, https://jquery.org/license/
+* jquery.zerclipboard: MIT license, https://github.com/zeroclipboard/jquery.zeroclipboard
+* rangeSlider: MIT license, http://ionden.com/a/plugins/ion.rangeSlider/
+* Slidebars: MIT license, http://plugins.adchsm.me/slidebars/
 
 ## Changelog
 [Cyprss wiki Major Changes](https://github.com/miramiku/Cypress/wiki/Major-Changes)
