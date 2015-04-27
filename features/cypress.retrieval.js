@@ -329,8 +329,8 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 			transfarTags: function () {
 				this.buildTransfarTagData( "sell", "[売却不可]" );
 				this.buildTransfarTagData( "trade", "[トレード不可]" );
-				this.buildTransfarTagData( "stolen", "<img src=\"images/stolen.png\" alt=\"略奪されない\">略奪されない" );
 				this.buildSupplimentTagData( "used", "使用後トレード不可" );
+				this.buildTransfarTagData( "stolen", "<img src=\"images/stolen.png\" alt=\"略奪されない\">略奪されない" );
 
 				return this;
 			},
