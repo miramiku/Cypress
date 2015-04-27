@@ -108,7 +108,7 @@ Wizardry Online の装備を検索または抽出を行います。
 * Slidebars: MIT license, http://plugins.adchsm.me/slidebars/
 
 ## Changelog
-[Cyprss wiki Major Changes](https://github.com/miramiku/Cypress/wiki/Major-Changes)
+[Cyprss wiki Changelog](https://github.com/miramiku/Cypress/wiki/Changelog)
 
 ## Author
 [みく](https://github.com/miramiku)

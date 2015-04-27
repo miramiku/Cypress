@@ -88,19 +88,19 @@ CYPRESS.COLUMN = {
 	WEPN:          57,
 	STATUS_CHANGE: 58,
 	PERCENT:       59,
-	SCPN:          60,
-	COMMENTS:      61,
-	SOURCES:       62,
-	NOTES:         63,
-	CHECKUP:       64,
-	EVIDENCE:      65
+	COMMENTS:      60,
+	SOURCES:       61,
+	NOTES:         62,
+	CHECKUP:       63,
+	EVIDENCE:      64
 };
 
 /** 装備データベース */
 CYPRESS.EQUIPMENT = ( function () {
 	"use strict";
 
-	var DB_URL = "https://dl.dropboxusercontent.com/u/6164477/wizon/equipment.json",
+//	var DB_URL = "https://dl.dropboxusercontent.com/u/6164477/wizon/equipment.json",
+	var DB_URL = "https://dl.dropboxusercontent.com/u/6164477/dev/equipment.json",
 		_equipment = {};
 
 	$.ajax( {

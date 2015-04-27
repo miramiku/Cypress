@@ -535,16 +535,16 @@ CYPRESS.getEquipmentCard = function ( catalog ) {
 			},
 			otherDataLine: function () {
 				var whenEquipped = equipment[ COLUMN.WHEN_EQUIPPED ],
-					percent = equipment[ COLUMN.PERCENT ];
+					statusChange = equipment[ COLUMN.STATUS_CHANGE ];
 
-				if ( whenEquipped !== "" || 0 < percent ) {
+				if ( whenEquipped !== "" || statusChange !== "" ) {
 					this.group( "other-data" );
-					this.card += equipment[ COLUMN.WHEN_EQUIPPED ] === "" ?
+					this.card += whenEquipped === "" ?
 						"<span class=\"when-equipped zero\"></span>" :
 						( "<span class=\"when-equipped " + ( equipment[ COLUMN.WEPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.WHEN_EQUIPPED ] + "</span>" );
-					this.card += 0 < equipment[ COLUMN.PERCENT ] ?
-						( "<span class=\"status-change " + ( equipment[ COLUMN.SCPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.STATUS_CHANGE ] + " (" + equipment[ COLUMN.PERCENT ] + "%)</span>" ) :
-						"<span class=\"status-change zero\"></span>";
+					this.card += statusChange === "" ?
+						"<span class=\"status-change zero\"></span>":
+						( "<span class=\"status-change " + ( 0 < equipment[ COLUMN.PERCENT ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.STATUS_CHANGE ] + " (" + Math.abs( equipment[ COLUMN.PERCENT ] ) + "%)</span>" );
 					this.end();
 				}
 
