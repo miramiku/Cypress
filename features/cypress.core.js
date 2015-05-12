@@ -180,7 +180,7 @@ CYPRESS.EQUIPMENT = ( function () {
 /**
  * 装備検索関数。
  * @param request 検索条件
- * @return 整理番号（配列）
+ * @return 装備データオブジェクトの配列
  */
 CYPRESS.search = ( function () {
 	"use strict";
@@ -190,7 +190,11 @@ CYPRESS.search = ( function () {
 
 			$.each( CYPRESS.EQUIPMENT, function ( catalog, record ) {
 				if ( request( this ) ) {
-					catalogs.push( catalog );
+					catalogs.push( {
+						catalog: catalog,
+						forge: 0,
+						equipment: [].concat( record )
+					} );
 				}
 			} );
 
