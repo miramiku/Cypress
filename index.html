@@ -116,65 +116,86 @@
 		</div><!-- #equipments -->
 	</div><!-- container -->
 
-	<div id="sorting-pane" class="sb-slidebar sb-left sd-width-custom sb-style-overlay" data-sb-width="300px">
-		<ul>
-			<li>品質</li>
-			<li>レベル</li>
-			<li>グレード</li>
-			<li>名前</li>
-			<li>物理</li>
-			<li>魔法</li>
-			<li>耐久</li>
-			<li>重量</li>
-			<li>硬度</li>
-			<li>ステータス
-				<ul>
-					<li>HP</li>
-					<li>MP</li>
-					<li>STR</li>
-					<li>VIT</li>
-					<li>DEX</li>
-					<li>AGI</li>
-					<li>INT</li>
-					<li>PIE</li>
-					<li>LUK</li>
-				</ul>
-			</li>
-			<li>状態異常
-				<ul>
-					<li>毒</li>
-					<li>麻痺</li>
-					<li>石化</li>
-					<li>気絶</li>
-					<li>暗闇</li>
-					<li>睡眠</li>
-					<li>沈黙</li>
-					<li>魅了</li>
-					<li>混乱</li>
-					<li>恐怖</li>
-				</ul>
-			</li>
-			<li>魔法防御
-				<ul>
-					<li>火防御</li>
-					<li>水防御</li>
-					<li>風防御</li>
-					<li>地防御</li>
-					<li>光防御</li>
-					<li>闇防御</li>
-				</ul>
-			</li>
-			<li>魔法攻撃
-				<ul>
-					<li>火攻撃</li>
-					<li>水攻撃</li>
-					<li>風攻撃</li>
-					<li>地攻撃</li>
-					<li>光攻撃</li>
-					<li>闇攻撃</li>
-				</ul>
-			</li>
-		</ul>
+	<div id="sorting-pane"   class="sb-slidebar sb-left  sb-width-custom sb-style-overlay" data-sb-width="300px">
+		<div class="sort-checkbox-top-category">
+			<input id="catalog-order" type="radio" name="sort-category" data-label="標準" checked>
+		</div>
+		<div class="sort-checkbox-top-category">
+			<input id="lexicographic-order" type="radio" name="sort-category" data-label="テキスト">
+			<button id="lexicographic-sort-order-select" data-order="ASC"><img src="images/lexicographic-sort-asc.png"> 辞書順　</button>
+		</div>
+		<div id="lexicographic-sort-list" class="sorting-option">
+			<ul>
+				<li>名前</li>
+				<li>装備時付与効果</li>
+				<li>状態異常</li>
+			</ul>
+		</div><!-- #lexicographic-sort -->
+
+		<div class="sort-checkbox-top-category">
+			<input id="numeric-order" type="radio" name="sort-category" data-label="順序・数値">
+			<button id="numeric-sort-order-select" data-order="ASC"><img src="images/numeric-sort-asc.png"> 低→高</button>
+		</div>
+
+		<div id="numeric-sort-list" class="sorting-option">
+			<ul>
+				<li>品質</li>
+				<li>レベル</li>
+				<li>グレード</li>
+				<li>物理</li>
+				<li>魔法</li>
+				<li>耐久</li>
+				<li>重量</li>
+				<li>硬度</li>
+				<li>ステータス
+					<ul>
+						<li>HP</li>
+						<li>MP</li>
+						<li>STR</li>
+						<li>VIT</li>
+						<li>DEX</li>
+						<li>AGI</li>
+						<li>INT</li>
+						<li>PIE</li>
+						<li>LUK</li>
+					</ul>
+				</li>
+				<li>状態異常
+					<ul>
+						<li>毒</li>
+						<li>麻痺</li>
+						<li>石化</li>
+						<li>気絶</li>
+						<li>暗闇</li>
+						<li>睡眠</li>
+						<li>沈黙</li>
+						<li>魅了</li>
+						<li>混乱</li>
+						<li>恐怖</li>
+					</ul>
+				</li>
+				<li>魔法防御
+					<ul>
+						<li>火防御</li>
+						<li>水防御</li>
+						<li>風防御</li>
+						<li>地防御</li>
+						<li>光防御</li>
+						<li>闇防御</li>
+					</ul>
+				</li>
+				<li>魔法攻撃
+					<ul>
+						<li>火攻撃</li>
+						<li>水攻撃</li>
+						<li>風攻撃</li>
+						<li>地攻撃</li>
+						<li>光攻撃</li>
+						<li>闇攻撃</li>
+					</ul>
+				</li>
+			</ul>
+		</div><!-- #order-sort -->
 	</div><!-- #sorting-pane -->
 
 	<div id="retrieval-pane" class="sb-slidebar sb-right sb-width-custom sb-style-overlay" data-sb-width="300px">

@@ -1280,12 +1280,7 @@ $( document ).ready( function () {
 	( function () {
 		// initialize slidebars
 		( function () {
-			$( "#toolbox-button-box" ).click( function () {
-				$( "#toolbox-button" ).toggleClass( "close" );
-				return false;
-			} );
-
-			 mySlidebars.slidebars.open( "right" );
+//			 mySlidebars.slidebars.open( "right" );
 		} () );
 
 		// initialize ionRangeSlider
@@ -1384,6 +1379,9 @@ $( document ).ready( function () {
 			} );
 
 			$( "#dialog-flags .control-box input" )
+			.each( iCheckInitialize );
+
+			$( "#sorting-pane [name=sort-category]" )
 			.each( iCheckInitialize );
 		} () );
 	} () );
@@ -1524,6 +1522,45 @@ $( document ).ready( function () {
 
 				$( "#usage-button" ).prop( "disabled", true );
 			} );
+
+			// ソートの昇順・降順切り替え
+			( function () {
+				var changeOrder = function ( text ) {
+						return function () {
+							var $this = $( this ),
+								order = $this.data( "order" ) === "ASC" ? "DESC" : "ASC";
+
+							$( this ).html( text[ order ] );
+							$this.data( "order", order );
+						};
+					};
+
+				$( "#lexicographic-sort-order-select" ).bind( "click", changeOrder( {
+					ASC:  "<img src=\"images/lexicographic-sort-asc.png\">  辞書順　",
+					DESC: "<img src=\"images/lexicographic-sort-desc.png\"> 逆辞書順"
+				} ) );
+
+				$( "#numeric-sort-order-select" ).bind( "click", changeOrder( {
+					ASC:  "<img src=\"images/numeric-sort-asc.png\">  低→高",
+					DESC: "<img src=\"images/numeric-sort-desc.png\"> 高→低"
+				} ) );
+			} () );
+
+			$( "#lexicographic-order" )
+				.on( "ifChecked", function () {
+					$( "#lexicographic-sort-list" ).slideDown();
+				} )
+				.on( "ifUnchecked", function () {
+					$( "#lexicographic-sort-list" ).slideUp();
+				} );
+
+			$( "#numeric-order" )
+				.on( "ifChecked", function () {
+					$( "#numeric-sort-list" ).slideDown();
+				} )
+				.on( "ifUnchecked", function () {
+					$( "#numeric-sort-list" ).slideUp();
+				} );
 		} () );
 
 		// Equipment Card Toolbox
@@ -1570,4 +1607,6 @@ $( document ).ready( function () {
 	$( "#usage-button" ).click();
 
 	$( "#equipment-name" ).prop( "placeholder", "例：" + CYPRESS.Manager.getEquipmentName() );
+
+	mySlidebars.slidebars.open( "left" );
 } );
