@@ -1118,23 +1118,29 @@ CYPRESS.makeRequest = function () {
 CYPRESS.makeCompareFunction = function () {
 	"use strict";
 
-	var _compare;
+	var COLUMN = CYPRESS.COLUMN,
+		CONFIG = CYPRESS.SORT_CONFIG,
 
-	       if ( $( "#catalog-order" ).prop( "checked" ) ) {
+		order = CONFIG.order === "ASC" ? 1 : -1,
+		_compare;
+
+	switch ( CONFIG.category ) {
+	case "LAXICOGRAPHIC":
 		_compare = function ( a, b ) {
-				return a.catalog - b.catalog;
-			};
-	} else if ( $( "#lexicographic-order" ).prop( "checked" ) ) {
-//			<input id="order-name"          type="radio" name="laxicographic-sort-order" data-label="装備名" checked>
-//			<input id="order-when-equipped" type="radio" name="laxicographic-sort-order" data-label="装備時付与効果">
-//			<input id="order-status-change" type="radio" name="laxicographic-sort-order" data-label="状態異常">
+			return ( a.equipment[ COLUMN[ CONFIG.key ] ] > b.equipment[ COLUMN[ CONFIG.key ] ] ?  1 :
+				     a.equipment[ COLUMN[ CONFIG.key ] ] < b.equipment[ COLUMN[ CONFIG.key ] ] ? -1 :
+				                                                                                  0 ) * order;
+		};
+		break;
+	case "NUMERIC":
 		_compare = function ( a, b ) {
-				return b.catalog - a.catalog;
-			};
-	} else { // $( "#numeric-order" ).prop( "checked" ) => true
+			return b.catalog - a.catalog;
+		};
+		break;
+	default: // case "CATALOG"
 		_compare = function ( a, b ) {
-				return b.catalog - a.catalog;
-			};
+			return a.catalog - b.catalog;
+		};
 	}
 
 	return _compare;
@@ -1370,50 +1376,53 @@ $( document ).ready( function () {
 						"radioClass": "icheckbox",
 						"insert": "<div class=\"icheck-icon\"></div>" + label
 					} );
-				},
-				iCheckInitializeRarities = function () {
-					var $self = $( this ),
-						label = $self.data( "label" );
+				};
 
-					$self.iCheck( {
-						"checkboxClass": "icheckbox " + label.toLowerCase(),
-						"insert": "<div class=\"icheck-icon\"></div>" + label
-					} );
-				},
-				statusChange = function ( category ) {
-					return function ( event ) {
+			// #retrieval-pane
+			( function () {
+				var iCheckInitializeRarities = function () {
 						var $self = $( this ),
 							label = $self.data( "label" );
 
-						CYPRESS.Manager.setStatus( category, label, $self.prop( "checked" ) );
+						$self.iCheck( {
+							"checkboxClass": "icheckbox " + label.toLowerCase(),
+							"insert": "<div class=\"icheck-icon\"></div>" + label
+						} );
+					},
+					statusChange = function ( category ) {
+						return function ( event ) {
+							var $self = $( this ),
+								label = $self.data( "label" );
 
-						CYPRESS.Manager.search();
+							CYPRESS.Manager.setStatus( category, label, $self.prop( "checked" ) );
+							CYPRESS.Manager.search();
+						};
 					};
-				};
 
-			$( "#query-rarities input" )
-			.each( iCheckInitializeRarities )
-			.on( "ifChanged", statusChange( "rarity" ) );
+				$( "#query-rarities input" )
+					.each( iCheckInitializeRarities )
+					.on( "ifChanged", statusChange( "rarity" ) );
 
-			$( "#query-classes input" )
-			.each( iCheckInitialize )
-			.on( "ifChanged", statusChange( "class" ) );
+				$( "#query-classes input" )
+					.each( iCheckInitialize )
+					.on( "ifChanged", statusChange( "class" ) );
 
-			$( "#dialog-types .control-box input" )
-			.each( iCheckInitialize );
+				$( "#dialog-types .control-box input" )
+					.each( iCheckInitialize );
 
-			$( "#wrap-weapons input, #wrap-protective-gear input, #wrap-accessories input" )
-			.on( "ifChanged", function ( event ) {
-				var $self = $( this ),
-					label = $self.data( "label" );
+				$( "#wrap-weapons input, #wrap-protective-gear input, #wrap-accessories input" )
+					.on( "ifChanged", function ( event ) {
+						var $self = $( this ),
+							label = $self.data( "label" );
 
-				CYPRESS.Manager.setStatus( "type", label, $self.prop( "checked" ) );
-			} );
+						CYPRESS.Manager.setStatus( "type", label, $self.prop( "checked" ) );
+					} );
 
-			$( "#dialog-flags .control-box input" )
-			.each( iCheckInitialize );
+				$( "#dialog-flags .control-box input" )
+					.each( iCheckInitialize );
+			} () );
 
-			// ソートペイン
+			// #sort-pane
 			( function () {
 				var changeConfig = function ( category, key, order ) {
 						var config = CYPRESS.SORT_CONFIG;
@@ -1438,25 +1447,28 @@ $( document ).ready( function () {
 							$( "#" + category + "-sort-order-change" ).prop( "disabled", true );
 						};
 					};
-
 				$( "#sorting-pane [name=sort-category]" )
-				.each( iCheckInitialize );
+					.each( iCheckInitialize );
 
-				$( "#lexicographic-sort-list input" )
-				.each( iCheckInitialize );
+				$( "#lexicographic-sort-list input, #numeric-sort-list input" )
+					.each( iCheckInitialize )
+					.on( "ifChecked", function () {
+						CYPRESS.SORT_CONFIG.key = $( this ).data( "key" );
+						console.log( CYPRESS.SORT_CONFIG.category + " : " + CYPRESS.SORT_CONFIG.key + " : " + CYPRESS.SORT_CONFIG.order );
+					} );
 
 				$( "#catalog-order" )
-				.on( "ifChecked", function () {
-					changeConfig( "CATALOG", "CATALOG", "ASC" );
-				} );
+					.on( "ifChecked", function () {
+						changeConfig( "CATALOG", "CATALOG", "ASC" );
+					} );
 
 				$( "#lexicographic-order" )
-				.on( "ifChecked", checkedBehavior( "lexicographic" ) )
-				.on( "ifUnchecked", uncheckedBehavior( "lexicographic" ) );
+					.on( "ifChecked",     checkedBehavior( "lexicographic" ) )
+					.on( "ifUnchecked", uncheckedBehavior( "lexicographic" ) );
 
 				$( "#numeric-order" )
-				.on( "ifChecked", checkedBehavior( "numeric" ) )
-				.on( "ifUnchecked", uncheckedBehavior( "numeric" ) );
+					.on( "ifChecked",     checkedBehavior( "numeric" ) )
+					.on( "ifUnchecked", uncheckedBehavior( "numeric" ) );
 			} () );
 		} () );
 	} () );
@@ -1508,11 +1520,11 @@ $( document ).ready( function () {
 
 				// multiple -> simple
 				$( "#query-" + category )
-				.on( "ifToggled", m2s( category, simples ) )
-				.on( "ifDeterminate", m2s( category, simples ) )
-				.next().next()
-				.mouseover( addHover( simples ) )
-				.mouseout( removeHover( simples ) );
+					.on( "ifToggled", m2s( category, simples ) )
+					.on( "ifDeterminate", m2s( category, simples ) )
+					.next().next()
+					.mouseover( addHover( simples ) )
+					.mouseout( removeHover( simples ) );
 
 				// simple -> multiple
 				$( simples ).on( "ifToggled", s2m( category, simples ) );
@@ -1522,10 +1534,11 @@ $( document ).ready( function () {
 				var simples = "#wrap-protective-gear ." + category;
 
 				// multiple -> simple
-				$( "#query-" + category ).on( "ifToggled", m2s( category, simples ) )
-				.next().next()
-				.mouseover( addHover( simples ) )
-				.mouseout( removeHover( simples ) );
+				$( "#query-" + category )
+					.on( "ifToggled", m2s( category, simples ) )
+					.next().next()
+					.mouseover( addHover( simples ) )
+					.mouseout( removeHover( simples ) );
 
 				// simple -> multiple
 				$( simples ).on( "ifToggled", s2m( category, simples ) );
@@ -1607,18 +1620,21 @@ $( document ).ready( function () {
 
 							$( this ).html( text[ order ] );
 							$this.data( "order", order );
+							CYPRESS.SORT_CONFIG.order = order;
 						};
 					};
 
-				$( "#lexicographic-sort-order-change" ).bind( "click", changeOrder( {
-					ASC:  "<span class=\"icon\">&#xe603;</span> 辞書順　",
-					DESC: "<span class=\"icon\">&#xe602;</span> 逆辞書順"
-				} ) );
+				$( "#lexicographic-sort-order-change" )
+					.bind( "click", changeOrder( {
+						ASC:  "<span class=\"icon\">&#xe603;</span> 辞書順　",
+						DESC: "<span class=\"icon\">&#xe602;</span> 逆辞書順"
+					} ) );
 
-				$( "#numeric-sort-order-change" ).bind( "click", changeOrder( {
-					ASC:  "<span class=\"icon\">&#xe601;</span> 低 → 高",
-					DESC: "<span class=\"icon\">&#xe600;</span> 高 → 低"
-				} ) );
+				$( "#numeric-sort-order-change" )
+					.bind( "click", changeOrder( {
+						ASC:  "<span class=\"icon\">&#xe601;</span> 低 → 高",
+						DESC: "<span class=\"icon\">&#xe600;</span> 高 → 低"
+					} ) );
 			} () );
 		} () );
 
