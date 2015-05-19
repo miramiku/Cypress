@@ -189,17 +189,18 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 		BuilderUtils = CYPRESS.BuilderUtils,
 
 		// field
-		type = equipment[ COLUMN.TYPE ],
+		record = equipment.equipment,
+		type = record[ COLUMN.TYPE ],
 
 		// method
 		buildCard = {
 			card: "<button class=\"data-copy\"><img src=\"images/copy-icon.png\" alt=\"copy equipment data\"></button>",
 
 			buildTransfarTagData: function ( column, content ) {
-				this.card += "<span class=\"" + column + "\">" + ( equipment[ COLUMN[ column.toUpperCase() ] ] ? "" : content ) + "</span>";
+				this.card += "<span class=\"" + column + "\">" + ( record[ COLUMN[ column.toUpperCase() ] ] ? "" : content ) + "</span>";
 			},
 			buildSupplimentTagData: function ( column, text ) {
-				if ( equipment[ COLUMN[ column.toUpperCase() ] ] ) {
+				if ( record[ COLUMN[ column.toUpperCase() ] ] ) {
 					this.card += "<span class=\"" + column + "\"><img src=\"images/" + column + ".png\" alt=\"\">" + text + "</span>";
 				}
 			},
@@ -224,14 +225,14 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 
 			// generic
 			unsignedInteger: function ( className, column ) {
-				var value = equipment[ column ];
+				var value = record[ column ];
 
 				this.card += "<span class=\"" + className + ( value === 0 ? " zero" : " positive" ) + "\">" + value + "</span>";
 
 				return this;
 			},
 			signedInteger: function ( className, column ) {
-				var value = equipment[ column ],
+				var value = record[ column ],
 					sign = "zero",
 					data = 0;
 
@@ -248,7 +249,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 				return this;
 			},
 			direct: function ( className, column ) {
-				this.card += "<span class=\"" + className + "\">" + equipment[ column ] + "</span>";
+				this.card += "<span class=\"" + className + "\">" + record[ column ] + "</span>";
 				return this;
 			},
 
@@ -262,9 +263,9 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 				return this;
 			},
 			level: function () {
-				var STDLVF = STANDARD_LEVEL_FLOOR[ equipment[ COLUMN.GRADE ] ],
-					floor  = equipment[ COLUMN.LEVEL_FLOOR ],
-					ceil   = equipment[ COLUMN.LEVEL_CEIL ],
+				var STDLVF = STANDARD_LEVEL_FLOOR[ record[ COLUMN.GRADE ] ],
+					floor  = record[ COLUMN.LEVEL_FLOOR ],
+					ceil   = record[ COLUMN.LEVEL_CEIL ],
 
 					floorText = "Lv " + floor,
 					ceilText  = ceil === -1 ? "" : "Lv " + ceil,
@@ -295,25 +296,25 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 			powers: function () {
 				var offenseOrDefense = BuilderUtils.isWeapon( type ) ? "weapons" : "guards";
 
-				this.card += "<span class=\"physical " + offenseOrDefense + "\">" + equipment[ COLUMN.PHYSICAL ] + "</span>" +
-							 "<span class=\"magical "  + offenseOrDefense + "\">" + equipment[ COLUMN.MAGICAL ] + "</span>";
+				this.card += "<span class=\"physical " + offenseOrDefense + "\">" + record[ COLUMN.PHYSICAL ] + "</span>" +
+							 "<span class=\"magical "  + offenseOrDefense + "\">" + record[ COLUMN.MAGICAL ] + "</span>";
 
 				return this;
 			},
 			whenEquipped: function () {
-				this.card += equipment[ COLUMN.WHEN_EQUIPPED ] === "" ?
+				this.card += record[ COLUMN.WHEN_EQUIPPED ] === "" ?
 					"<span class=\"when-equipped zero\"></span>" :
-					( "<span class=\"when-equipped " + ( equipment[ COLUMN.WEPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.WHEN_EQUIPPED ] + "</span>" );
+					( "<span class=\"when-equipped " + ( record[ COLUMN.WEPN ] ? "positive" : "negative" ) +"\">" + record[ COLUMN.WHEN_EQUIPPED ] + "</span>" );
 				return this;
 			},
 			statusChange: function () {
-				this.card += 0 < equipment[ COLUMN.PERCENT ] ?
-					( "<span class=\"status-change " + ( equipment[ COLUMN.SCPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.STATUS_CHANGE ] + " (" + equipment[ COLUMN.PERCENT ] + "%)</span>" ) :
+				this.card += 0 < record[ COLUMN.PERCENT ] ?
+					( "<span class=\"status-change " + ( record[ COLUMN.SCPN ] ? "positive" : "negative" ) +"\">" + record[ COLUMN.STATUS_CHANGE ] + " (" + record[ COLUMN.PERCENT ] + "%)</span>" ) :
 					"<span class=\"status-change zero\"></span>";
 				return this;
 			},
 			classRestriction: function () {
-				var cr = equipment[ COLUMN.CLASS ],
+				var cr = record[ COLUMN.CLASS ],
 					buildClassIcon = function ( cls ) {
 						return "<span class=\"" + cls.toLowerCase() + " " + ( cr & CLASSMASKS[ cls ] ? "equipable" : "non-equipable" ) + "\">" + cls + "</span>";
 					},
@@ -350,7 +351,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 					this.group( "physical-attributes" );
 					this.label( "物理属性" );
 					$.each( ORDERS.PHYSICAL_ATTRIBUTES, function () {
-						that.card += "<span class=\"" + this.toLowerCase() + "\">" + equipment[ COLUMN[ this ] ] + "</span>";
+						that.card += "<span class=\"" + this.toLowerCase() + "\">" + record[ COLUMN[ this ] ] + "</span>";
 					} );
 					this.end();
 				}
@@ -359,14 +360,14 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 			},
 			properties: function () {
 				if ( REGEXP.ACCESSORIES.test( type ) ) {
-					this.card += "<span class=\"weight\">"     + equipment[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>";
+					this.card += "<span class=\"weight\">"     + record[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>";
 				} else if ( REGEXP.SHOTS.test( type ) ) {
-					this.card += "<span class=\"weight\">"     + equipment[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>" +
-								 "<span class=\"hardness\">"   + equipment[ COLUMN.HARDNESS ]            + "</span>";
+					this.card += "<span class=\"weight\">"     + record[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>" +
+								 "<span class=\"hardness\">"   + record[ COLUMN.HARDNESS ]            + "</span>";
 				} else {
-					this.card += "<span class=\"durability\">" + equipment[ COLUMN.DURABILITY ]          + "</span>" +
-								 "<span class=\"weight\">"     + equipment[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>" +
-								 "<span class=\"hardness\">"   + equipment[ COLUMN.HARDNESS ]            + "</span>";
+					this.card += "<span class=\"durability\">" + record[ COLUMN.DURABILITY ]          + "</span>" +
+								 "<span class=\"weight\">"     + record[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>" +
+								 "<span class=\"hardness\">"   + record[ COLUMN.HARDNESS ]            + "</span>";
 				}
 
 				return this;
@@ -374,36 +375,36 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 			specialPropertiesLine: function () {
 				var content = {
 					"弓": function () {
-						return "<span class=\"range\">"             + equipment[ COLUMN.RANGE ]         + "</span>" +
-							   "<span class=\"quality bows\">"      + equipment[ COLUMN.QUALITY ]       + "</span>";
+						return "<span class=\"range\">"             + record[ COLUMN.RANGE ]         + "</span>" +
+							   "<span class=\"quality bows\">"      + record[ COLUMN.QUALITY ]       + "</span>";
 					},
 					"矢": function () {
-						var range     = equipment[ COLUMN.RANGE ],
-							quality   = equipment[ COLUMN.QUALITY ];
+						var range     = record[ COLUMN.RANGE ],
+							quality   = record[ COLUMN.QUALITY ];
 
 						return "<span class=\"range-rate" +        (range   !== 100 ? range   < 100 ? " negative" : " positive" : "") + "\">" + range   + "%</span>" +
 							   "<span class=\"quality-rate bows" + (quality !== 100 ? quality < 100 ? " negative" : " positive" : "") + "\">" + quality + "%</span>";
 					},
 					"銃": function () {
-						return "<span class=\"range\">"             + equipment[ COLUMN.RANGE ]         + "</span>" +
-							   "<span class=\"quality guns\">"      + equipment[ COLUMN.QUALITY ]       + "</span>" +
-							   "<span class=\"charge-weight\">"     + equipment[ COLUMN.CHARGE_WEIGHT ] + "</span>";
+						return "<span class=\"range\">"             + record[ COLUMN.RANGE ]         + "</span>" +
+							   "<span class=\"quality guns\">"      + record[ COLUMN.QUALITY ]       + "</span>" +
+							   "<span class=\"charge-weight\">"     + record[ COLUMN.CHARGE_WEIGHT ] + "</span>";
 					},
 					"銃弾": function () {
-						var range     = equipment[ COLUMN.RANGE ],
-							quality   = equipment[ COLUMN.QUALITY ];
+						var range     = record[ COLUMN.RANGE ],
+							quality   = record[ COLUMN.QUALITY ];
 
 						return "<span class=\"range-rate" +        (range   !== 100 ? range   < 100 ? " negative" : " positive" : "") + "\">" + range   + "%</span>" +
 							   "<span class=\"quality-rate guns" + (quality !== 100 ? quality < 100 ? " negative" : " positive" : "") + "\">" + quality + "%</span>";
 					},
 					"小型盾": function () {
-						return "<span class=\"quality gp\">"        + equipment[ COLUMN.QUALITY ]       + "</span>";
+						return "<span class=\"quality gp\">"        + record[ COLUMN.QUALITY ]       + "</span>";
 					},
 					"中型盾": function () {
-						return "<span class=\"quality gp\">"        + equipment[ COLUMN.QUALITY ]       + "</span>";
+						return "<span class=\"quality gp\">"        + record[ COLUMN.QUALITY ]       + "</span>";
 					},
 					"大型盾": function () {
-						return "<span class=\"quality gp\">"        + equipment[ COLUMN.QUALITY ]       + "</span>";
+						return "<span class=\"quality gp\">"        + record[ COLUMN.QUALITY ]       + "</span>";
 					}
 				};
 
@@ -420,7 +421,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 							var obj = {};
 
 							$.each( ORDERS.SPECIAL_EFFECTS, function () {
-								obj[ this ] = equipment[ COLUMN[ this ] ];
+								obj[ this ] = record[ COLUMN[ this ] ];
 							} );
 
 							return obj;
@@ -451,7 +452,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 							var obj = {};
 
 							$.each( ORDERS.RESISTANCE, function () {
-								obj[ this ] = equipment[ COLUMN[ this ] ];
+								obj[ this ] = record[ COLUMN[ this ] ];
 							} );
 
 							return obj;
@@ -488,7 +489,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 								var obj = {};
 
 								$.each( ORDERS.ATTRIBUTES, function () {
-									 obj[ this ] = equipment[ COLUMN[ this + "_" + type ] ];
+									 obj[ this ] = record[ COLUMN[ this + "_" + type ] ];
 								} );
 
 								return obj;
@@ -537,17 +538,17 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 				return this;
 			},
 			otherDataLine: function () {
-				var whenEquipped = equipment[ COLUMN.WHEN_EQUIPPED ],
-					statusChange = equipment[ COLUMN.STATUS_CHANGE ];
+				var whenEquipped = record[ COLUMN.WHEN_EQUIPPED ],
+					statusChange = record[ COLUMN.STATUS_CHANGE ];
 
 				if ( whenEquipped !== "" || statusChange !== "" ) {
 					this.group( "other-data" );
 					this.card += whenEquipped === "" ?
 						"<span class=\"when-equipped zero\"></span>" :
-						( "<span class=\"when-equipped " + ( equipment[ COLUMN.WEPN ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.WHEN_EQUIPPED ] + "</span>" );
+						( "<span class=\"when-equipped " + ( record[ COLUMN.WEPN ] ? "positive" : "negative" ) +"\">" + record[ COLUMN.WHEN_EQUIPPED ] + "</span>" );
 					this.card += statusChange === "" ?
 						"<span class=\"status-change zero\"></span>":
-						( "<span class=\"status-change " + ( 0 < equipment[ COLUMN.PERCENT ] ? "positive" : "negative" ) +"\">" + equipment[ COLUMN.STATUS_CHANGE ] + " (" + Math.abs( equipment[ COLUMN.PERCENT ] ) + "%)</span>" );
+						( "<span class=\"status-change " + ( 0 < record[ COLUMN.PERCENT ] ? "positive" : "negative" ) +"\">" + record[ COLUMN.STATUS_CHANGE ] + " (" + Math.abs( record[ COLUMN.PERCENT ] ) + "%)</span>" );
 					this.end();
 				}
 
@@ -557,9 +558,9 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 				var LABEL = 0,
 					TEXT = 1,
 					lines = {
-						comments: [ "コメント", equipment[ COLUMN.COMMENTS ] ],
-						sources:  [ "入手経路", equipment[ COLUMN.SOURCES ] ],
-						notes:    [ "ノート",  equipment[ COLUMN.NOTES ] ]
+						comments: [ "コメント", record[ COLUMN.COMMENTS ] ],
+						sources:  [ "入手経路", record[ COLUMN.SOURCES ] ],
+						notes:    [ "ノート",  record[ COLUMN.NOTES ] ]
 					},
 					that = this;
 
@@ -579,8 +580,9 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 				return this;
 			},
 			toolbox: function () {
-				var ableForge = ( function () {
-						if ( REGEXP.DISABLE_FORGE.test( equipment[ COLUMN.RARITY ] ) ) {
+				var forge = equipment.forge,
+					ableForge = ( function () {
+						if ( REGEXP.DISABLE_FORGE.test( record[ COLUMN.RARITY ] ) ) {
 							return " disabled";
 						} else if ( REGEXP.SHOTS.test( type ) ) {
 							return " disabled";
@@ -588,17 +590,29 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 						return "";
 					} () );
 
-				this.card += "<div class=\"toolbox\"><div class=\"tool-buttons\">" +
-							 "<span class=\"tool-button forging-plus" + ableForge + "\">+1</span>" +
-							 "<span class=\"tool-button forging-minus disabled\">-1</span>" +
-							 "</div></div>";
+				       if ( forge === 0  ) {
+					this.card += "<div class=\"toolbox\"><div class=\"tool-buttons\">" +
+								 "<span class=\"tool-button forging-plus" + ableForge + "\">+1</span>" +
+								 "<span class=\"tool-button forging-minus disabled\">-1</span>" +
+								 "</div></div>";
+				} else if ( forge === 10 ) {
+					this.card += "<div class=\"toolbox\"><div class=\"tool-buttons\">" +
+								 "<span class=\"tool-button forging-plus disabled\">+1</span>" +
+								 "<span class=\"tool-button forging-minus\">-1</span>" +
+								 "</div></div>";
+				} else {
+					this.card += "<div class=\"toolbox\"><div class=\"tool-buttons\">" +
+								 "<span class=\"tool-button forging-plus\">+1</span>" +
+								 "<span class=\"tool-button forging-minus\">-1</span>" +
+								 "</div></div>";
+				}
 				return this;
 			}
 		};
 
 	// construct!
 	buildCard
-		.group( "equipment-card-inner " + equipment[ COLUMN.RARITY ].toLowerCase() )
+		.group( "equipment-card-inner " + record[ COLUMN.RARITY ].toLowerCase() )
 			.group( "basic-information" )
 				.group( "property" )
 					.rarity().type().transfarTags()
@@ -919,7 +933,7 @@ CYPRESS.displayEquipmentCard = function ( equipments ) {
 
 	$.each( equipments, function () {
 		$( "#equipments" ).append( "<div class=\"equipment-card\" data-catalog=\"" + this.catalog + "\">" +
-								       CYPRESS.getEquipmentCard( this.equipment ) +
+								       CYPRESS.getEquipmentCard( this ) +
 								   "</div>" );
 	} );
 };
@@ -1122,6 +1136,14 @@ CYPRESS.makeCompareFunction = function () {
 		CONFIG = CYPRESS.SORT_CONFIG,
 
 		order = CONFIG.order === "ASC" ? 1 : -1,
+		RARITY_CODE = {
+			"Poor":     1,
+			"Normal":   2,
+			"Good":     3,
+			"Master":   4,
+			"Legend":   5,
+			"Artifact": 6,
+		},
 		_compare;
 
 	switch ( CONFIG.category ) {
@@ -1133,9 +1155,15 @@ CYPRESS.makeCompareFunction = function () {
 		};
 		break;
 	case "NUMERIC":
-		_compare = function ( a, b ) {
-			return b.catalog - a.catalog;
-		};
+		if ( CONFIG.key === "RARITY" ) { // 順序
+			_compare = function ( a, b ) {
+				return ( RARITY_CODE[ a.equipment[ COLUMN.RARITY ] ] - RARITY_CODE[ b.equipment[ COLUMN.RARITY ] ] ) * order;
+			};
+		} else { // 数値項目
+			_compare = function ( a, b ) {
+				return ( a.equipment[ COLUMN[ CONFIG.key ] ] - b.equipment[ COLUMN[ CONFIG.key ] ] ) * order;
+			};
+		}
 		break;
 	default: // case "CATALOG"
 		_compare = function ( a, b ) {
@@ -1243,7 +1271,7 @@ CYPRESS.Manager = ( function () {
 			equipment.forge += forging;
 
 			CYPRESS.Forging( equipment );
-			$card.html( CYPRESS.getEquipmentCard( equipment.equipment ) );
+			$card.html( CYPRESS.getEquipmentCard( equipment ) );
 
 			if ( equipment.forge === 0 ) {
 				$card.find( ".forging-plus" ).removeClass( "disabled" );
@@ -1318,7 +1346,7 @@ $( document ).ready( function () {
 	( function () {
 		// initialize slidebars
 		( function () {
-//			 mySlidebars.slidebars.open( "right" );
+			 mySlidebars.slidebars.open( "right" );
 		} () );
 
 		// initialize ionRangeSlider
@@ -1431,6 +1459,11 @@ $( document ).ready( function () {
 						config.key = key;
 						config.order = order;
 					},
+					runSort = function () {
+						if ( !$( "#usage" ).length ) {
+							CYPRESS.Manager.display();
+						}
+					},
 					checkedBehavior = function( category ) {
 						return function () {
 							changeConfig( $( this ).data( "category" ),
@@ -1452,14 +1485,20 @@ $( document ).ready( function () {
 
 				$( "#lexicographic-sort-list input, #numeric-sort-list input" )
 					.each( iCheckInitialize )
+					.on( "ifClicked", function () {
+						if ( $( this ).prop( "checked" ) ) {
+							runSort();
+						}
+					} )
 					.on( "ifChecked", function () {
 						CYPRESS.SORT_CONFIG.key = $( this ).data( "key" );
-						console.log( CYPRESS.SORT_CONFIG.category + " : " + CYPRESS.SORT_CONFIG.key + " : " + CYPRESS.SORT_CONFIG.order );
+						runSort();
 					} );
 
 				$( "#catalog-order" )
 					.on( "ifChecked", function () {
 						changeConfig( "CATALOG", "CATALOG", "ASC" );
+						runSort();
 					} );
 
 				$( "#lexicographic-order" )
@@ -1621,6 +1660,10 @@ $( document ).ready( function () {
 							$( this ).html( text[ order ] );
 							$this.data( "order", order );
 							CYPRESS.SORT_CONFIG.order = order;
+
+							if ( !$( "#usage" ).length ) {
+								CYPRESS.Manager.display();
+							}
 						};
 					};
 
@@ -1682,6 +1725,4 @@ $( document ).ready( function () {
 	$( "#usage-button" ).click();
 
 	$( "#equipment-name" ).prop( "placeholder", "例：" + CYPRESS.Manager.getEquipmentName() );
-
-	mySlidebars.slidebars.open( "left" );
 } );

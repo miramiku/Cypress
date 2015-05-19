@@ -531,6 +531,7 @@
 #sorting-pane {
 	.pane();
 }
+
 .sort-checkbox-top-category {
 	display: block;
 	overflow: hidden;
@@ -540,27 +541,50 @@
 		top: 1px;
 	}
 }
-	.sorting-option {
+	.sorting-option( @margin-left ) {
 		display: none;
 		overflow: hidden;
-		margin: 5px 0 15px 30px;
+		margin: 5px 0 15px @margin-left ;
+	}
 
-		.icheck( 90px );
+	.order-checkbox( @width ) {
+		.icheck( @width );
 		.icheckbox {
 			.setCheckboxColor( fade( #aa846f, 80% ) );
 		}
+	}
 
-		ul ul {
-			padding-left: 20px;
-			& li {
-				display: inline;
-				&:before {
-					content: "・ ";
-				}
+	#lexicographic-sort-list {
+		.sorting-option( 30px );
+		.order-checkbox( 90px );
+	}
+
+	#numeric-sort-list {
+		.sorting-option( 15px );
+		.label {
+			display: block;
+			overflow: hidden;
+			&:before {
+				content: "* ";
 			}
+		}
+		.checkboxes {
+			margin-left: 15px;
+			overflow: hidden;
 		}
 	}
 
+	.numeric-sort-subset( @width ) {
+		.order-checkbox( @width );
+		overflow: hidden;
+		margin-bottom: 10px;
+	}
+
+	#sort-basic-property    { .numeric-sort-subset( 60px ); }
+	#sort-special-effect    { .numeric-sort-subset( 30px ); }
+	#sort-status-change     { .numeric-sort-subset( 30px ); }
+	#sort-magic-attack      { .numeric-sort-subset( 20px ); }
+	#sort-magic-resist      { .numeric-sort-subset( 20px ); }
 
 /* ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
  * retrieval-pane6
