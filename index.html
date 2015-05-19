@@ -2,375 +2,472 @@
 <html lang="ja">
 
 <head>
-    <meta charset="utf-8">
-    <title>Cypress - wizardry online equipment retrieval system</title>
+	<meta charset="utf-8">
+	<title>Cypress - wizardry online equipment retrieval system</title>
 
-    <!-- meta section -->
-    <meta name="Author" content="miku">
-    <meta name="keywords" content="Wizardry Online,wizon,装備検索,鍛錬シミュレート">
-    <meta name="description" content="Wizardry Online の装備品データを検索・抽出するシステムです。また、簡単な装備の鍛錬シミュレート機能などもできます。">
+	<!-- meta section -->
+	<meta name="Author" content="miku">
+	<meta name="keywords" content="Wizardry Online,wizon,装備検索,鍛錬シミュレート">
+	<meta name="description" content="Wizardry Online の装備品データを検索・抽出するシステムです。また、簡単な装備の鍛錬シミュレート機能などもできます。">
 
-    <!-- scripts -->
-    <script src="features/cypress.retrieval.min.js?ver=0.3.8"></script>
+	<!-- scripts -->
+	<script src="features/cypress.retrieval.min.js?ver=1.0.0"></script>
 
-    <!-- styles -->
-    <link href="styles/cypress-retrieval.css" rel="stylesheet" type="text/css">
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-
-    <!-- favicons -->
+	<!-- styles -->
+	<link href="styles/cypress-retrieval.css" rel="stylesheet" type="text/css">
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 </head>
 
 <body id="cypress">
-    <header>
-        <div id="logo">
-            <img src="images/cypress-logo.png" alt="Cypress">
-        </div>
+	<header>
+		<div id="sorting-pane-button" class="sb-toggle-left">
+			<span class="button-icon">&#xe605;</span>
+			<span class="button-text">並べ替え</span>
+		</div>
 
-        <div id="search-box">
-            <div id="toolbox-button-box" class="sb-toggle-right">
-                <span id="toolbox-button" class="close"></span>
-            </div>
-        </div>
-        <span id="search-request-title">検索条件</span>
-        <span id="tool-commentary"></span>
-    </header>
+		<div id="logo">
+			<img src="images/cypress-logo.png" alt="Cypress">
+		</div>
 
-    <div id="container" class="sb-site">
-        <div id="equipments">
-            <div id="usage" class="equipment-card">
-                <div class="equipment-card-inner usage">
-                    <div id="landing-title">
-                        Cypress - wizardry online equipment retrieval system
-                    </div>
-                    <div id="landing">
-                        <h4>Overview: 概要</h4>
-                        <ul>
-                            <li>Wizardry Online の装備品データを抽出・検索するシステムです</li>
-                            <li>装備品データにはできる限り注意を払っていますが誤りのあるデータも混入していると思います</li>
-                            <li>誤りのあるデータを見つけたらご一報いただけると幸いです。早急に修正します</li>
-                            <li>質問や要望、提案などありましたらコンタクトの方までお願いします</li>
-                        </ul>
-                        <!-- <h4>Features: 特徴</h4> -->
-                        <h4>Usage: 使い方</h4>
-                        <ul>
-                            <li>条件を設定して「検索」ボタンを押せば条件に該当した装備データが表示されます</li>
-                            <li>該当するデータが多いと表示されるまで時間（数秒程度）がかかってしまうのでご注意ください</li>
-                            <li>該当するデータが0件の場合は「検索」ボタンは操作できません</li>
-                            <li>該当するデータの件数は検索パネル上部にある「検索」ボタンの左側に表示されています</li>
-                            <li>「検索」ボタンは上部と下部にあわせて2つありますがどちらを利用しても同じ動作をします</li>
-                            <li>再度検索しなおす時は右上のボタンを押すと検索条件パネルが開きます</li>
-                        </ul>
-                        <h4>Tasks: 今後の機能追加予定や既知の不具合など</h4>
-                        <ul>
-                            <li><a href="https://github.com/miramiku/Cypress/issues">Cypress Issues</a></li>
-                        </ul>
-                        <h4>Consideration: 動作情報</h4>
-                        <ul>
-                            <li>Internet Explorer では表示するデータの件数が多くなると表示にかなり時間がかかります（数十秒程度）</li>
-                        </ul>
-                        <h4>Contact: コンタクト</h4>
-                        <ul>
-                            <li>ソウルネーム： みくε（アルバロア）</li>
-                            <li>Twitter:
-                                <a href="https://twitter.com/miramiku"><img src="images/twitter-icon.png" alt="@miramiku"> @miramiku</a>
-                            </li>
-                            <li>メールアドレス：<img src="images/mail.png" alt="">（画像です）</li>
-                        </ul>
-                        <h4>Resources: リソース情報</h4>
-                        <ul>
-                            <li>Ripository <img src="images/github-icon.png" alt="github repository">: <a href="https://github.com/miramiku/Cypress">miramiku/Cypress</a></li>
-                            <li>Processed Database: <a href="https://dl.dropboxusercontent.com/u/6164477/wizon/equipment.json">equipment.json</a></li>
-                            <li>Original Database: <a href="https://onedrive.live.com/redir?page=view&amp;resid=716B8A626FB713C5!2012&amp;authkey=!AN5inIkYaDGbvAE">equipment.db.xlsm (Read only)</a></li>
-                        </ul>
-                        <h4>Changelog: 変更履歴</h4>
-                        <ul>
-                            <li>[2015-05-11] [v0.3.8] コピー用文字列のステータス名が小文字だった不具合を修正</li>
-                            <li>[2015-04-23] [v0.3.7] v0.3.6 の不具合修正</li>
-                            <li>[2015-04-27] [v0.3.6] データベースの簡素化</li>
-                            <li>[2015-04-24] [v0.3.5] 矢・銃弾の効率に関する項目に色付けしました</li>
-                            <li>[2015-04-14] [v0.3.4] 装備データベースの仕様を一部変更しました</li>
-                            <li>[2015-04-09] [v0.3.0] 鍛錬シミュレートと装備データのコピー機能を追加</li>
-                            <li>もっと見る：<a href="https://github.com/miramiku/Cypress/wiki/Changelog">(GitHub) Cypress wiki 変更履歴</a></li>
-                        </ul>
-                        <h4>Advanced usage: 右のパネルではできない詳細な検索</h4>
-                        <ul>
-                            <li><a href="https://github.com/miramiku/Cypress/wiki/Advanced-Usage">(GitHub) Cypress wiki 高度な検索</a></li>
-                        </ul>
-                    </div><!-- #landing -->
-                </div><!-- .equipment-card-inner -->
-            </div><!-- #usage -->
-        </div><!-- #equipments -->
-    </div><!-- container -->
+		<div id="retrieval-pane-button" class="sb-toggle-right">
+			<span class="button-text">検索・抽出</span>
+			<span class="button-icon">&#xe604;</span>
+		</div>
 
-    <div id="search-pane" class="sb-slidebar sb-right sb-width-custom sb-style-overlay" data-sb-width="300px">
-        <div id="search-queries">
-            <div id="search-button-box-sub">
-                <div id="records"></div>
-                <button id="search-button-sub">検索</button>
-            </div><!-- #search-button-box-sub -->
+		<span id="tool-commentary"></span>
+	</header>
 
-            <div id="query-string">
-                <span class="query-label">装備名</span>
-                <div class="control-box text">
-                    <input type="text" value="" id="equipment-name" placeholder="例：ぬるぬる柄の斧">
-                </div>
-            </div><!-- #query-string -->
+	<div id="container" class="sb-site">
+		<div id="equipments">
+			<div id="usage" class="equipment-card">
+				<div class="equipment-card-inner usage">
+					<div id="landing-title">
+						Cypress - wizardry online equipment retrieval system
+					</div>
+					<div id="landing">
+						<h4>Overview: 概要</h4>
+						<ul>
+							<li>Wizardry Online の装備品データを抽出・検索するシステムです</li>
+							<li>装備品データにはできる限り注意を払っていますが誤りのあるデータも混入していると思います</li>
+							<li>誤りのあるデータを見つけたらご一報いただけると幸いです。早急に修正します</li>
+							<li>質問や要望、提案などありましたらコンタクトの方までお願いします</li>
+						</ul>
+						<!-- <h4>Features: 特徴</h4> -->
+						<h4>Retrieval: 装備の検索・抽出について</h4>
+						<ul>
+							<li>条件を設定して「検索」ボタンを押せば条件に該当した装備データが表示されます</li>
+							<li>該当するデータが多いと表示されるまで時間（数秒程度）がかかってしまうのでご注意ください</li>
+							<li>該当するデータが 0 件の場合は「検索」ボタンを押すことが出来ません</li>
+							<li>該当するデータの件数は検索パネル上部にある「検索」ボタンの左側に表示されています</li>
+							<li>「検索」ボタンは上部と下部にあわせて2つありますがどちらを利用しても同じ動作をします</li>
+							<li>再度検索しなおす時はサイト右上の「検索・抽出」を押すと検索条件パネルが開きます</li>
+						</ul>
+						<h4>About Sorting: 並べ替え機能について</h4>
+						<ul>
+							<li>サイト左上の「並べ替え」を押すと並べ替えパネルの開閉ができます</li>
+							<li>一番上の「装備種別」または属性名（茶色いボタン）を押すと装備データを並べ替えます</li>
+							<li>鍛錬をシミュレートして書きかえたデータも反映されて並べ替えられます</li>
+							<li>並べ替えはこの使い方が表示されていると動作しません。<br>
+								並べ替えをしたいときはもう一度検索ボタンを押して消してください</li>
+							<li>表示件数が多すぎると装備データを再描画するのに時間がかかってしまいます。<br>
+								環境にもよりますが 100 件未満の検索結果で使用されることをお勧めします</li>
+							<li>検索条件パネルのように自動で閉じないので、閉じるときはサイト左上の「並べ替え」を押してください</li>
+						</ul>
+						<h4>Tasks: 今後の機能追加予定や既知の不具合など</h4>
+						<ul>
+							<li><a href="https://github.com/miramiku/Cypress/issues">Cypress Issues</a></li>
+						</ul>
+						<h4>Consideration: 動作情報</h4>
+						<ul>
+							<li>Internet Explorer では表示するデータの件数が多くなると表示にかなり時間がかかります（数十秒程度）</li>
+						</ul>
+						<h4>Contact: コンタクト</h4>
+						<ul>
+							<li>ソウルネーム： みくε（アルバロア）</li>
+							<li>Twitter:
+								<a href="https://twitter.com/miramiku"><img src="images/twitter-icon.png" alt="@miramiku"> @miramiku <span class="icon">&#xea91;</span></a>
+							</li>
+							<li>メールアドレス：<img src="images/mail.png" alt="">（画像です）</li>
+						</ul>
+						<h4>Resources: リソース情報</h4>
+						<ul>
+							<li>Ripository: <a href="https://github.com/miramiku/Cypress">miramiku/Cypress <span class="icon">&#xeab4;</span></a></li>
+							<li>Processed Database: <a href="https://dl.dropboxusercontent.com/u/6164477/wizon/equipment.json">equipment.json</a></li>
+							<li>Original Database: <a href="https://onedrive.live.com/redir?page=view&amp;resid=716B8A626FB713C5!2012&amp;authkey=!AN5inIkYaDGbvAE">equipment.db.xlsm (Read only)</a></li>
+						</ul>
+						<h4>Changelog: 変更履歴</h4>
+						<ul>
+							<li>[2015-05-20] [v1.0.0] 並べ替え機能実装</li>
+							<li>もっと見る：<a href="https://github.com/miramiku/Cypress/wiki/Changelog">(GitHub) Cypress wiki 変更履歴</a></li>
+						</ul>
+						<h4>Advanced usage: 右のパネルではできない詳細な検索</h4>
+						<ul>
+							<li><a href="https://github.com/miramiku/Cypress/wiki/Advanced-Usage">(GitHub) Cypress wiki 高度な検索</a></li>
+						</ul>
+					</div><!-- #landing -->
+				</div><!-- .equipment-card-inner -->
+			</div><!-- #usage -->
+		</div><!-- #equipments -->
+	</div><!-- container -->
 
-            <div id="query-grade">
-                <span class="query-label">グレード</span>
-                <div class="control-box slider">
-                    <input type="text" id="grade-range" value="">
-                </div>
-            </div><!-- #query-grade -->
+	<div id="sorting-pane"   class="sb-slidebar sb-left  sb-width-custom sb-style-overlay" data-sb-width="320px">
+		<div class="sort-checkbox-top-category">
+			<input id="catalog-order" type="radio" name="sort-category" data-label="装備種別" checked>
+		</div>
+		<div class="sort-checkbox-top-category">
+			<input id="lexicographic-order" type="radio" name="sort-category" data-category="LAXICOGRAPHIC" data-label="テキスト">
+			<button id="lexicographic-sort-order-change" data-order="ASC" disabled><span class="icon">&#xe603;</span> 辞書順　</button>
+		</div>
+		<div id="lexicographic-sort-list">
+			<input type="radio" name="laxicographic-sort-order" data-key="NAME"          data-label="装備名" checked>
+			<input type="radio" name="laxicographic-sort-order" data-key="WHEN_EQUIPPED" data-label="装備時付与効果">
+			<input type="radio" name="laxicographic-sort-order" data-key="STATUS_CHANGE" data-label="状態異常">
+		</div><!-- #lexicographic-sort-list -->
 
-            <div id="query-level">
-                <span class="query-label">装備可能レベル（特殊鍛錬考慮せず）</span>
-                <div class="control-box slider">
-                    <input type="text" id="level-range" value="">
-                </div>
-            </div><!-- #query-level -->
+		<div class="sort-checkbox-top-category">
+			<input id="numeric-order" type="radio" name="sort-category" data-category="NUMERIC" data-label="順序・数値">
+			<button id="numeric-sort-order-change" data-order="ASC" disabled><span class="icon">&#xe601;</span> 低 → 高</button>
+		</div>
+		<div id="numeric-sort-list">
+			<div id="sort-basic-property">
+				<span class="label">基本属性</span>
+				<div class="checkboxes">
+					<input type="radio" name="numeric-sort-order" data-key="RARITY"      data-label="品質" checked>
+					<input type="radio" name="numeric-sort-order" data-key="GRADE"       data-label="グレード">
+					<input type="radio" name="numeric-sort-order" data-key="PHYSICAL"    data-label="物攻/物防">
+					<input type="radio" name="numeric-sort-order" data-key="MAGICAL"     data-label="魔攻/魔防">
+					<input type="radio" name="numeric-sort-order" data-key="LEVEL_FLOOR" data-label="レベル">
+					<input type="radio" name="numeric-sort-order" data-key="DURABILITY"  data-label="耐久度">
+					<input type="radio" name="numeric-sort-order" data-key="WEIGHT"      data-label="重量">
+					<input type="radio" name="numeric-sort-order" data-key="HARDNESS"    data-label="硬度">
+				</div><!-- .checkboxes -->
+			</div><!-- #sort-basic-property -->
 
-            <div id="query-rarities">
-                <span class="query-label">品質</span>
-                <div class="control-box checkboxes">
-                    <input type="checkbox" id="query-poor"     data-label="Poor">
-                    <input type="checkbox" id="query-normal"   data-label="Normal">
-                    <input type="checkbox" id="query-good"     data-label="Good">
-                    <input type="checkbox" id="query-master"   data-label="Master">
-                    <input type="checkbox" id="query-legend"   data-label="Legend">
-                    <input type="checkbox" id="query-artifact" data-label="Artifact">
-                </div><!-- .control-box.checkboxes -->
-            </div><!-- #query-rarities -->
+			<div id="sort-special-effect">
+				<span class="label">ステータス補正</span>
+				<div class="checkboxes">
+					<input type="radio" name="numeric-sort-order" data-key="HP"  data-label="HP">
+					<input type="radio" name="numeric-sort-order" data-key="MP"  data-label="MP">
+					<input type="radio" name="numeric-sort-order" data-key="STR" data-label="STR">
+					<input type="radio" name="numeric-sort-order" data-key="VIT" data-label="VIT">
+					<input type="radio" name="numeric-sort-order" data-key="DEX" data-label="DEX">
+					<input type="radio" name="numeric-sort-order" data-key="AGI" data-label="AGI">
+					<input type="radio" name="numeric-sort-order" data-key="INT" data-label="INT">
+					<input type="radio" name="numeric-sort-order" data-key="PIE" data-label="PIE">
+					<input type="radio" name="numeric-sort-order" data-key="LUK" data-label="LUK">
+				</div><!-- .checkboxes -->
+			</div><!-- #sort-special-effect -->
 
-            <div id="query-classes">
-                <span class="query-label">職業</span>
-                <div class="control-box checkboxes">
-                    <input type="checkbox" id="query-fig" data-label="FIG">
-                    <input type="checkbox" id="query-thi" data-label="THI">
-                    <input type="checkbox" id="query-mag" data-label="MAG">
-                    <input type="checkbox" id="query-pri" data-label="PRI">
-                    <input type="checkbox" id="query-sam" data-label="SAM">
-                    <input type="checkbox" id="query-nin" data-label="NIN">
-                    <input type="checkbox" id="query-bis" data-label="BIS">
-                    <input type="checkbox" id="query-lor" data-label="LOR">
-                    <input type="checkbox" id="query-clo" data-label="CLO">
-                </div><!-- .control-box.checkboxes -->
-            </div><!-- #query-classes -->
+			<div id="sort-status-change">
+				<span class="label">状態異常</span>
+				<div class="checkboxes">
+					<input type="radio" name="numeric-sort-order" data-key="POISON"    data-label="毒">
+					<input type="radio" name="numeric-sort-order" data-key="PARALYZE"  data-label="麻痺">
+					<input type="radio" name="numeric-sort-order" data-key="PETRIFY"   data-label="石化">
+					<input type="radio" name="numeric-sort-order" data-key="FAINT"     data-label="気絶">
+					<input type="radio" name="numeric-sort-order" data-key="BLIND"     data-label="暗闇">
+				</div><!-- .checkboxes -->
+				<div class="checkboxes">
+					<input type="radio" name="numeric-sort-order" data-key="SLEEP"     data-label="睡眠">
+					<input type="radio" name="numeric-sort-order" data-key="SILENCE"   data-label="沈黙">
+					<input type="radio" name="numeric-sort-order" data-key="CHARM"     data-label="魅了">
+					<input type="radio" name="numeric-sort-order" data-key="CONFUSION" data-label="混乱">
+					<input type="radio" name="numeric-sort-order" data-key="FEAR"      data-label="恐怖">
+				</div><!-- .checkboxes -->
+			</div><!-- #sort-status-change -->
 
-            <div id="query-types">
-                <span class="query-label">種類</span>
-                <div class="control-box dialog">
-                    <button id="choice-types">種類を選択</button>
-                    <div class="colorbox-load-contents">
-                        <div id="dialog-types">
-                            <div class="control-box checkboxes">
-                                <div class="wrap-category">
-                                    <span class="group-title">全選択・解除</span>
-                                    <div class="group-line">
-                                        <input type="checkbox" id="query-weapons" data-label="武器">
-                                        <input type="checkbox" id="query-protective-gear" data-label="防具">
-                                        <input type="checkbox" id="query-accessories" data-label="装飾品">
-                                    </div><!-- .group-line -->
-                                </div><!-- .wrap-category -->
-                                <div class="wrap-category" id="wrap-weapons">
-                                    <span class="group-title">武器</span>
-                                    <div class="group-line">
-                                        <input type="checkbox" id="query-one-handed-swords" data-label="片手剣">
-                                        <input type="checkbox" id="query-two-handed-swords" data-label="両手剣">
-                                        <input type="checkbox" id="query-one-handed-axws" data-label="片手斧">
-                                        <input type="checkbox" id="query-two-handed-axws" data-label="両手斧">
-                                        <input type="checkbox" id="query-one-handed-clubs" data-label="片手鈍器">
-                                        <input type="checkbox" id="query-two-handed-clubs" data-label="両手鈍器">
-                                    </div><!-- .group-line -->
-                                    <div class="group-line">
-                                        <input type="checkbox" id="query-spears" data-label="槍">
-                                        <input type="checkbox" id="query-hand-weapons" data-label="暗器">
-                                        <input type="checkbox" id="query-swords" data-label="短剣">
-                                        <input type="checkbox" id="query-two-handed-staffs" data-label="両手杖">
-                                        <input type="checkbox" id="query-katanas" data-label="刀">
-                                        <input type="checkbox" id="query-double-bladed-weapons" data-label="双刃">
-                                    </div><!-- .group-line -->
-                                    <div class="group-line">
-                                        <input type="checkbox" id="query-bows" data-label="弓">
-                                        <input type="checkbox" id="query-arrows" data-label="矢">
-                                        <input type="checkbox" id="query-guns" data-label="銃">
-                                        <input type="checkbox" id="query-bullets" data-label="銃弾">
-                                    </div><!-- .group-line -->
-                                </div><!-- #wrap-weapons -->
-                                <div class="wrap-category">
-                                    <span class="group-title">防具：まとめて</span>
-                                    <div class="group-line">
-                                        <input type="checkbox" id="query-head" data-label="頭装備">
-                                        <input type="checkbox" id="query-torso" data-label="上半身">
-                                        <input type="checkbox" id="query-legs" data-label="下半身">
-                                        <input type="checkbox" id="query-arms" data-label="腕装備">
-                                        <input type="checkbox" id="query-feet" data-label="足装備">
-                                        <input type="checkbox" id="query-shields" data-label="盾">
-                                    </div><!-- .group-line -->
-                                </div><!-- .wrap-category -->
-                                <div class="wrap-category" id="wrap-protective-gear">
-                                    <span class="group-title">防具：こまかく</span>
-                                    <div class="group-line">
-                                        <input type="checkbox" id="query-helmets" class="head" data-label="兜">
-                                        <input type="checkbox" id="query-armors" class="torso" data-label="鎧">
-                                        <input type="checkbox" id="query-greaves" class="legs" data-label="脚鎧">
-                                        <input type="checkbox" id="query-gauntlets" class="arms" data-label="手甲">
-                                        <input type="checkbox" id="query-solid-shoes" class="feet" data-label="鉄靴">
-                                        <input type="checkbox" id="query-large-shields" class="shields" data-label="大型盾">
-                                    </div><!-- .group-line -->
-                                    <div class="group-line">
-                                        <input type="checkbox" id="query-hats" class="head" data-label="帽子">
-                                        <input type="checkbox" id="query-coats" class="torso" data-label="外衣">
-                                        <input type="checkbox" id="query-clothes" class="legs" data-label="衣服">
-                                        <input type="checkbox" id="query-gloves" class="arms" data-label="手袋">
-                                        <input type="checkbox" id="query-leather-shoes" class="feet" data-label="革靴">
-                                        <input type="checkbox" id="query-medium-shileds" class="shields" data-label="中型盾">
-                                    </div><!-- .group-line -->
-                                    <div class="group-line">
-                                        <input type="checkbox" id="query-hoods" class="head" data-label="頭巾">
-                                        <input type="checkbox" id="query-tops" class="torso" data-label="上衣">
-                                        <input type="checkbox" id="query-bottoms" class="legs" data-label="下衣">
-                                        <input type="checkbox" id="query-bracelets" class="arms" data-label="腕輪">
-                                        <input type="checkbox" id="query-shoes" class="feet" data-label="靴">
-                                        <input type="checkbox" id="query-small-shileds" class="shields" data-label="小型盾">
-                                    </div><!-- .group-line -->
-                                    <div class="group-line">
-                                        <input type="checkbox" id="query-capes" data-label="外套">
-                                    </div><!-- .group-line -->
-                                </div><!-- .wrap-category -->
-                                <div class="wrap-category" id="wrap-accessories">
-                                    <span class="group-title">装飾品</span>
-                                    <div class="group-line">
-                                        <input type="checkbox" id="query-rings" data-label="指輪">
-                                        <input type="checkbox" id="query-earrings" data-label="耳飾り">
-                                        <input type="checkbox" id="query-necklaces" data-label="首飾り">
-                                        <input type="checkbox" id="query-belts" data-label="ベルト">
-                                    </div><!-- .group-line -->
-                                </div><!-- #wrap-accessories -->
-                            </div><!-- .control-box.checkboxes -->
+			<div id="sort-magic-attack">
+				<span class="label">魔法攻撃</span>
+				<div class="checkboxes">
+					<input type="radio" name="numeric-sort-order" data-key="FIRE_ATTACK"  data-label="火">
+					<input type="radio" name="numeric-sort-order" data-key="WATER_ATTACK" data-label="水">
+					<input type="radio" name="numeric-sort-order" data-key="WIND_ATTACK"  data-label="風">
+					<input type="radio" name="numeric-sort-order" data-key="EARTH_ATTACK" data-label="地">
+					<input type="radio" name="numeric-sort-order" data-key="LIGHT_ATTACK" data-label="光">
+					<input type="radio" name="numeric-sort-order" data-key="DARK_ATTACK"  data-label="闇">
+				</div><!-- .checkboxes -->
+			</div><!-- #sort-magic-attack -->
 
-                            <div class="dialog-buttons">
-                                <button id="dialog-types-reset">チェック全解除</button>
-                                <button id="dialog-types-close">閉じる</button>
-                            </div><!-- .dialog-buttons -->
-                        </div><!-- #dialog-types -->
-                    </div><!-- .colorbox-load-contents -->
-                </div><!-- .control-box.dialog -->
-            </div><!-- #qyery-types -->
+			<div id="sort-magic-resist">
+				<span class="label">魔法防御</span>
+				<div class="checkboxes">
+					<input type="radio" name="numeric-sort-order" data-key="FIRE_RESIST"  data-label="火">
+					<input type="radio" name="numeric-sort-order" data-key="WATER_RESIST" data-label="水">
+					<input type="radio" name="numeric-sort-order" data-key="WIND_RESIST"  data-label="風">
+					<input type="radio" name="numeric-sort-order" data-key="EARTH_RESIST" data-label="地">
+					<input type="radio" name="numeric-sort-order" data-key="LIGHT_RESIST" data-label="光">
+					<input type="radio" name="numeric-sort-order" data-key="DARK_RESIST"  data-label="闇">
+				</div><!-- .checkboxes -->
+			</div><!-- #sort-magic-resist -->
+		</div><!-- #order-sort-list -->
+	</div><!-- #sorting-pane -->
 
-            <div id="query-flags">
-                <span class="query-label">その他（フラグ）</span>
-                <div class="control-box dialog">
-                    <button id="choice-flags">その他こまかな条件を選択</button>
-                    <div class="colorbox-load-contents">
-                        <div id="dialog-flags">
-                            <div class="control-box checkboxes">
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <span class="group-title">装備時付与効果</span>
-                                                <div class="group-line">
-                                                    <input type="radio" name="option-when_equipped" class="all" data-flag="when_equipped" data-label="すべて" checked>
-                                                    <input type="radio" name="option-when_equipped" class="only" data-flag="when_equipped" data-label="のみ">
-                                                    <input type="radio" name="option-when_equipped" class="eliminate" data-flag="when_equipped" data-label="除外">
-                                                </div><!-- .group-line -->
+	<div id="retrieval-pane" class="sb-slidebar sb-right sb-width-custom sb-style-overlay" data-sb-width="300px">
+		<div id="retrieval-queries">
+			<div id="retrieval-button-box-sub">
+				<div id="records"></div>
+				<button id="retrieval-button-sub">検索</button>
+			</div><!-- #retrieval-button-box-sub -->
 
-                                            </td>
-                                            <td>
-                                                <span class="group-title">状態異常付与</span>
-                                                <div class="group-line">
-                                                    <input type="radio" name="option-status_change" class="all" data-flag="status_change" data-label="すべて" checked>
-                                                    <input type="radio" name="option-status_change" class="only" data-flag="status_change" data-label="のみ">
-                                                    <input type="radio" name="option-status_change" class="eliminate" data-flag="status_change" data-label="除外">
-                                                </div><!-- .group-line -->
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="group-title">祝福されている<img src="images/blessed.png" alt=""></span>
-                                                <div class="group-line">
-                                                    <input type="radio" name="option-blessed" class="all" data-flag="blessed" data-label="すべて" checked>
-                                                    <input type="radio" name="option-blessed" class="only" data-flag="blessed" data-label="のみ">
-                                                    <input type="radio" name="option-blessed" class="eliminate" data-flag="blessed" data-label="除外">
-                                                </div><!-- .group-line -->
-                                            </td>
-                                            <td>
-                                                <span class="group-title">呪われている<img src="images/cursed.png" alt=""></span>
-                                                <div class="group-line">
-                                                    <input type="radio" name="option-cursed" class="all" data-flag="cursed" data-label="すべて" checked>
-                                                    <input type="radio" name="option-cursed" class="only" data-flag="cursed" data-label="のみ">
-                                                    <input type="radio" name="option-cursed" class="eliminate" data-flag="cursed" data-label="除外">
-                                                </div><!-- .group-line -->
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="group-title">使用後トレード不可<img src="images/used.png" alt=""></span>
-                                                <div class="group-line">
-                                                    <input type="radio" name="option-used" class="all" data-flag="used" data-label="すべて" checked>
-                                                    <input type="radio" name="option-used" class="only" data-flag="used" data-label="のみ">
-                                                    <input type="radio" name="option-used" class="eliminate" data-flag="used" data-label="除外">
-                                                </div><!-- .group-line -->
-                                            </td>
-                                            <td>
-                                                <span class="group-title">売却不可</span>
-                                                <div class="group-line">
-                                                    <input type="radio" name="option-sell" class="all" data-flag="sell" data-label="すべて" checked>
-                                                    <input type="radio" name="option-sell" class="only" data-flag="sell" data-label="のみ">
-                                                    <input type="radio" name="option-sell" class="eliminate" data-flag="sell" data-label="除外">
-                                                </div><!-- .group-line -->
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="group-title">トレード不可</span>
-                                                <div class="group-line">
-                                                    <input type="radio" name="option-trade" class="all" data-flag="trade" data-label="すべて" checked>
-                                                    <input type="radio" name="option-trade" class="only" data-flag="trade" data-label="のみ">
-                                                    <input type="radio" name="option-trade" class="eliminate" data-flag="trade" data-label="除外">
-                                                </div><!-- .group-line -->
-                                            </td>
-                                            <td>
-                                                <span class="group-title">略奪されない<img src="images/stolen.png" alt=""></span>
-                                                <div class="group-line">
-                                                    <input type="radio" name="option-stolen" class="all" data-flag="stolen" data-label="すべて" checked>
-                                                    <input type="radio" name="option-stolen" class="only" data-flag="stolen" data-label="のみ">
-                                                    <input type="radio" name="option-stolen" class="eliminate" data-flag="stolen" data-label="除外">
-                                                </div><!-- .group-line -->
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div><!-- .control-box.checkboxes -->
+			<div id="query-string">
+				<span class="query-label">装備名</span>
+				<div class="control-box text">
+					<input type="text" value="" id="equipment-name" placeholder="例：ぬるぬる柄の斧">
+				</div>
+			</div><!-- #query-string -->
+			<div id="query-grade">
+				<span class="query-label">グレード</span>
+				<div class="control-box slider">
+					<input type="text" id="grade-range" value="">
+				</div>
+			</div><!-- #query-grade -->
+			<div id="query-level">
+				<span class="query-label">装備可能レベル（特殊鍛錬考慮せず）</span>
+				<div class="control-box slider">
+					<input type="text" id="level-range" value="">
+				</div>
+			</div><!-- #query-level -->
+			<div id="query-rarities">
+				<span class="query-label">品質</span>
+				<div class="control-box checkboxes">
+					<input type="checkbox" id="query-poor"     data-label="Poor">
+					<input type="checkbox" id="query-normal"   data-label="Normal">
+					<input type="checkbox" id="query-good"     data-label="Good">
+					<input type="checkbox" id="query-master"   data-label="Master">
+					<input type="checkbox" id="query-legend"   data-label="Legend">
+					<input type="checkbox" id="query-artifact" data-label="Artifact">
+				</div><!-- .control-box.checkboxes -->
+			</div><!-- #query-rarities -->
 
-                            <div class="dialog-buttons">
-                                <button id="dialog-flags-reset">リセット</button>
-                                <button id="dialog-flags-close">閉じる</button>
-                            </div><!-- .dialog-buttons -->
-                        </div><!-- #dialog-flags -->
-                    </div><!-- .colorbox-load-contents -->
-                </div><!-- .control-box.dialog -->
-            </div><!-- #qyery-flags -->
+			<div id="query-classes">
+				<span class="query-label">職業</span>
+				<div class="control-box checkboxes">
+					<input type="checkbox" id="query-fig" data-label="FIG">
+					<input type="checkbox" id="query-thi" data-label="THI">
+					<input type="checkbox" id="query-mag" data-label="MAG">
+					<input type="checkbox" id="query-pri" data-label="PRI">
+					<input type="checkbox" id="query-sam" data-label="SAM">
+					<input type="checkbox" id="query-nin" data-label="NIN">
+					<input type="checkbox" id="query-bis" data-label="BIS">
+					<input type="checkbox" id="query-lor" data-label="LOR">
+					<input type="checkbox" id="query-clo" data-label="CLO">
+				</div><!-- .control-box.checkboxes -->
+			</div><!-- #query-classes -->
 
-            <div id="search-button-box-main" class="control-box buttons">
-                <button id="reqiest-reset-button">条件リセット</button>
-                <button id="search-button-main">検索</button>
-            </div><!-- #search-button-box-main -->
+			<div id="query-types">
+				<span class="query-label">種類</span>
+				<div class="control-box dialog">
+					<button id="choice-types">種類を選択</button>
+					<div class="colorbox-load-contents">
+						<div id="dialog-types">
+							<div class="control-box checkboxes">
+								<div class="wrap-category">
+									<span class="group-title">全選択・解除</span>
+									<div class="group-line">
+										<input type="checkbox" id="query-weapons" data-label="武器">
+										<input type="checkbox" id="query-protective-gear" data-label="防具">
+										<input type="checkbox" id="query-accessories" data-label="装飾品">
+									</div><!-- .group-line -->
+								</div><!-- .wrap-category -->
+								<div class="wrap-category" id="wrap-weapons">
+									<span class="group-title">武器</span>
+									<div class="group-line">
+										<input type="checkbox" id="query-one-handed-swords" data-label="片手剣">
+										<input type="checkbox" id="query-two-handed-swords" data-label="両手剣">
+										<input type="checkbox" id="query-one-handed-axws" data-label="片手斧">
+										<input type="checkbox" id="query-two-handed-axws" data-label="両手斧">
+										<input type="checkbox" id="query-one-handed-clubs" data-label="片手鈍器">
+										<input type="checkbox" id="query-two-handed-clubs" data-label="両手鈍器">
+									</div><!-- .group-line -->
+									<div class="group-line">
+										<input type="checkbox" id="query-spears" data-label="槍">
+										<input type="checkbox" id="query-hand-weapons" data-label="暗器">
+										<input type="checkbox" id="query-swords" data-label="短剣">
+										<input type="checkbox" id="query-two-handed-staffs" data-label="両手杖">
+										<input type="checkbox" id="query-katanas" data-label="刀">
+										<input type="checkbox" id="query-double-bladed-weapons" data-label="双刃">
+									</div><!-- .group-line -->
+									<div class="group-line">
+										<input type="checkbox" id="query-bows" data-label="弓">
+										<input type="checkbox" id="query-arrows" data-label="矢">
+										<input type="checkbox" id="query-guns" data-label="銃">
+										<input type="checkbox" id="query-bullets" data-label="銃弾">
+									</div><!-- .group-line -->
+								</div><!-- #wrap-weapons -->
+								<div class="wrap-category">
+									<span class="group-title">防具：まとめて</span>
+									<div class="group-line">
+										<input type="checkbox" id="query-head" data-label="頭装備">
+										<input type="checkbox" id="query-torso" data-label="上半身">
+										<input type="checkbox" id="query-legs" data-label="下半身">
+										<input type="checkbox" id="query-arms" data-label="腕装備">
+										<input type="checkbox" id="query-feet" data-label="足装備">
+										<input type="checkbox" id="query-shields" data-label="盾">
+									</div><!-- .group-line -->
+								</div><!-- .wrap-category -->
+								<div class="wrap-category" id="wrap-protective-gear">
+									<span class="group-title">防具：こまかく</span>
+									<div class="group-line">
+										<input type="checkbox" id="query-helmets" class="head" data-label="兜">
+										<input type="checkbox" id="query-armors" class="torso" data-label="鎧">
+										<input type="checkbox" id="query-greaves" class="legs" data-label="脚鎧">
+										<input type="checkbox" id="query-gauntlets" class="arms" data-label="手甲">
+										<input type="checkbox" id="query-solid-shoes" class="feet" data-label="鉄靴">
+										<input type="checkbox" id="query-large-shields" class="shields" data-label="大型盾">
+									</div><!-- .group-line -->
+									<div class="group-line">
+										<input type="checkbox" id="query-hats" class="head" data-label="帽子">
+										<input type="checkbox" id="query-coats" class="torso" data-label="外衣">
+										<input type="checkbox" id="query-clothes" class="legs" data-label="衣服">
+										<input type="checkbox" id="query-gloves" class="arms" data-label="手袋">
+										<input type="checkbox" id="query-leather-shoes" class="feet" data-label="革靴">
+										<input type="checkbox" id="query-medium-shileds" class="shields" data-label="中型盾">
+									</div><!-- .group-line -->
+									<div class="group-line">
+										<input type="checkbox" id="query-hoods" class="head" data-label="頭巾">
+										<input type="checkbox" id="query-tops" class="torso" data-label="上衣">
+										<input type="checkbox" id="query-bottoms" class="legs" data-label="下衣">
+										<input type="checkbox" id="query-bracelets" class="arms" data-label="腕輪">
+										<input type="checkbox" id="query-shoes" class="feet" data-label="靴">
+										<input type="checkbox" id="query-small-shileds" class="shields" data-label="小型盾">
+									</div><!-- .group-line -->
+									<div class="group-line">
+										<input type="checkbox" id="query-capes" data-label="外套">
+									</div><!-- .group-line -->
+								</div><!-- .wrap-category -->
+								<div class="wrap-category" id="wrap-accessories">
+									<span class="group-title">装飾品</span>
+									<div class="group-line">
+										<input type="checkbox" id="query-rings" data-label="指輪">
+										<input type="checkbox" id="query-earrings" data-label="耳飾り">
+										<input type="checkbox" id="query-necklaces" data-label="首飾り">
+										<input type="checkbox" id="query-belts" data-label="ベルト">
+									</div><!-- .group-line -->
+								</div><!-- #wrap-accessories -->
+							</div><!-- .control-box.checkboxes -->
 
-            <div id="usage-button-box" class="control-box buttons">
-                <button id="usage-button">使い方を挿入</button>
-            </div><!-- #search-button-box-main -->
-        </div><!-- #query-classes -->
-    </div><!-- #search-pane -->
+							<div class="dialog-buttons">
+								<button id="dialog-types-reset">チェック全解除</button>
+								<button id="dialog-types-close">閉じる</button>
+							</div><!-- .dialog-buttons -->
+						</div><!-- #dialog-types -->
+					</div><!-- .colorbox-load-contents -->
+				</div><!-- .control-box.dialog -->
+			</div><!-- #qyery-types -->
 
-    <footer>
-        <p>
-            Created by miku.
-            <br> "Wizardry(R)" of GMO Gamepot Inc. All rights reserved.
-            <br> Wizardry Renaissance(TM) (c)2009 GMO Gamepot Inc. All rights reserved.
-        </p>
-    </footer>
+			<div id="query-flags">
+				<span class="query-label">その他（フラグ）</span>
+				<div class="control-box dialog">
+					<button id="choice-flags">その他こまかな条件を選択</button>
+					<div class="colorbox-load-contents">
+						<div id="dialog-flags">
+							<div class="control-box checkboxes">
+								<table>
+									<tbody>
+										<tr>
+											<td>
+												<span class="group-title">装備時付与効果</span>
+												<div class="group-line">
+													<input type="radio" name="option-when_equipped" class="all" data-flag="when_equipped" data-label="すべて" checked>
+													<input type="radio" name="option-when_equipped" class="only" data-flag="when_equipped" data-label="のみ">
+													<input type="radio" name="option-when_equipped" class="eliminate" data-flag="when_equipped" data-label="除外">
+												</div><!-- .group-line -->
+
+											</td>
+											<td>
+												<span class="group-title">状態異常付与</span>
+												<div class="group-line">
+													<input type="radio" name="option-status_change" class="all" data-flag="status_change" data-label="すべて" checked>
+													<input type="radio" name="option-status_change" class="only" data-flag="status_change" data-label="のみ">
+													<input type="radio" name="option-status_change" class="eliminate" data-flag="status_change" data-label="除外">
+												</div><!-- .group-line -->
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<span class="group-title">祝福されている<img src="images/blessed.png" alt=""></span>
+												<div class="group-line">
+													<input type="radio" name="option-blessed" class="all" data-flag="blessed" data-label="すべて" checked>
+													<input type="radio" name="option-blessed" class="only" data-flag="blessed" data-label="のみ">
+													<input type="radio" name="option-blessed" class="eliminate" data-flag="blessed" data-label="除外">
+												</div><!-- .group-line -->
+											</td>
+											<td>
+												<span class="group-title">呪われている<img src="images/cursed.png" alt=""></span>
+												<div class="group-line">
+													<input type="radio" name="option-cursed" class="all" data-flag="cursed" data-label="すべて" checked>
+													<input type="radio" name="option-cursed" class="only" data-flag="cursed" data-label="のみ">
+													<input type="radio" name="option-cursed" class="eliminate" data-flag="cursed" data-label="除外">
+												</div><!-- .group-line -->
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<span class="group-title">使用後トレード不可<img src="images/used.png" alt=""></span>
+												<div class="group-line">
+													<input type="radio" name="option-used" class="all" data-flag="used" data-label="すべて" checked>
+													<input type="radio" name="option-used" class="only" data-flag="used" data-label="のみ">
+													<input type="radio" name="option-used" class="eliminate" data-flag="used" data-label="除外">
+												</div><!-- .group-line -->
+											</td>
+											<td>
+												<span class="group-title">売却不可</span>
+												<div class="group-line">
+													<input type="radio" name="option-sell" class="all" data-flag="sell" data-label="すべて" checked>
+													<input type="radio" name="option-sell" class="only" data-flag="sell" data-label="のみ">
+													<input type="radio" name="option-sell" class="eliminate" data-flag="sell" data-label="除外">
+												</div><!-- .group-line -->
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<span class="group-title">トレード不可</span>
+												<div class="group-line">
+													<input type="radio" name="option-trade" class="all" data-flag="trade" data-label="すべて" checked>
+													<input type="radio" name="option-trade" class="only" data-flag="trade" data-label="のみ">
+													<input type="radio" name="option-trade" class="eliminate" data-flag="trade" data-label="除外">
+												</div><!-- .group-line -->
+											</td>
+											<td>
+												<span class="group-title">略奪されない<img src="images/stolen.png" alt=""></span>
+												<div class="group-line">
+													<input type="radio" name="option-stolen" class="all" data-flag="stolen" data-label="すべて" checked>
+													<input type="radio" name="option-stolen" class="only" data-flag="stolen" data-label="のみ">
+													<input type="radio" name="option-stolen" class="eliminate" data-flag="stolen" data-label="除外">
+												</div><!-- .group-line -->
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div><!-- .control-box.checkboxes -->
+
+							<div class="dialog-buttons">
+								<button id="dialog-flags-reset">リセット</button>
+								<button id="dialog-flags-close">閉じる</button>
+							</div><!-- .dialog-buttons -->
+						</div><!-- #dialog-flags -->
+					</div><!-- .colorbox-load-contents -->
+				</div><!-- .control-box.dialog -->
+			</div><!-- #qyery-flags -->
+
+			<div id="retrieval-button-box-main" class="control-box buttons">
+				<button id="reqiest-reset-button">条件リセット</button>
+				<button id="retrieval-button-main">検索</button>
+			</div><!-- #retrieval-button-box-main -->
+
+			<div id="usage-button-box" class="control-box buttons">
+				<button id="usage-button">使い方を挿入</button>
+			</div><!-- #usage-button-box-main -->
+		</div><!-- #retrieval-queries -->
+	</div><!-- #retrieval-pane -->
+
+	<footer>
+		<p>
+			Created by miku.
+			<br> "Wizardry(R)" of GMO Gamepot Inc. All rights reserved.
+			<br> Wizardry Renaissance(TM) (c)2009 GMO Gamepot Inc. All rights reserved.
+		</p>
+	</footer>
 </body>
 
 </html>
