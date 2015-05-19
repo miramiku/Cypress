@@ -33,89 +33,51 @@
 
 @tool-button-side: 25px;
 
+@font-face {
+	font-family: "icons";
+	src: url( "icons.woff" ) format( "woff" ),
+		 url( "icons.svg" )  format( "svg" );
+	font-weight: normal;
+	font-style: normal;
+}
+
+.icon {
+	font-family: icons;
+}
+
 /* ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
  * header
  * ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== */
+#logo {
+	margin-left: 15px;
+}
+
 #tool-commentary {
-	float: right;
 	display: block;
+	float: right;
 	line-height: @headerHeight;
 	margin-right: 20px;
 }
 
-#search-request-title {
-	float: right;
-	display: block;
-	font-size: 14px;
-	line-height: @headerHeight;
-}
+#sorting-pane-button   { .pane-button( left, 24px );  }
+#retrieval-pane-button { .pane-button( right, 20px ); }
 
-#search-box {
-	.parentBox();
-	float: right;
-}
-
-	#toolbox-button-box {
-		position: relative;
-		float: right;
-		margin: 5px;
-		height: 40px;
-		width: 40px;
-		cursor: pointer;
-		overflow: hidden;
-
-		.close {
-			background: transparent;
-
-			&:before {
-				.toolbox-button-box( -45deg );
-			}
-
-			&:after {
-				.toolbox-button-box( -135deg );
-			}
-		}
-
-		.toolbox-button-box( @deg ) {
-			margin-top: 0;
-			transform: rotate( @deg );
-			-webkit-transform: rotate( @deg );
-		}
+.pane-button( @float, @iconSize ) {
+	cursor: pointer;
+	float: @float;
+	height: 40px;
+	line-height: 40px;
+	margin: 5px 10px;
+	.button-icon {
+		.icon;
+		font-size: @iconSize;
+		vertical-align: middle;
 	}
-
-		#toolbox-button {
-			display: block;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			width: 24px;
-			height: 4px;
-			border-radius: 1px;
-			margin: -2px 0 0 -11px;
-			background: #ffffff;
-			transition: 0.2s;
-
-			&:before {
-				.toolbox-button( -10px );
-			}
-
-			&:after {
-				.toolbox-button( 6px );
-			}
-		}
-
-		.toolbox-button( @marginTop ) {
-			display: block;
-			content: "";
-			position: absolute;
-			top: 50%;
-			left: 0;
-			width: 24px;
-			height: 4px;
-			background: #ffffff;
-			transition: 0.3s;
-			margin-top: @marginTop;
-		}
+	.button-text {
+		font-size: 14px;
+		vertical-align: middle;
+	}
+}
 
 /* ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
  * equipments
@@ -543,26 +505,19 @@
 		}
 	} // .equipment-card
 } // #equipments
-
 	#landing-title {
 		position: relative;
 		z-index: 1;
 	}
-
 	#landing {
-		.newline {
-			margin-top: 10px;
-		}
-
-		img {
-			vertical-align: middle;
-		}
+		.newline { margin-top: 10px; }
+		img { vertical-align: middle; }
 	}
 
 /* ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
- * search-pane
+ * sorting-pane, retrieval-pane common styles
  * ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== */
-#search-pane {
+.pane() {
 	padding: @headerHeight + 5px 5px 5px 5px;
 	font-size: 12px;
 	box-shadow: -1px 0 4px fade( @themeColor, 90% );
@@ -570,7 +525,74 @@
 	.userSelect( none );
 }
 
-	#search-queries {
+/* ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
+ * sorting-pane
+ * ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== */
+#sorting-pane {
+	.pane();
+}
+
+.sort-checkbox-top-category {
+	display: block;
+	overflow: hidden;
+	margin: 10px 15px 0;
+	.icheck( 70px );
+	.icheckbox {
+		top: 1px;
+	}
+}
+	.sorting-option( @margin-left ) {
+		display: none;
+		overflow: hidden;
+		margin: 5px 0 15px @margin-left ;
+	}
+
+	.order-checkbox( @width ) {
+		.icheck( @width );
+		.icheckbox {
+			.setCheckboxColor( fade( #aa846f, 80% ) );
+		}
+	}
+
+	#lexicographic-sort-list {
+		.sorting-option( 30px );
+		.order-checkbox( 90px );
+	}
+
+	#numeric-sort-list {
+		.sorting-option( 15px );
+		.label {
+			display: block;
+			overflow: hidden;
+			&:before {
+				content: "* ";
+			}
+		}
+		.checkboxes {
+			margin-left: 15px;
+			overflow: hidden;
+		}
+	}
+
+	.numeric-sort-subset( @width ) {
+		.order-checkbox( @width );
+		overflow: hidden;
+		margin-bottom: 10px;
+	}
+
+	#sort-basic-property    { .numeric-sort-subset( 60px ); }
+	#sort-special-effect    { .numeric-sort-subset( 30px ); }
+	#sort-status-change     { .numeric-sort-subset( 30px ); }
+	#sort-magic-attack      { .numeric-sort-subset( 20px ); }
+	#sort-magic-resist      { .numeric-sort-subset( 20px ); }
+
+/* ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
+ * retrieval-pane6
+ * ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== */
+#retrieval-pane {
+	.pane();
+}
+	#retrieval-queries {
 		.query-label {
 			display: block;
 			margin: 5px 0 2px;
@@ -591,11 +613,9 @@
 			display: none;
 		}
 	}
-
-		#search-button-box-sub {
+		#retrieval-button-box-sub {
 			.parentBox();
 		}
-
 			#records {
 				width: 130px;
 				text-align: right;
@@ -612,15 +632,13 @@
 					color: @positiveColor;
 				}
 			}
-
-			#search-button-sub {
+			#retrieval-button-sub {
 				float: right;
 				text-align: right;
 				margin-right: 20px;
 				margin-bottom: 0;
 			}
-
-		#search-button-box-main {
+		#retrieval-button-box-main {
 			margin-top: 50px;
 			margin-right: 20px;
 			text-align: right;
@@ -628,13 +646,11 @@
 				margin-left: 20px;
 			}
 		}
-
 		#usage-button-box {
 			margin-top: 25px;
 			margin-right: 20px;
 			text-align: right;
 		}
-
 		#equipment-name {
 			display: block;
 			border: solid 1px @standardUIColor;
@@ -661,13 +677,11 @@
 			}
 
 		}
-
 		#query-level {
 			.query-label {
 				margin-top: 0;
 			}
 		}
-
 		#query-rarities {
 			.parentBox();
 
@@ -676,14 +690,20 @@
 			}
 
 			.icheck( 60px );
+			.icheckbox {
+				&.poor     { .setCheckboxColor( @poorColor );     }
+				&.normal   { .setCheckboxColor( @normalColor );   }
+				&.good     { .setCheckboxColor( @goodColor );     }
+				&.master   { .setCheckboxColor( @masterColor );   }
+				&.legend   { .setCheckboxColor( @legendColor );   }
+				&.artifact { .setCheckboxColor( @artifactColor ); }
+			}
 		}
-
 		#query-classes {
 			.parentBox();
 
 			.icheck( 28px );
 		}
-
 		#dialog-types, #dialog-flags {
 			.userSelect( none );
 
@@ -715,11 +735,9 @@
 				}
 			}
 		}
-
 		#dialog-types {
 			.icheck( 50px );
 		}
-
 		#dialog-flags {
 			.icheck( 50px );
 		}
@@ -766,21 +784,14 @@
 		}
 
 		.setCheckboxColor( @standardUIColor );
+	}
+}
 
-		&.poor     { .setCheckboxColor( @poorColor );     }
-		&.normal   { .setCheckboxColor( @normalColor );   }
-		&.good     { .setCheckboxColor( @goodColor );     }
-		&.master   { .setCheckboxColor( @masterColor );   }
-		&.legend   { .setCheckboxColor( @legendColor );   }
-		&.artifact { .setCheckboxColor( @artifactColor ); }
+.setCheckboxColor( @color ) {
+	border: 1px solid @color;
 
-		.setCheckboxColor( @color ) {
-			border: 1px solid @color;
-
-			&.hover, &.checked.hover {
-				.cypressGradient( 0% 0%, fade( @color, 80% ), transparent 40% );
-			}
-		}
+	&.hover, &.checked.hover {
+		.cypressGradient( 0% 0%, fade( @color, 80% ), transparent 40% );
 	}
 }
 
