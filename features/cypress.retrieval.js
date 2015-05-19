@@ -152,6 +152,12 @@ CYPRESS.STATUS = {
 	}
 };
 
+CYPRESS.SORT_CONFIG = {
+	category: "CATALOG",
+	key: "CATALOG",
+	order: "ASC"
+};
+
 /** データ構築に共通する処理をまとめたクラス */
 CYPRESS.BuilderUtils = {
 	isWeapon: function ( type ) {
@@ -1109,6 +1115,31 @@ CYPRESS.makeRequest = function () {
 	return _request;
 };
 
+CYPRESS.makeCompareFunction = function () {
+	"use strict";
+
+	var _compare;
+
+	       if ( $( "#catalog-order" ).prop( "checked" ) ) {
+		_compare = function ( a, b ) {
+				return a.catalog - b.catalog;
+			};
+	} else if ( $( "#lexicographic-order" ).prop( "checked" ) ) {
+//			<input id="order-name"          type="radio" name="laxicographic-sort-order" data-label="装備名" checked>
+//			<input id="order-when-equipped" type="radio" name="laxicographic-sort-order" data-label="装備時付与効果">
+//			<input id="order-status-change" type="radio" name="laxicographic-sort-order" data-label="状態異常">
+		_compare = function ( a, b ) {
+				return b.catalog - a.catalog;
+			};
+	} else { // $( "#numeric-order" ).prop( "checked" ) => true
+		_compare = function ( a, b ) {
+				return b.catalog - a.catalog;
+			};
+	}
+
+	return _compare;
+};
+
 /**
  * 鍛錬をシミュレートして鍛錬後の装備データオブジェクトの装備データを書き換える
  * @param Object equipment 装備データオブジェクト
@@ -1184,6 +1215,7 @@ CYPRESS.Manager = ( function () {
 		},
 		/** 検索結果から装備一覧を描写する */
 		_display = function () {
+			_equipments.sort( CYPRESS.makeCompareFunction() );
 			CYPRESS.displayEquipmentCard( _equipments );
 		},
 		/**
@@ -1381,8 +1413,51 @@ $( document ).ready( function () {
 			$( "#dialog-flags .control-box input" )
 			.each( iCheckInitialize );
 
-			$( "#sorting-pane [name=sort-category]" )
-			.each( iCheckInitialize );
+			// ソートペイン
+			( function () {
+				var changeConfig = function ( category, key, order ) {
+						var config = CYPRESS.SORT_CONFIG;
+
+						config.category = category;
+						config.key = key;
+						config.order = order;
+					},
+					checkedBehavior = function( category ) {
+						return function () {
+							changeConfig( $( this ).data( "category" ),
+										  $( "#" + category + "-sort-list :checked" ).data( "key" ),
+										  $( "#" + category + "-sort-order-change" ).data( "order" ) );
+
+							$( "#" + category + "-sort-list" ).slideDown();
+							$( "#" + category + "-sort-order-change" ).prop( "disabled", false );
+						};
+					},
+					uncheckedBehavior = function( category ) {
+						return function () {
+							$( "#" + category + "-sort-list" ).slideUp();
+							$( "#" + category + "-sort-order-change" ).prop( "disabled", true );
+						};
+					};
+
+				$( "#sorting-pane [name=sort-category]" )
+				.each( iCheckInitialize );
+
+				$( "#lexicographic-sort-list input" )
+				.each( iCheckInitialize );
+
+				$( "#catalog-order" )
+				.on( "ifChecked", function () {
+					changeConfig( "CATALOG", "CATALOG", "ASC" );
+				} );
+
+				$( "#lexicographic-order" )
+				.on( "ifChecked", checkedBehavior( "lexicographic" ) )
+				.on( "ifUnchecked", uncheckedBehavior( "lexicographic" ) );
+
+				$( "#numeric-order" )
+				.on( "ifChecked", checkedBehavior( "numeric" ) )
+				.on( "ifUnchecked", uncheckedBehavior( "numeric" ) );
+			} () );
 		} () );
 	} () );
 
@@ -1535,32 +1610,16 @@ $( document ).ready( function () {
 						};
 					};
 
-				$( "#lexicographic-sort-order-select" ).bind( "click", changeOrder( {
-					ASC:  "<img src=\"images/lexicographic-sort-asc.png\">  辞書順　",
-					DESC: "<img src=\"images/lexicographic-sort-desc.png\"> 逆辞書順"
+				$( "#lexicographic-sort-order-change" ).bind( "click", changeOrder( {
+					ASC:  "<span class=\"icon\">&#xe603;</span> 辞書順　",
+					DESC: "<span class=\"icon\">&#xe602;</span> 逆辞書順"
 				} ) );
 
-				$( "#numeric-sort-order-select" ).bind( "click", changeOrder( {
-					ASC:  "<img src=\"images/numeric-sort-asc.png\">  低→高",
-					DESC: "<img src=\"images/numeric-sort-desc.png\"> 高→低"
+				$( "#numeric-sort-order-change" ).bind( "click", changeOrder( {
+					ASC:  "<span class=\"icon\">&#xe601;</span> 低 → 高",
+					DESC: "<span class=\"icon\">&#xe600;</span> 高 → 低"
 				} ) );
 			} () );
-
-			$( "#lexicographic-order" )
-				.on( "ifChecked", function () {
-					$( "#lexicographic-sort-list" ).slideDown();
-				} )
-				.on( "ifUnchecked", function () {
-					$( "#lexicographic-sort-list" ).slideUp();
-				} );
-
-			$( "#numeric-order" )
-				.on( "ifChecked", function () {
-					$( "#numeric-sort-list" ).slideDown();
-				} )
-				.on( "ifUnchecked", function () {
-					$( "#numeric-sort-list" ).slideUp();
-				} );
 		} () );
 
 		// Equipment Card Toolbox

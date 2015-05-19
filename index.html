@@ -33,8 +33,8 @@
 <body id="cypress">
 	<header>
 		<div id="sorting-pane-button" class="sb-toggle-left">
-			<img src="images/sorting-icon.png" alt="sorting-icon">
-			並べ替え
+			<span class="button-icon">&#xe605;</span>
+			<span class="button-text">並べ替え</span>
 		</div>
 
 		<div id="logo">
@@ -42,8 +42,8 @@
 		</div>
 
 		<div id="retrieval-pane-button" class="sb-toggle-right">
-			検索・抽出
-			<img src="images/retrieval-icon.png" alt="retrieval-icon">
+			<span class="button-text">検索・抽出</span>
+			<span class="button-icon">&#xe604;</span>
 		</div>
 
 		<span id="tool-commentary"></span>
@@ -86,13 +86,13 @@
 						<ul>
 							<li>ソウルネーム： みくε（アルバロア）</li>
 							<li>Twitter:
-								<a href="https://twitter.com/miramiku"><img src="images/twitter-icon.png" alt="@miramiku"> @miramiku</a>
+								<a href="https://twitter.com/miramiku"><img src="images/twitter-icon.png" alt="@miramiku"> @miramiku <span class="icon">&#xea91;</span></a>
 							</li>
 							<li>メールアドレス：<img src="images/mail.png" alt="">（画像です）</li>
 						</ul>
 						<h4>Resources: リソース情報</h4>
 						<ul>
-							<li>Ripository <img src="images/github-icon.png" alt="github repository">: <a href="https://github.com/miramiku/Cypress">miramiku/Cypress</a></li>
+							<li>Ripository: <a href="https://github.com/miramiku/Cypress">miramiku/Cypress <span class="icon">&#xeab4;</span></a></li>
 							<li>Processed Database: <a href="https://dl.dropboxusercontent.com/u/6164477/wizon/equipment.json">equipment.json</a></li>
 							<li>Original Database: <a href="https://onedrive.live.com/redir?page=view&amp;resid=716B8A626FB713C5!2012&amp;authkey=!AN5inIkYaDGbvAE">equipment.db.xlsm (Read only)</a></li>
 						</ul>
@@ -121,20 +121,18 @@
 			<input id="catalog-order" type="radio" name="sort-category" data-label="標準" checked>
 		</div>
 		<div class="sort-checkbox-top-category">
-			<input id="lexicographic-order" type="radio" name="sort-category" data-label="テキスト">
-			<button id="lexicographic-sort-order-select" data-order="ASC"><img src="images/lexicographic-sort-asc.png"> 辞書順　</button>
+			<input id="lexicographic-order" type="radio" name="sort-category" data-category="LAXICOGRAPHIC" data-label="テキスト">
+			<button id="lexicographic-sort-order-change" data-order="ASC" disabled><span class="icon">&#xe603;</span> 辞書順　</button>
 		</div>
 		<div id="lexicographic-sort-list" class="sorting-option">
-			<ul>
-				<li>名前</li>
-				<li>装備時付与効果</li>
-				<li>状態異常</li>
-			</ul>
+			<input id="order-name"          type="radio" name="laxicographic-sort-order" data-key="NAME"          data-label="装備名" checked>
+			<input id="order-when-equipped" type="radio" name="laxicographic-sort-order" data-key="WHEN_EQUIPPED" data-label="装備時付与効果">
+			<input id="order-status-change" type="radio" name="laxicographic-sort-order" data-key="STATUS_CHANGE" data-label="状態異常">
 		</div><!-- #lexicographic-sort -->
 
 		<div class="sort-checkbox-top-category">
-			<input id="numeric-order" type="radio" name="sort-category" data-label="順序・数値">
-			<button id="numeric-sort-order-select" data-order="ASC"><img src="images/numeric-sort-asc.png"> 低→高</button>
+			<input id="numeric-order" type="radio" name="sort-category" data-category="NUMERIC" data-label="順序・数値">
+			<button id="numeric-sort-order-change" data-order="ASC" disabled><span class="icon">&#xe601;</span> 低 → 高</button>
 		</div>
 
 		<div id="numeric-sort-list" class="sorting-option">
@@ -456,7 +454,6 @@
 			</div><!-- #usage-button-box-main -->
 		</div><!-- #retrieval-queries -->
 	</div><!-- #retrieval-pane -->
-
 
 	<footer>
 		<p>

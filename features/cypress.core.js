@@ -182,24 +182,20 @@ CYPRESS.EQUIPMENT = ( function () {
  * @param request 検索条件
  * @return 装備データオブジェクトの配列
  */
-CYPRESS.search = ( function () {
+CYPRESS.search = function ( request ) {
 	"use strict";
 
-	var _search = function ( request ) {
-			var catalogs = [];
+	var catalogs = [];
 
-			$.each( CYPRESS.EQUIPMENT, function ( catalog, record ) {
-				if ( request( this ) ) {
-					catalogs.push( {
-						catalog: catalog,
-						forge: 0,
-						equipment: [].concat( record )
-					} );
-				}
+	$.each( CYPRESS.EQUIPMENT, function ( catalog, record ) {
+		if ( request( this ) ) {
+			catalogs.push( {
+				catalog: catalog,
+				forge: 0,
+				equipment: [].concat( record )
 			} );
+		}
+	} );
 
-			return catalogs;
-		};
-
-	return _search;
-} () );
+	return catalogs;
+};
