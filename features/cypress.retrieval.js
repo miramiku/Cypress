@@ -1616,10 +1616,17 @@ $( document ).ready( function () {
 			var $usage = $( "#usage" );
 
 			$usage.remove();
-
-			$( "#equipment-name" ).bind( "change", function () {
-				CYPRESS.Manager.search();
+			$( "#usage-button" ).bind( "click", function () {
+				// memo: すでに要素があっても多重に追加されない
+				$( "#equipments" ).prepend( $usage );
+				$( "#usage-button" ).prop( "disabled", true );
 			} );
+
+			$( "#logo" ).bind( "click", function () {
+				$( "body" ).animate( { scrollTop: 0 }, "slow", "swing" );
+			} );
+
+			$( "#equipment-name" ).bind( "change", CYPRESS.Manager.search );
 
 			$( "#retrieval-button-main, #retrieval-button-sub" ).bind( "click", function () {
 				CYPRESS.Manager.display();
@@ -1641,13 +1648,6 @@ $( document ).ready( function () {
 				$( "#dialog-flags-reset" ).click();
 
 				CYPRESS.Manager.search();
-			} );
-
-			$( "#usage-button" ).bind( "click", function () {
-				// memo: すでに要素があっても多重に追加されない
-				$( "#equipments" ).prepend( $usage );
-
-				$( "#usage-button" ).prop( "disabled", true );
 			} );
 
 			// ソートの昇順・降順切り替え
