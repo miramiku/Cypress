@@ -194,7 +194,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 
 		// method
 		buildCard = {
-			card: "<button class=\"data-copy\"><img src=\"images/copy-icon.png\" alt=\"copy equipment data\"></button>",
+			card: "<button class=\"data-copy\">&#xe604;</button>",
 
 			buildTransfarTagData: function ( column, content ) {
 				this.card += "<span class=\"" + column + "\">" + ( record[ COLUMN[ column.toUpperCase() ] ] ? "" : content ) + "</span>";
