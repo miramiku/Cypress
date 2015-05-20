@@ -194,7 +194,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 
 		// method
 		buildCard = {
-			card: "<button class=\"data-copy\"><img src=\"images/copy-icon.png\" alt=\"copy equipment data\"></button>",
+			card: "<button class=\"data-copy\">&#xe604;</button>",
 
 			buildTransfarTagData: function ( column, content ) {
 				this.card += "<span class=\"" + column + "\">" + ( record[ COLUMN[ column.toUpperCase() ] ] ? "" : content ) + "</span>";
@@ -282,7 +282,10 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 				return this;
 			},
 			grade: function () {
-				this.direct( "grade", COLUMN.GRADE );
+				var grade = record[ COLUMN.GRADE ];
+
+				this.card += grade ? "<span class=\"grade\">" + grade + "</span>" : "";
+
 				return this;
 			},
 			name: function () {
@@ -398,13 +401,14 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 							   "<span class=\"quality-rate guns" + (quality !== 100 ? quality < 100 ? " negative" : " positive" : "") + "\">" + quality + "%</span>";
 					},
 					"小型盾": function () {
-						return "<span class=\"quality gp\">"        + record[ COLUMN.QUALITY ]       + "</span>";
+						var gp = record[ COLUMN.QUALITY ];
+						return gp ? "<span class=\"quality gp\">" + gp                       + "</span>" : "";
 					},
 					"中型盾": function () {
-						return "<span class=\"quality gp\">"        + record[ COLUMN.QUALITY ]       + "</span>";
+						return      "<span class=\"quality gp\">" + record[ COLUMN.QUALITY ] + "</span>";
 					},
 					"大型盾": function () {
-						return "<span class=\"quality gp\">"        + record[ COLUMN.QUALITY ]       + "</span>";
+						return      "<span class=\"quality gp\">" + record[ COLUMN.QUALITY ] + "</span>";
 					}
 				};
 
@@ -1616,10 +1620,17 @@ $( document ).ready( function () {
 			var $usage = $( "#usage" );
 
 			$usage.remove();
-
-			$( "#equipment-name" ).bind( "change", function () {
-				CYPRESS.Manager.search();
+			$( "#usage-button" ).bind( "click", function () {
+				// memo: すでに要素があっても多重に追加されない
+				$( "#equipments" ).prepend( $usage );
+				$( "#usage-button" ).prop( "disabled", true );
 			} );
+
+			$( "#logo" ).bind( "click", function () {
+				$( "body" ).animate( { scrollTop: 0 }, "slow", "swing" );
+			} );
+
+			$( "#equipment-name" ).bind( "change", CYPRESS.Manager.search );
 
 			$( "#retrieval-button-main, #retrieval-button-sub" ).bind( "click", function () {
 				CYPRESS.Manager.display();
@@ -1641,13 +1652,6 @@ $( document ).ready( function () {
 				$( "#dialog-flags-reset" ).click();
 
 				CYPRESS.Manager.search();
-			} );
-
-			$( "#usage-button" ).bind( "click", function () {
-				// memo: すでに要素があっても多重に追加されない
-				$( "#equipments" ).prepend( $usage );
-
-				$( "#usage-button" ).prop( "disabled", true );
 			} );
 
 			// ソートの昇順・降順切り替え
