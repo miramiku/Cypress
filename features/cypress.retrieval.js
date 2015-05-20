@@ -970,7 +970,7 @@ CYPRESS.makeRequest = function () {
 				floor = parseInt( range[ 0 ], 10 ),
 				ceil = parseInt( range[ 1 ], 10 );
 
-			if ( floor === 1 ) {
+			if ( floor === 0 ) {
 				if ( ceil === CYPRESS.CONSTS.CAPS.GRADE ) {
 					return function ( record ) { // case 1: 全範囲
 						return true;
@@ -999,7 +999,7 @@ CYPRESS.makeRequest = function () {
 				floor = parseInt( range[ 0 ], 10 ),
 				ceil = parseInt( range[ 1 ], 10 );
 
-			if ( floor === 1 ) {
+			if ( floor === 0 ) {
 				if ( ceil === CYPRESS.CONSTS.CAPS.LEVEL ) {
 					return function ( record ) { // case 1: 全範囲
 						return true;
@@ -1237,16 +1237,17 @@ CYPRESS.Manager = ( function () {
 
 	var _equipments = [], // private field
 		_writeRecords = function ( records ) { // private function
+			console.log( $( "#search-button-main" ).prop( "disabled" ) );
 			$( "#records" ).html( ( function () {
 				switch ( records ) {
 				case 0:
-					$( "#search-button-main, #search-button-sub" ).prop( "disabled", true );
+					$( "#retrieval-button-main, #retrieval-button-sub" ).prop( "disabled", true );
 					return "<span class=\"no-records\">no records</span>";
 				case CYPRESS.CONSTS.ALL_RECORDS:
-					$( "#search-button-main, #search-button-sub" ).prop( "disabled", false );
+					$( "#retrieval-button-main, #retrieval-button-sub" ).prop( "disabled", false );
 					return "<span class=\"all-records\">" + CYPRESS.CONSTS.ALL_RECORDS + " (all) records</span>";
 				default:
-					$( "#search-button-main, #search-button-sub" ).prop( "disabled", false );
+					$( "#retrieval-button-main, #retrieval-button-sub" ).prop( "disabled", false );
 					return "<span>" + records + " records</span>";
 				}
 			} () ) );
@@ -1357,7 +1358,7 @@ $( document ).ready( function () {
 		( function () {
 			$( "#grade-range" ).ionRangeSlider( {
 				"type": "double",
-				"min": 1,
+				"min": 0,
 				"max": CYPRESS.CONSTS.CAPS.GRADE,
 				"hide_min_max": true,
 				"values_separator": "-",
