@@ -282,7 +282,10 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 				return this;
 			},
 			grade: function () {
-				this.direct( "grade", COLUMN.GRADE );
+				var grade = record[ COLUMN.GRADE ];
+
+				this.card += grade ? "<span class=\"grade\">" + grade + "</span>" : "";
+
 				return this;
 			},
 			name: function () {
