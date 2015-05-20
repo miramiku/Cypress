@@ -398,13 +398,14 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 							   "<span class=\"quality-rate guns" + (quality !== 100 ? quality < 100 ? " negative" : " positive" : "") + "\">" + quality + "%</span>";
 					},
 					"小型盾": function () {
-						return "<span class=\"quality gp\">"        + record[ COLUMN.QUALITY ]       + "</span>";
+						var gp = record[ COLUMN.QUALITY ];
+						return gp ? "<span class=\"quality gp\">" + gp                       + "</span>" : "";
 					},
 					"中型盾": function () {
-						return "<span class=\"quality gp\">"        + record[ COLUMN.QUALITY ]       + "</span>";
+						return      "<span class=\"quality gp\">" + record[ COLUMN.QUALITY ] + "</span>";
 					},
 					"大型盾": function () {
-						return "<span class=\"quality gp\">"        + record[ COLUMN.QUALITY ]       + "</span>";
+						return      "<span class=\"quality gp\">" + record[ COLUMN.QUALITY ] + "</span>";
 					}
 				};
 
