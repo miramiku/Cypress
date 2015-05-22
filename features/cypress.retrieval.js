@@ -59,8 +59,7 @@ CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR = [
 /** 表示用装備データ生成に関する集合・ベクトル */
 CYPRESS.EQUIPMENT_STYLE = {
 	ORDERS: {// 表示順序定義
-		CLASSES:             [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO" ],
-	//  CLASSES:             [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO", "ALC" ],
+		CLASSES:             [ "FIG", "THI", "MAG", "PRI", "SAM", "NIN", "BIS", "LOR", "CLO", "ALC" ],
 		PHYSICAL_ATTRIBUTES: [ "SLASH", "STRIKE", "PIERCE" ],
 		SPECIAL_EFFECTS:     [ "HP", "MP", "STR", "VIT", "DEX", "AGI", "INT", "PIE", "LUK" ],
 		RESISTANCE:          [ "POISON", "PARALYZE", "PETRIFY", "FAINT", "BLIND", "SLEEP", "SILENCE", "CHARM", "CONFUSION", "FEAR" ],
@@ -1038,8 +1037,8 @@ CYPRESS.makeRequest = function () {
 					return mask;
 				} () );
 
-			// memo: 511: FIG -> CLO ( without ALC )
-			if ( requireMask === 0 || requireMask === 511 ) {
+			// memo: 1023: FIG -> ALC
+			if ( requireMask === 0 || requireMask === 1023 ) {
 				return function ( record ) {
 					return true;
 				};
