@@ -1147,34 +1147,33 @@ CYPRESS.makeCompareFunction = function () {
 			"Legend":   5,
 			"Artifact": 6,
 		},
-		_compare;
-
-	switch ( CONFIG.category ) {
-	case "LAXICOGRAPHIC":
-		_compare = function ( a, b ) {
-			return ( a.equipment[ COLUMN[ CONFIG.key ] ] > b.equipment[ COLUMN[ CONFIG.key ] ] ?  1 :
-				     a.equipment[ COLUMN[ CONFIG.key ] ] < b.equipment[ COLUMN[ CONFIG.key ] ] ? -1 :
-				                                                                                  0 ) * order;
+		_compare = {
+			LAXICOGRAPHIC: function () {
+					return function ( a, b ) {
+						return ( a.equipment[ COLUMN[ CONFIG.key ] ] > b.equipment[ COLUMN[ CONFIG.key ] ] ?  1 :
+								 a.equipment[ COLUMN[ CONFIG.key ] ] < b.equipment[ COLUMN[ CONFIG.key ] ] ? -1 :
+																											  0 ) * order;
+					}
+				},
+			NUMERIC: function () {
+					if ( CONFIG.key === "RARITY" ) { // 順序
+						return function ( a, b ) {
+							return ( RARITY_CODE[ a.equipment[ COLUMN.RARITY ] ] - RARITY_CODE[ b.equipment[ COLUMN.RARITY ] ] ) * order;
+						};
+					} else { // 数値項目
+						return function ( a, b ) {
+							return ( a.equipment[ COLUMN[ CONFIG.key ] ] - b.equipment[ COLUMN[ CONFIG.key ] ] ) * order;
+						};
+					}
+				},
+			CATALOG: function () {
+				return function ( a, b ) {
+					return a.catalog - b.catalog;
+				};
+			}
 		};
-		break;
-	case "NUMERIC":
-		if ( CONFIG.key === "RARITY" ) { // 順序
-			_compare = function ( a, b ) {
-				return ( RARITY_CODE[ a.equipment[ COLUMN.RARITY ] ] - RARITY_CODE[ b.equipment[ COLUMN.RARITY ] ] ) * order;
-			};
-		} else { // 数値項目
-			_compare = function ( a, b ) {
-				return ( a.equipment[ COLUMN[ CONFIG.key ] ] - b.equipment[ COLUMN[ CONFIG.key ] ] ) * order;
-			};
-		}
-		break;
-	default: // case "CATALOG"
-		_compare = function ( a, b ) {
-			return a.catalog - b.catalog;
-		};
-	}
 
-	return _compare;
+	return _compare[ CONFIG.category ]();
 };
 
 /**
