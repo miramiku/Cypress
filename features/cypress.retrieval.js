@@ -1118,7 +1118,7 @@ CYPRESS.makeRequest = function () {
 				   _containsLevelRange( record ) && // レベル範囲
 				   _containsClasses( record )    && // 職業フィルタ
 				   _containsRarities( record )   && // 品質フィルタ
-				   _containsTypes( record )      && // 種別フィルタ
+				   _containsTypes( record )      && // 分類フィルタ
 				   _filterWhenEquipped( record ) && // 「装備時に」
 				   _filterStatusChange( record ) && // 「状態異常」
 				   _filterBlessed( record )      && // 「祝福されている」
