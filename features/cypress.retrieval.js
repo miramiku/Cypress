@@ -14,13 +14,13 @@ CYPRESS.CONSTS.FORGING_DATA = {
 	QUALITY: [ 1.00, 1.05, 1.15, 1.27, 1.39, 1.54, 1.69, 1.84, 1.99, 2.14, 2.29 ],
 	GP: { "小型盾":  5, "中型盾": 10, "大型盾": 15 },
 	WEIGHT: [
-		//              0   +1   +2   +3   +4   +5   +6   +7   +8   +9  +10
-		/* < 0.2 */ [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
-		/* < 0.4 */ [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.1 ],
-		/* < 1.0 */ [ 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2 ],
-		/* < 2.0 */ [ 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.2 ],
-		/* < 4.0 */ [ 0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.3, 0.4 ],
-		/* 4.0 < */ [ 0.0, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.4, 0.4, 0.5, 0.5 ]
+		//               0   +1   +2   +3   +4   +5   +6   +7   +8   +9  +10
+		/* < 0.2  */ [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+		/* < 0.4  */ [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.1 ],
+		/* < 1.0  */ [ 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2 ],
+		/* < 2.0  */ [ 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.2 ],
+		/* < 4.0  */ [ 0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.3, 0.4 ],
+		/* 4.0 <= */ [ 0.0, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.4, 0.4, 0.5, 0.5 ]
 	],
 	//       0  +1  +2  +3  +4  +5  +6   +7   +8   +9  +10
 	RANGE: [ 0, 10, 20, 30, 40, 60, 80, 100, 120, 120, 120 ],
@@ -53,7 +53,8 @@ CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR = [
 	/* Grade 17 */ 44,
 	/* Grade 18 */ 46,
 	/* Grade 19 */ 48,
-	/* Grade 20 */ 50
+	/* Grade 20 */ 50,
+	/* Grade 21 */ 52
 ];
 
 /** 表示用装備データ生成に関する集合・ベクトル */
@@ -1145,7 +1146,7 @@ CYPRESS.makeCompareFunction = function () {
 			"Good":     3,
 			"Master":   4,
 			"Legend":   5,
-			"Artifact": 6,
+			"Artifact": 6
 		},
 		_compare = {
 			LAXICOGRAPHIC: function () {
@@ -1153,7 +1154,7 @@ CYPRESS.makeCompareFunction = function () {
 						return ( a.equipment[ COLUMN[ CONFIG.key ] ] > b.equipment[ COLUMN[ CONFIG.key ] ] ?  1 :
 								 a.equipment[ COLUMN[ CONFIG.key ] ] < b.equipment[ COLUMN[ CONFIG.key ] ] ? -1 :
 																											  0 ) * order;
-					}
+					};
 				},
 			NUMERIC: function () {
 					if ( CONFIG.key === "RARITY" ) { // 順序
@@ -1235,7 +1236,6 @@ CYPRESS.Manager = ( function () {
 
 	var _equipments = [], // private field
 		_writeRecords = function ( records ) { // private function
-			console.log( $( "#search-button-main" ).prop( "disabled" ) );
 			$( "#records" ).html( ( function () {
 				switch ( records ) {
 				case 0:
