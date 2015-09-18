@@ -86,8 +86,10 @@ CYPRESS.STATUS = {
 		"Normal":   false,
 		"Good":     false,
 		"Master":   false,
+		"Epic":     false,
 		"Legend":   false,
-		"Artifact": false
+		"Artifact": false,
+		"Other":    false
 	},
 	"class": {
 		"FIG": false,
