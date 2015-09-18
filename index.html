@@ -11,7 +11,7 @@
 	<meta name="description" content="Wizardry Online の装備品データを検索・抽出するシステムです。また、簡単な装備の鍛錬シミュレート機能などもできます。">
 
 	<!-- scripts -->
-	<script src="features/cypress.retrieval.min.js?ver=1.0.7"></script>
+	<script src="features/cypress.retrieval.min.js?ver=1.0.8"></script>
 
 	<!-- styles -->
 	<link href="styles/cypress-retrieval.css" rel="stylesheet" type="text/css">
@@ -103,6 +103,7 @@
 						</ul>
 						<h4>Changelog: 変更履歴</h4>
 						<ul>
+							<li>[2015-09-18] [v1.0.8] 品質 Epic / Other に対応</li>
 							<li>[2015-09-06] [v1.0.7] 鍛錬データ追加</li>
 							<li>[2015-08-26] [v1.0.6] グレード 22 装備品への対応および鍛錬データ追加</li>
 							<li>[2015-06-10] [v1.0.5] グレード 21 装備品への対応</li>
@@ -251,8 +252,10 @@
 					<input type="checkbox" id="query-normal"   data-label="Normal">
 					<input type="checkbox" id="query-good"     data-label="Good">
 					<input type="checkbox" id="query-master"   data-label="Master">
+					<input type="checkbox" id="query-epic"     data-label="Epic">
 					<input type="checkbox" id="query-legend"   data-label="Legend">
 					<input type="checkbox" id="query-artifact" data-label="Artifact">
+					<input type="checkbox" id="query-other"    data-label="Other">
 				</div><!-- .control-box.checkboxes -->
 			</div><!-- #query-rarities -->
 
