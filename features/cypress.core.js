@@ -105,8 +105,10 @@ CYPRESS.EQUIPMENT = ( function () {
 			2: "Normal",
 			3: "Good",
 			4: "Master",
-			5: "Legend",
-			6: "Artifact"
+			5: "Epic",
+			6: "Legend",
+			7: "Artifact",
+			8: "Other"
 		},
 		TYPES = {
 			 1: "暗器",
