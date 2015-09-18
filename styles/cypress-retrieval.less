@@ -19,15 +19,19 @@
 @PANTONECoolGray7CP: rgb( 153, 153, 155);
 @PANTONE620CP:       rgb( 148, 133,  33);
 @PANTONE2925CP:      rgb(  21, 150, 209);
+@PANTONE7456CP:      rgb( 109, 121, 182);
 @PANTONE348CP:       rgb(   0, 143,  76);
 @PANTONE7418CP:      rgb( 197,  80,  88);
+@PANTONE7618CP:      rgb( 202, 115,  79);
 
 @poorColor:     @PANTONE513CP;
 @normalColor:   @PANTONECoolGray7CP;
 @goodColor:     @PANTONE620CP;
 @masterColor:   @PANTONE2925CP;
+@epicColor:     @PANTONE7456CP;
 @legendColor:   @PANTONE348CP;
 @artifactColor: @PANTONE7418CP;
+@otherColor:    @PANTONE7618CP;
 
 @standardUIColor: @normalColor;
 
@@ -119,8 +123,10 @@
 			&.normal   { background-image: url( "../images/normal.png" );   }
 			&.good     { background-image: url( "../images/good.png" );     }
 			&.master   { background-image: url( "../images/master.png" );   }
+			&.epic     { background-image: url( "../images/epic.png" );   }
 			&.legend   { background-image: url( "../images/legend.png" );   }
 			&.artifact { background-image: url( "../images/artifact.png" ); }
+			&.other    { background-image: url( "../images/other.png" ); }
 			&.usage    { background-image: url( "../images/usage.png" );    }
 		}
 
@@ -696,8 +702,10 @@
 				&.normal   { .setCheckboxColor( @normalColor );   }
 				&.good     { .setCheckboxColor( @goodColor );     }
 				&.master   { .setCheckboxColor( @masterColor );   }
+				&.epic     { .setCheckboxColor( @epicColor );     }
 				&.legend   { .setCheckboxColor( @legendColor );   }
 				&.artifact { .setCheckboxColor( @artifactColor ); }
+				&.other    { .setCheckboxColor( @otherColor );    }
 			}
 		}
 		#query-classes {
