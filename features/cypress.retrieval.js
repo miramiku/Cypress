@@ -257,6 +257,10 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 			},
 
 			// concrete
+			ribbon: function () {
+				this.card += "<span class=\"ribbon " + record[ COLUMN.RARITY ].toLowerCase() + "\"></span>";
+				return this;
+			},
 			rarity: function () {
 				this.direct( "rarity", COLUMN.RARITY );
 				return this;
@@ -626,7 +630,8 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 
 	// construct!
 	buildCard
-		.group( "equipment-card-inner " + record[ COLUMN.RARITY ].toLowerCase() )
+		.group( "equipment-card-inner" )
+			.ribbon()
 			.group( "basic-information" )
 				.group( "property" )
 					.rarity().type().transfarTags()

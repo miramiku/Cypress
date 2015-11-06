@@ -6,23 +6,23 @@
 /* ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
  * definition division
  * ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== */
-@StrawberryPink: rgb( 248, 123, 144 ); // PANTONE 16-1731 TPX Strawberry Pink
+@StrawberryPink: #F87B90; // PANTONE 16-1731 TPX Strawberry Pink
 @usageColor: @StrawberryPink;
 
 @positiveColor: #6bd38c; // PANTONE 14-6340 TPX Spring Bouquet
 @negativeColor: #e8768f; // PANTONE 16-1723 TPX Confetti
 @nonActive: #66676c; // PANTONE Cool Gray 10 CP
-@cardBackgroundA: rgba( 0, 0, 0, 0.3 );
-@cardBackgroundB: rgba( 39, 45, 51, 0.9 );
+@cardBackgroundA: fade( #000000, 30% );
+@cardBackgroundB: fade( #272D33, 90% );
 
-@PANTONE513CP:       rgb( 142,  59, 144);
-@PANTONECoolGray7CP: rgb( 153, 153, 155);
-@PANTONE620CP:       rgb( 148, 133,  33);
-@PANTONE2925CP:      rgb(  21, 150, 209);
-@PANTONE7456CP:      rgb( 109, 121, 182);
-@PANTONE348CP:       rgb(   0, 143,  76);
-@PANTONE7418CP:      rgb( 197,  80,  88);
-@PANTONE7618CP:      rgb( 202, 115,  79);
+@PANTONE513CP:       #8E3B90;
+@PANTONECoolGray7CP: #99999B;
+@PANTONE620CP:       #948521;
+@PANTONE2925CP:      #1596D1;
+@PANTONE7456CP:      #6D79B6;
+@PANTONE348CP:       #008F4C;
+@PANTONE7418CP:      #C55058;
+@PANTONE7618CP:      #CB734F;
 
 @poorColor:     @PANTONE513CP;
 @normalColor:   @PANTONECoolGray7CP;
@@ -118,16 +118,31 @@
 			padding: 8px 10px;
 			overflow: hidden;
 			background-repeat: no-repeat;
+			position: relative;
 
-			&.poor     { background-image: url( "../images/poor.png" );     }
-			&.normal   { background-image: url( "../images/normal.png" );   }
-			&.good     { background-image: url( "../images/good.png" );     }
-			&.master   { background-image: url( "../images/master.png" );   }
-			&.epic     { background-image: url( "../images/epic.png" );   }
-			&.legend   { background-image: url( "../images/legend.png" );   }
-			&.artifact { background-image: url( "../images/artifact.png" ); }
-			&.other    { background-image: url( "../images/other.png" ); }
-			&.usage    { background-image: url( "../images/usage.png" );    }
+			.ribbon( @order ) {
+				background-position: 0 -35px * @order;
+			}
+
+			.ribbon {
+				position: absolute;
+				display: block;
+				width: 35px;
+				height: 35px;
+				top: 0;
+				left: 0;
+				background-image: url( "../images/ribbons.png" );
+				background-repeat: no-repeat;
+				&.poor     { .ribbon( 0 ); }
+				&.normal   { .ribbon( 1 ); }
+				&.good     { .ribbon( 2 ); }
+				&.master   { .ribbon( 3 ); }
+				&.epic     { .ribbon( 4 ); }
+				&.legend   { .ribbon( 5 ); }
+				&.artifact { .ribbon( 6 ); }
+				&.other    { .ribbon( 7 ); }
+				&.usage    { .ribbon( 8 ); }
+			}
 		}
 
 		.section-divider {
