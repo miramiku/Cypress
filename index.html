@@ -11,7 +11,7 @@
 	<meta name="description" content="Wizardry Online の装備品データを検索・抽出するシステムです。また、簡単な装備の鍛錬シミュレート機能などもできます。">
 
 	<!-- scripts -->
-	<script src="features/cypress.retrieval.min.js?ver=2.0.0"></script>
+	<script src="features/cypress.retrieval.min.js?ver=2.1.0"></script>
 
 	<!-- styles -->
 	<link href="styles/cypress-retrieval.css" rel="stylesheet" type="text/css">
@@ -47,6 +47,7 @@
 		<div id="equipments">
 			<div id="usage" class="equipment-card">
 				<div class="equipment-card-inner usage">
+					<span class="ribbon usage"></span>
 					<div id="landing-title">
 						Cypress - wizardry online equipment retrieval system
 					</div>
@@ -103,6 +104,7 @@
 						</ul>
 						<h4>Changelog: 変更履歴</h4>
 						<ul>
+							<li>[2015-11-06] [v2.1.0] 付与許容値の表示</li>
 							<li>[2015-11-06] [v2.0.0] エンチャントシステム実装によるデータベース改修</li>
 							<li>もっと見る：<a href="https://github.com/miramiku/Cypress/wiki/Changelog">Cypress wiki 変更履歴 <span class="icon">&#xeab4;</span></a></li>
 						</ul>
@@ -416,11 +418,11 @@
 										</tr>
 										<tr>
 											<td>
-												<span class="group-title">使用後トレード不可<img src="images/used.png" alt=""></span>
+												<span class="group-title">使用後トレード不可<img src="images/bind.png" alt=""></span>
 												<div class="group-line">
-													<input type="radio" name="option-used" class="all" data-flag="used" data-label="すべて" checked>
-													<input type="radio" name="option-used" class="only" data-flag="used" data-label="のみ">
-													<input type="radio" name="option-used" class="eliminate" data-flag="used" data-label="除外">
+													<input type="radio" name="option-bind" class="all" data-flag="bind" data-label="すべて" checked>
+													<input type="radio" name="option-bind" class="only" data-flag="bind" data-label="のみ">
+													<input type="radio" name="option-bind" class="eliminate" data-flag="bind" data-label="除外">
 												</div><!-- .group-line -->
 											</td>
 											<td>
