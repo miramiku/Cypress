@@ -78,7 +78,7 @@ CYPRESS.COLUMN = {
 	DARK_ATTACK:   47,
 	SELL:          48,
 	TRADE:         49,
-	USED:          50,
+	BIND:          50,
 	STOLEN:        51,
 	BLESSED:       52,
 	CURSED:        53,

@@ -155,7 +155,7 @@
 			color: @nonActive;
 		}
 
-		.positive:before, .negative:before {
+		.positive::before, .negative::before {
 			color: @baseForegroundColor;
 		}
 
@@ -187,25 +187,25 @@
 			.property {
 				display: block;
 				float: left;
-				width: 480px;
+				width: 450px;
 
 				.rarity {
 					position: relative;
 					z-index: 1;
 
-					&:after {
+					&::after {
 						content: " ";
 					}
 				}
 
-				.type:after {
+				.type::after {
 					content: " ";
 				}
 
-				.sell, .trade, .stolen, .used {
+				.sell, .trade, .stolen, .bind {
 					font-size: 10px;
 
-					&:after {
+					&::after {
 						content: " ";
 					}
 				}
@@ -213,7 +213,7 @@
 			.name-box {
 				display: block;
 				float: left;
-				width: 480px;
+				width: 450px;
 
 				.name {
 					font-size: 16px;
@@ -222,7 +222,7 @@
 
 				.blessed, .cursed {
 					font-size: 10px;
-					&:after {
+					&::after {
 						content: " ";
 					}
 				}
@@ -238,7 +238,7 @@
 			.restrictions {
 				float: right;
 				display: block;
-				width: 140px;
+				width: 170px;
 
 				.level {
 				}
@@ -246,7 +246,7 @@
 					float: right;
 					font-weight: bold;
 				}
-				.grade:before {
+				.grade::before {
 					content: "Grade ";
 				}
 				.restriction {
@@ -270,25 +270,25 @@
 				width: 85px;
 			}
 
-			.physical.weapons:before { content: "物攻："; }
-			.physical.guards:before  { content: "物防："; }
-			.magical.weapons:before  { content: "魔攻："; }
-			.magical.guards:before   { content: "魔防："; }
+			.physical.weapons::before { content: "物攻："; }
+			.physical.guards::before  { content: "物防："; }
+			.magical.weapons::before  { content: "魔攻："; }
+			.magical.guards::before   { content: "魔防："; }
 
-			.durability:before { content: "耐久："; }
-			.weight:before     { content: "重量："; }
-			.hardness:before   { content: "硬度："; }
+			.durability::before { content: "耐久："; }
+			.weight::before     { content: "重量："; }
+			.hardness::before   { content: "硬度："; }
 
 			.physical-attributes {
 				float: left;
 				display: block;
 				width: 195px;
 
-				.slash:before  { content: "斬"; }
-				.strike:before { content: "打"; }
-				.pierce:before { content: "突"; }
+				.slash::before  { content: "斬"; }
+				.strike::before { content: "打"; }
+				.pierce::before { content: "突"; }
 
-				:after {
+				::after {
 					content: " ";
 				}
 			}
@@ -309,23 +309,22 @@
 				width: 110px;
 			}
 
-			.gp:before                 { content: "GP："; }
-			.range:before              { content: "射程距離："; }
-			.quality.bows:before       { content: "溜め性能："; }
-			.quality.guns:before       { content: "装填性能："; }
-			.charge-weight:before      { content: "装填数："; }
-			.range-rate:before         { content: "射程効率："; }
-			.quality-rate.bows:before  { content: "溜め効率："; }
-			.quality-rate.guns:before  { content: "装填効率："; }
+			.gp::before                 { content: "GP："; }
+			.range::before              { content: "射程距離："; }
+			.quality.bows::before       { content: "溜め性能："; }
+			.quality.guns::before       { content: "装填性能："; }
+			.charge-weight::before      { content: "装填数："; }
+			.range-rate::before         { content: "射程効率："; }
+			.quality-rate.bows::before  { content: "溜め効率："; }
+			.quality-rate.guns::before  { content: "装填効率："; }
 
-			:after {
+			::after {
 				content: " ";
 			}
 		} // .special-properties
 
-		.class-restriction {
+		.class-restriction-line {
 			.parentBox();
-
 			margin: 6px 0 3px;
 
 			.fig, .thi, .mag, .pri,
@@ -349,22 +348,33 @@
 				border: 1px solid @nonActive;
 				color: @nonActive;
 			}
+
+			.class-restriction {
+				float: left;
+				width: 500px;
+			}
+
+			.enchant {
+				display: block;
+				&::before { content: "付与許容値："; }
+			}
+
 		} // .class-restriction
 
 		.special-effects {
 			.parentBox();
 
-			.hp:before  { content: "HP";  }
-			.mp:before  { content: "MP";  }
-			.str:before { content: "STR"; }
-			.vit:before { content: "VIT"; }
-			.dex:before { content: "DEX"; }
-			.agi:before { content: "AGI"; }
-			.int:before { content: "INT"; }
-			.pie:before { content: "PIE"; }
-			.luk:before { content: "LUK"; }
+			.hp::before  { content: "HP";  }
+			.mp::before  { content: "MP";  }
+			.str::before { content: "STR"; }
+			.vit::before { content: "VIT"; }
+			.dex::before { content: "DEX"; }
+			.agi::before { content: "AGI"; }
+			.int::before { content: "INT"; }
+			.pie::before { content: "PIE"; }
+			.luk::before { content: "LUK"; }
 
-			:after {
+			::after {
 				content: " ";
 			}
 		} // .special-effects
@@ -372,18 +382,18 @@
 		.resistance {
 			.parentBox();
 
-			.poison:before    { content: "毒";   }
-			.paralyze:before  { content: "麻痺"; }
-			.petrify:before   { content: "石化"; }
-			.faint:before     { content: "気絶"; }
-			.blind:before     { content: "暗闇"; }
-			.sleep:before     { content: "睡眠"; }
-			.silence:before   { content: "沈黙"; }
-			.charm:before     { content: "魅了"; }
-			.confusion:before { content: "混乱"; }
-			.fear:before      { content: "恐怖"; }
+			.poison::before    { content: "毒";   }
+			.paralyze::before  { content: "麻痺"; }
+			.petrify::before   { content: "石化"; }
+			.faint::before     { content: "気絶"; }
+			.blind::before     { content: "暗闇"; }
+			.sleep::before     { content: "睡眠"; }
+			.silence::before   { content: "沈黙"; }
+			.charm::before     { content: "魅了"; }
+			.confusion::before { content: "混乱"; }
+			.fear::before      { content: "恐怖"; }
 
-			:after {
+			::after {
 				content: " ";
 			}
 		} // .resistance
@@ -396,14 +406,14 @@
 				width: 310px;
 			}
 
-			.fire:before  { content: "火"; }
-			.water:before { content: "水"; }
-			.wind:before  { content: "風"; }
-			.earth:before { content: "地"; }
-			.light:before { content: "光"; }
-			.dark:before  { content: "闇"; }
+			.fire::before  { content: "火"; }
+			.water::before { content: "水"; }
+			.wind::before  { content: "風"; }
+			.earth::before { content: "地"; }
+			.light::before { content: "光"; }
+			.dark::before  { content: "闇"; }
 
-			:after {
+			::after {
 				content: " ";
 			}
 		} // .magic-attributes
@@ -418,17 +428,17 @@
 				width: 310px;
 			}
 
-			.when-equipped:before {
+			.when-equipped::before {
 				content: "装備時に ";
 			}
-			.when-equipped.zero:before {
+			.when-equipped.zero::before {
 				content: "";
 			}
-			.status-change:before {
+			.status-change::before {
 				color: @baseForegroundColor;
 				content: "状態異常：";
 			}
-			.status-change.zero:before {
+			.status-change.zero::before {
 				content: "";
 			}
 		} // .other-data
@@ -576,7 +586,7 @@
 		.label {
 			display: block;
 			overflow: hidden;
-			&:before {
+			&::before {
 				content: "* ";
 			}
 		}
@@ -609,7 +619,7 @@
 			display: block;
 			margin: 5px 0 2px;
 		}
-		.query-label:before {
+		.query-label::before {
 			content: "＊ ";
 		}
 
@@ -724,7 +734,7 @@
 				margin-top: 15px;
 				display: block;
 
-				&:before {
+				&::before {
 					content: "* "
 				}
 			}

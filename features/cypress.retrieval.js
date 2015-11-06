@@ -66,7 +66,7 @@ CYPRESS.EQUIPMENT_STYLE = {
 		SPECIAL_EFFECTS:     [ "HP", "MP", "STR", "VIT", "DEX", "AGI", "INT", "PIE", "LUK" ],
 		RESISTANCE:          [ "POISON", "PARALYZE", "PETRIFY", "FAINT", "BLIND", "SLEEP", "SILENCE", "CHARM", "CONFUSION", "FEAR" ],
 		ATTRIBUTES:          [ "FIRE", "WATER", "WIND", "EARTH", "LIGHT", "DARK" ],
-		FLAGS:               [ "SELL", "TRADE", "STOLEN", "BLESSED", "CURSED", "USED" ]
+		FLAGS:               [ "SELL", "TRADE", "STOLEN", "BLESSED", "CURSED", "BIND" ]
 	},
 	REGEXP: { // 条件分岐用正規表現
 		DISABLE_FORGE:               /^Legend$|^Artifact$/,
@@ -148,7 +148,7 @@ CYPRESS.STATUS = {
 		"status_change": "all",
 		"blessed":       "all",
 		"cursed":        "all",
-		"used":          "all",
+		"bind":          "all",
 		"sell":          "all",
 		"trade":         "all",
 		"stolen":        "all"
@@ -326,10 +326,17 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 					},
 					that = this;
 
+				this.group( "class-restriction-line" );
+
 				this.group( "class-restriction" );
 				$.each( ORDERS.CLASSES, function () {
 					that.card += buildClassIcon( this );
 				} );
+				this.end();
+				this.card += "<span class=\"enchant\">" +
+							 ( record[ COLUMN.ENCHANT ] === -1 ? "調査中" : record[ COLUMN.ENCHANT ] ) +
+							 "</span>";
+
 				this.end();
 
 				return this;
@@ -339,7 +346,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 			transfarTags: function () {
 				this.buildTransfarTagData( "sell", "[売却不可]" );
 				this.buildTransfarTagData( "trade", "[トレード不可]" );
-				this.buildSupplimentTagData( "used", "使用後トレード不可" );
+				this.buildSupplimentTagData( "bind", "使用後トレード不可" );
 				this.buildTransfarTagData( "stolen", "<img src=\"images/stolen.png\" alt=\"略奪されない\">略奪されない" );
 
 				return this;
@@ -368,12 +375,12 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 				if ( REGEXP.ACCESSORIES.test( type ) ) {
 					this.card += "<span class=\"weight\">"     + record[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>";
 				} else if ( REGEXP.SHOTS.test( type ) ) {
-					this.card += "<span class=\"weight\">"     + record[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>" +
-								 "<span class=\"hardness\">"   + record[ COLUMN.HARDNESS ]            + "</span>";
+					this.card += "<span class=\"hardness\">"   + record[ COLUMN.HARDNESS ]            + "</span>" +
+								 "<span class=\"weight\">"     + record[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>";
 				} else {
 					this.card += "<span class=\"durability\">" + record[ COLUMN.DURABILITY ]          + "</span>" +
-								 "<span class=\"weight\">"     + record[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>" +
-								 "<span class=\"hardness\">"   + record[ COLUMN.HARDNESS ]            + "</span>";
+								 "<span class=\"hardness\">"   + record[ COLUMN.HARDNESS ]            + "</span>" +
+								 "<span class=\"weight\">"     + record[ COLUMN.WEIGHT ].toFixed( 2 ) + "</span>";
 				}
 
 				return this;
@@ -566,7 +573,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 					TEXT = 1,
 					lines = {
 						comments: [ "コメント", record[ COLUMN.COMMENTS ] ],
-						sources:  [ "入手経路", record[ COLUMN.SOURCES ] ],
+						sources:  [ "入手方法", record[ COLUMN.SOURCES ] ],
 						notes:    [ "ノート",  record[ COLUMN.NOTES ] ]
 					},
 					that = this;
@@ -901,7 +908,7 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 						text += !equipment[ COLUMN.STOLEN ]  ? "略奪されない "      : "";
 						text += equipment[ COLUMN.BLESSED ]  ? "祝福されている "    : "";
 						text += equipment[ COLUMN.CURSED ]   ? "呪われている "      : "";
-						text += equipment[ COLUMN.USED ]     ? "使用後トレード不可 " : "";
+						text += equipment[ COLUMN.BIND ]     ? "使用後トレード不可 " : "";
 
 						return text;
 					} () );
@@ -1111,7 +1118,7 @@ CYPRESS.makeRequest = function () {
 		_filterStatusChange = _filterStringFlag( "status_change" ),
 		_filterBlessed      = _filterBooleanFlag( "blessed", false ),
 		_filterCursed       = _filterBooleanFlag( "cursed",  false ),
-		_filterUsed         = _filterBooleanFlag( "used",    false ),
+		_filterBind         = _filterBooleanFlag( "bind",    false ),
 		_filterSell         = _filterBooleanFlag( "sell",    true  ),
 		_filterTrade        = _filterBooleanFlag( "trade",   true  ),
 		_filterStolen       = _filterBooleanFlag( "stolen",  true  ),
@@ -1127,7 +1134,7 @@ CYPRESS.makeRequest = function () {
 				   _filterStatusChange( record ) && // 「状態異常」
 				   _filterBlessed( record )      && // 「祝福されている」
 				   _filterCursed( record )       && // 「呪われている」
-				   _filterUsed( record )         && // 「使用後取引不可」
+				   _filterBind( record )         && // 「使用後取引不可」
 				   _filterSell( record )         && // 「NPC売却可否」
 				   _filterTrade( record )        && // 「取引可否」
 				   _filterStolen( record );         // 「略奪できない」
