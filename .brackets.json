@@ -16,19 +16,6 @@
 				"generateMap": false,
 				"mangle": true,
 				"isolate": false
-			},
-			{
-				"inputs": [
-					"features/jquery.min.js",
-					"features/slidebars.min.js",
-					"features/icheck.min.js",
-					"features/cypress.core.js",
-					"features/cypress.counting-dev.js"
-				],
-				"output": "features/cypress.counting.js",
-				"generateMap": false,
-				"mangle": true,
-				"isolate": false
 			}
 		]
 	}
