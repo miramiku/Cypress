@@ -198,7 +198,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 
 		// method
 		buildCard = {
-			card: "<button class=\"data-copy\">&#xe604;</button>",
+			card: "",
 
 			buildTransfarTagData: function ( column, content ) {
 				this.card += "<span class=\"" + column + "\">" + ( record[ COLUMN[ column.toUpperCase() ] ] ? "" : content ) + "</span>";
@@ -260,6 +260,10 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 			// concrete
 			ribbon: function () {
 				this.card += "<span class=\"ribbon " + record[ COLUMN.RARITY ].toLowerCase() + "\"></span>";
+				return this;
+			},
+			copy: function () {
+				this.card += "<button class=\"data-copy\">&#xe604;</button>";
 				return this;
 			},
 			rarity: function () {
@@ -633,6 +637,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 	buildCard
 		.group( "equipment-card-inner" )
 			.ribbon()
+			.copy()
 			.group( "basic-information" )
 				.group( "property" )
 					.rarity().type().transfarTags()
