@@ -1167,8 +1167,10 @@ CYPRESS.makeCompareFunction = function () {
 			"Normal":   2,
 			"Good":     3,
 			"Master":   4,
-			"Legend":   5,
-			"Artifact": 6
+			"Epic":     5,
+			"Legend":   6,
+			"Artifact": 7,
+			"Other":    8
 		},
 		_compare = {
 			LAXICOGRAPHIC: function () {
