@@ -1,5 +1,5 @@
 # [Cypress](https://miramiku.github.io/Cypress/)
-wizardry online equipment retrieval system
+wizardry online equipment data retrieval system
 
 ## Description
 Wizardry Online の装備を検索または抽出を行います。

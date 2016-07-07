@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Cypress - wizardry online equipment retrieval system</title>
+	<title>Cypress - wizardry online equipment data retrieval system</title>
 
 	<!-- meta section -->
 	<meta name="Author" content="miku">
@@ -12,7 +12,7 @@
 
 	<!-- scripts -->
 <!--
-	<script src="features/cypress.retrieval.min.js?ver=2.1.4"></script>
+	<script src="features/cypress.retrieval.min.js?ver=2.1.5"></script>
 -->
 	<script src="features/jquery.min.js"></script>
 	<script src="features/slidebars.min.js"></script>
@@ -59,7 +59,7 @@
 				<div class="equipment-card-inner usage">
 					<span class="ribbon usage"></span>
 					<div id="landing-title">
-						Cypress - wizardry online equipment retrieval system
+						Cypress - wizardry online equipment data retrieval system
 					</div>
 					<div id="landing">
 						<h4>Overview: 概要</h4>
@@ -114,6 +114,7 @@
 						</ul>
 						<h4>Changelog: 変更履歴</h4>
 						<ul>
+							<li>[2016-07-08] [v2.1.5] 「衣服」という分類はそもそも存在しないため削除</li>
 							<li>[2016-04-19] [v2.1.4] 品質によるソートがうまくいかなかった不具合修正</li>
 							<li>[2016-03-29] [v2.1.3] グレード 24 装備品への対応および銃 +10 の装填性能データ適用</li>
 							<li>[2015-12-20] [v2.1.2] コピーボタンが動作しなかった不具合修正</li>
@@ -346,16 +347,16 @@
 									</div><!-- .group-line -->
 									<div class="group-line">
 										<input type="checkbox" id="query-hats" class="head" data-label="帽子">
-										<input type="checkbox" id="query-coats" class="torso" data-label="外衣">
-										<input type="checkbox" id="query-clothes" class="legs" data-label="衣服">
+										<input type="checkbox" id="query-tops" class="torso" data-label="上衣">
+										<input type="checkbox" id="query-bottoms" class="legs" data-label="下衣">
 										<input type="checkbox" id="query-gloves" class="arms" data-label="手袋">
 										<input type="checkbox" id="query-leather-shoes" class="feet" data-label="革靴">
 										<input type="checkbox" id="query-medium-shileds" class="shields" data-label="中型盾">
 									</div><!-- .group-line -->
 									<div class="group-line">
 										<input type="checkbox" id="query-hoods" class="head" data-label="頭巾">
-										<input type="checkbox" id="query-tops" class="torso" data-label="上衣">
-										<input type="checkbox" id="query-bottoms" class="legs" data-label="下衣">
+										<input type="checkbox" id="query-coats" class="torso" data-label="外衣">
+										<span class="blank-button-space"></span>
 										<input type="checkbox" id="query-bracelets" class="arms" data-label="腕輪">
 										<input type="checkbox" id="query-shoes" class="feet" data-label="靴">
 										<input type="checkbox" id="query-small-shileds" class="shields" data-label="小型盾">
