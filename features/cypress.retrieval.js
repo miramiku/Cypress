@@ -905,7 +905,7 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 							   levelText;
 
 				if ( restriction !== "" ) {
-					this.string += " " + restriction;
+					this.string += ", " + restriction;
 				}
 
 				return this;
@@ -1278,6 +1278,19 @@ CYPRESS.Manager = ( function () {
 			_equipments.sort( CYPRESS.makeCompareFunction() );
 			CYPRESS.displayEquipmentCard( _equipments );
 		},
+		/** 整理番号から編集済みの装備データを取得する */
+		_getCurrentEquipment = function ( catalog ) {
+			var last = _equipments.length,
+				index = 0;
+
+			do {
+				if ( parseInt( _equipments[ index ].catalog, 10 ) === catalog ) {
+					return _equipments[ index ];
+				}
+			} while( ( index += 1 ) !== last );
+
+			return null;
+		},
 		/**
 		 * カードを鍛錬シミュレートしたデータに書き換える。
 		 * 鍛錬ボタンの利用可否の操作も行う
@@ -1309,19 +1322,6 @@ CYPRESS.Manager = ( function () {
 				$card.find( ".forging-plus" ).removeClass( "disabled" );
 				$card.find( ".forging-minus" ).removeClass( "disabled" );
 			}
-		},
-		/** 整理番号から編集済みの装備データを取得する */
-		_getCurrentEquipment = function ( catalog ) {
-			var last = _equipments.length,
-				index = 0;
-
-			do {
-				if ( parseInt( _equipments[ index ].catalog, 10 ) === catalog ) {
-					return _equipments[ index ];
-				}
-			} while( ( index += 1 ) !== last );
-
-			return null;
 		},
 		/**
 		 * 装備名をランダムに1つ返す。
