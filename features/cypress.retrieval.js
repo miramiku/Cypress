@@ -57,7 +57,8 @@ CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR = [
 	/* Grade 21 */ 52,
 	/* Grade 22 */ 54,
 	/* Grade 23 */ 56,
-	/* Grade 24 */ 58
+	/* Grade 24 */ 58,
+	/* Grade 25 */ 60
 ];
 
 /** 表示用装備データ生成に関する集合・ベクトル */
@@ -343,7 +344,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 				} );
 				this.end();
 				this.card += "<span class=\"enchant\">" +
-							 ( record[ COLUMN.ENCHANT ] === -1 ? "調査中" : record[ COLUMN.ENCHANT ] ) +
+							 ( record[ COLUMN.ENCHANT ] === -1 ? "N/A" : record[ COLUMN.ENCHANT ] ) +
 							 "</span>";
 
 				this.end();
