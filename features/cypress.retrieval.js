@@ -57,7 +57,8 @@ CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR = [
 	/* Grade 21 */ 52,
 	/* Grade 22 */ 54,
 	/* Grade 23 */ 56,
-	/* Grade 24 */ 58
+	/* Grade 24 */ 58,
+	/* Grade 25 */ 60
 ];
 
 /** 表示用装備データ生成に関する集合・ベクトル */
