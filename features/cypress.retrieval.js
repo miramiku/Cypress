@@ -344,7 +344,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 				} );
 				this.end();
 				this.card += "<span class=\"enchant\">" +
-							 ( record[ COLUMN.ENCHANT ] === -1 ? "調査中" : record[ COLUMN.ENCHANT ] ) +
+							 ( record[ COLUMN.ENCHANT ] === -1 ? "N/A" : record[ COLUMN.ENCHANT ] ) +
 							 "</span>";
 
 				this.end();
