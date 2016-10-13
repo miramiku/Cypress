@@ -1,4 +1,7 @@
-/** Cypress の中核コード。 */
+/**
+ * Documents: Cypress.Core APIs
+ * url: https://miramiku.github.io/post/wizon/cypress/core-apis/
+ */
 
 /** Package のつもり */
 var CYPRESS = {};

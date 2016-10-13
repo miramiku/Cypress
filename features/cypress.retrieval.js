@@ -2,13 +2,13 @@
 
 /**
  * Documents: Cypress.Retrieval APIs
- * url: https://github.com/miramiku/Cypress/wiki/Retrieval-APIs
+ * url: https://miramiku.github.io/post/wizon/cypress/retrieval-apis/
  */
 
 /* Global Consts */
 /**
  * 鍛錬値データ
- * ref: https://github.com/miramiku/Cypress/wiki/Forging-Data
+ * ref:https://miramiku.github.io/post/wizon/cypress/forging-data/
  */
 CYPRESS.CONSTS.FORGING_DATA = {
 	QUALITY: [ 1.00, 1.05, 1.15, 1.27, 1.39, 1.54, 1.69, 1.84, 1.99, 2.14, 2.29 ],
@@ -83,6 +83,12 @@ CYPRESS.EQUIPMENT_STYLE = {
 };
 
 /* Global Fields */
+CYPRESS.SORT_CONFIG = {
+	category: "CATALOG",
+	key: "CATALOG",
+	order: "ASC"
+};
+
 CYPRESS.STATUS = {
 	"rarity": {
 		"Poor":     false,
@@ -157,12 +163,6 @@ CYPRESS.STATUS = {
 	}
 };
 
-CYPRESS.SORT_CONFIG = {
-	category: "CATALOG",
-	key: "CATALOG",
-	order: "ASC"
-};
-
 /** データ構築に共通する処理をまとめたクラス */
 CYPRESS.BuilderUtils = {
 	isWeapon: function ( type ) {
@@ -172,6 +172,59 @@ CYPRESS.BuilderUtils = {
 	//  GUARDS:  [ "兜", "帽子", "頭巾", "鎧", "上衣", "外衣", "手甲", "手袋", "腕輪", "脚鎧", "下衣", "鉄靴", "革靴", "靴", "小型盾", "中型盾", "大型盾", "外套", "指輪", "耳飾り", "首飾り", "ベルト" ]
 
 		return 0 <= $.inArray( type, [ "暗器", "短剣", "片手剣", "両手剣", "刀", "片手斧", "両手斧", "槍", "片手鈍器", "両手鈍器", "両手杖", "弓", "矢", "銃", "銃弾", "双刃" ] );
+	}
+};
+
+/**
+ * 鍛錬をシミュレートして鍛錬後の装備データオブジェクトの装備データを書き換える
+ * @param Object equipment 装備データオブジェクト
+ */
+CYPRESS.forging = function ( equipment ) {
+	"use strict";
+
+	var COLUMN = CYPRESS.COLUMN,
+		FORGING_DATA = CYPRESS.CONSTS.FORGING_DATA,
+		REGEXP = CYPRESS.EQUIPMENT_STYLE.REGEXP,
+
+		BASE = CYPRESS.EQUIPMENT[ equipment.catalog ],
+		TYPE = BASE[ COLUMN.TYPE ],
+		WEIGHT = BASE[ COLUMN.WEIGHT ],
+
+		FORGE = equipment.forge,
+		RECORD = equipment.equipment,
+
+		WEIGHT_CLASSS = ( function () {
+				   if ( WEIGHT < 0.20 ) {
+				return 0;
+			} else if ( WEIGHT < 0.40 ) {
+				return 1;
+			} else if ( WEIGHT < 1.00 ) {
+				return 2;
+			} else if ( WEIGHT < 2.00 ) {
+				return 3;
+			} else if ( WEIGHT < 4.00 ) {
+				return 4;
+			} else {
+				return 5;
+			}
+		} () );
+
+	RECORD[ COLUMN.NAME ]     = BASE[ COLUMN.NAME ] + ( 0 < FORGE ? "+" + FORGE : "" );
+	RECORD[ COLUMN.PHYSICAL ] = Math.floor( BASE[ COLUMN.PHYSICAL ] * FORGING_DATA.QUALITY[ FORGE ] );
+	RECORD[ COLUMN.MAGICAL ]  = Math.floor( BASE[ COLUMN.MAGICAL ]  * FORGING_DATA.QUALITY[ FORGE ] );
+	RECORD[ COLUMN.WEIGHT ]   = WEIGHT - FORGING_DATA.WEIGHT[ WEIGHT_CLASSS ][ FORGE ];
+
+	if ( !REGEXP.ACCESSORIES.test( TYPE ) ) {
+		RECORD[ COLUMN.DURABILITY ] = Math.floor( BASE[ COLUMN.DURABILITY ] * ( 1 + ( FORGE / 10 ) ) );
+		RECORD[ COLUMN.HARDNESS ]   = BASE[ COLUMN.HARDNESS ] + Math.floor( FORGE / 5 );
+	}
+
+	// 排他的な条件なので else if を利用
+	if ( REGEXP.SHIELDS.test( TYPE ) ) {
+		RECORD[ COLUMN.QUALITY ] = BASE[ COLUMN.QUALITY ] + FORGE * FORGING_DATA.GP[ TYPE ];
+	} else if ( REGEXP.RANGED_WEAPONS.test( TYPE ) ) {
+		RECORD[ COLUMN.RANGE ]   = BASE[ COLUMN.RANGE ]   + FORGING_DATA.RANGE[ FORGE ];
+		RECORD[ COLUMN.QUALITY ] = BASE[ COLUMN.QUALITY ] + FORGING_DATA.SPECIAL_QUALITY[ TYPE ][ FORGE ];
 	}
 };
 
@@ -670,6 +723,23 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 };
 
 /**
+ * カタログ番号からカードを表示する。
+ * @param equipments array 装備オブジェクトの配列
+ */
+CYPRESS.displayEquipmentCard = function ( equipments ) {
+	"use strict";
+
+	$( "#equipments" ).empty();
+	$( "#usage-button" ).prop( "disabled", false );
+
+	$.each( equipments, function () {
+		$( "#equipments" ).append( "<div class=\"equipment-card\" data-catalog=\"" + this.catalog + "\">" +
+								       CYPRESS.getEquipmentCard( this ) +
+								   "</div>" );
+	} );
+};
+
+/**
  * 装備データの文字列表現を返す（コピーテキスト用）
  * @param record （鍛錬済）装備のレコード
  * @return string 装備データの文字列表現
@@ -947,21 +1017,50 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 	return buildString.string;
 };
 
-/**
- * カタログ番号からカードを表示する。
- * @param equipments array 装備オブジェクトの配列
- */
-CYPRESS.displayEquipmentCard = function ( equipments ) {
+CYPRESS.makeCompareFunction = function () {
 	"use strict";
 
-	$( "#equipments" ).empty();
-	$( "#usage-button" ).prop( "disabled", false );
+	var COLUMN = CYPRESS.COLUMN,
+		CONFIG = CYPRESS.SORT_CONFIG,
 
-	$.each( equipments, function () {
-		$( "#equipments" ).append( "<div class=\"equipment-card\" data-catalog=\"" + this.catalog + "\">" +
-								       CYPRESS.getEquipmentCard( this ) +
-								   "</div>" );
-	} );
+		order = CONFIG.order === "ASC" ? 1 : -1,
+		RARITY_CODE = {
+			"Poor":     1,
+			"Normal":   2,
+			"Good":     3,
+			"Master":   4,
+			"Epic":     5,
+			"Legend":   6,
+			"Artifact": 7,
+			"Other":    8
+		},
+		_compare = {
+			LAXICOGRAPHIC: function () {
+					return function ( a, b ) {
+						return ( a.equipment[ COLUMN[ CONFIG.key ] ] > b.equipment[ COLUMN[ CONFIG.key ] ] ?  1 :
+								 a.equipment[ COLUMN[ CONFIG.key ] ] < b.equipment[ COLUMN[ CONFIG.key ] ] ? -1 :
+																											  0 ) * order;
+					};
+				},
+			NUMERIC: function () {
+					if ( CONFIG.key === "RARITY" ) { // 順序
+						return function ( a, b ) {
+							return ( RARITY_CODE[ a.equipment[ COLUMN.RARITY ] ] - RARITY_CODE[ b.equipment[ COLUMN.RARITY ] ] ) * order;
+						};
+					} else { // 数値項目
+						return function ( a, b ) {
+							return ( a.equipment[ COLUMN[ CONFIG.key ] ] - b.equipment[ COLUMN[ CONFIG.key ] ] ) * order;
+						};
+					}
+				},
+			CATALOG: function () {
+				return function ( a, b ) {
+					return a.catalog - b.catalog;
+				};
+			}
+		};
+
+	return _compare[ CONFIG.category ]();
 };
 
 /**
@@ -1155,105 +1254,6 @@ CYPRESS.makeRequest = function () {
 	return _request;
 };
 
-CYPRESS.makeCompareFunction = function () {
-	"use strict";
-
-	var COLUMN = CYPRESS.COLUMN,
-		CONFIG = CYPRESS.SORT_CONFIG,
-
-		order = CONFIG.order === "ASC" ? 1 : -1,
-		RARITY_CODE = {
-			"Poor":     1,
-			"Normal":   2,
-			"Good":     3,
-			"Master":   4,
-			"Epic":     5,
-			"Legend":   6,
-			"Artifact": 7,
-			"Other":    8
-		},
-		_compare = {
-			LAXICOGRAPHIC: function () {
-					return function ( a, b ) {
-						return ( a.equipment[ COLUMN[ CONFIG.key ] ] > b.equipment[ COLUMN[ CONFIG.key ] ] ?  1 :
-								 a.equipment[ COLUMN[ CONFIG.key ] ] < b.equipment[ COLUMN[ CONFIG.key ] ] ? -1 :
-																											  0 ) * order;
-					};
-				},
-			NUMERIC: function () {
-					if ( CONFIG.key === "RARITY" ) { // 順序
-						return function ( a, b ) {
-							return ( RARITY_CODE[ a.equipment[ COLUMN.RARITY ] ] - RARITY_CODE[ b.equipment[ COLUMN.RARITY ] ] ) * order;
-						};
-					} else { // 数値項目
-						return function ( a, b ) {
-							return ( a.equipment[ COLUMN[ CONFIG.key ] ] - b.equipment[ COLUMN[ CONFIG.key ] ] ) * order;
-						};
-					}
-				},
-			CATALOG: function () {
-				return function ( a, b ) {
-					return a.catalog - b.catalog;
-				};
-			}
-		};
-
-	return _compare[ CONFIG.category ]();
-};
-
-/**
- * 鍛錬をシミュレートして鍛錬後の装備データオブジェクトの装備データを書き換える
- * @param Object equipment 装備データオブジェクト
- */
-CYPRESS.Forging = function ( equipment ) {
-	"use strict";
-
-	var COLUMN = CYPRESS.COLUMN,
-		FORGING_DATA = CYPRESS.CONSTS.FORGING_DATA,
-		REGEXP = CYPRESS.EQUIPMENT_STYLE.REGEXP,
-
-		BASE = CYPRESS.EQUIPMENT[ equipment.catalog ],
-		TYPE = BASE[ COLUMN.TYPE ],
-		WEIGHT = BASE[ COLUMN.WEIGHT ],
-
-		FORGE = equipment.forge,
-		RECORD = equipment.equipment,
-
-		WEIGHT_CLASSS = ( function () {
-				   if ( WEIGHT < 0.20 ) {
-				return 0;
-			} else if ( WEIGHT < 0.40 ) {
-				return 1;
-			} else if ( WEIGHT < 1.00 ) {
-				return 2;
-			} else if ( WEIGHT < 2.00 ) {
-				return 3;
-			} else if ( WEIGHT < 4.00 ) {
-				return 4;
-			} else {
-				return 5;
-			}
-		} () );
-
-	RECORD[ COLUMN.NAME ]     = BASE[ COLUMN.NAME ] + ( 0 < FORGE ? "+" + FORGE : "" );
-	RECORD[ COLUMN.PHYSICAL ] = Math.floor( BASE[ COLUMN.PHYSICAL ] * FORGING_DATA.QUALITY[ FORGE ] );
-	RECORD[ COLUMN.MAGICAL ]  = Math.floor( BASE[ COLUMN.MAGICAL ]  * FORGING_DATA.QUALITY[ FORGE ] );
-	RECORD[ COLUMN.WEIGHT ]   = WEIGHT - FORGING_DATA.WEIGHT[ WEIGHT_CLASSS ][ FORGE ];
-
-	if ( !REGEXP.ACCESSORIES.test( TYPE ) ) {
-		RECORD[ COLUMN.DURABILITY ] = Math.floor( BASE[ COLUMN.DURABILITY ] * ( 1 + ( FORGE / 10 ) ) );
-		RECORD[ COLUMN.HARDNESS ]   = BASE[ COLUMN.HARDNESS ] + Math.floor( FORGE / 5 );
-	}
-
-	// 排他的な条件なので else if を利用
-	if ( REGEXP.SHIELDS.test( TYPE ) ) {
-		RECORD[ COLUMN.QUALITY ] = BASE[ COLUMN.QUALITY ] + FORGE * FORGING_DATA.GP[ TYPE ];
-	} else if ( REGEXP.RANGED_WEAPONS.test( TYPE ) ) {
-		RECORD[ COLUMN.RANGE ]   = BASE[ COLUMN.RANGE ]   + FORGING_DATA.RANGE[ FORGE ];
-		RECORD[ COLUMN.QUALITY ] = BASE[ COLUMN.QUALITY ] + FORGING_DATA.SPECIAL_QUALITY[ TYPE ][ FORGE ];
-	}
-};
-
 /** Cypress 操作ファサード（クラス） */
 CYPRESS.Manager = ( function () {
 	"use strict";
@@ -1310,7 +1310,7 @@ CYPRESS.Manager = ( function () {
 
 			equipment.forge += forging;
 
-			CYPRESS.Forging( equipment );
+			CYPRESS.forging( equipment );
 			$card.html( CYPRESS.getEquipmentCard( equipment ) );
 
 			if ( equipment.forge === 0 ) {
@@ -1330,7 +1330,7 @@ CYPRESS.Manager = ( function () {
 		 * @return string 装備名
 		 */
 		_getEquipmentName = function () {
-			return _equipments[ Math.floor( Math.random() * _equipments.length ) ].equipment[ CYPRESS.COLUMN.NAME ];
+			return _equipments[ Math.floor( Math.random() * ( _equipments.length - 1 ) ) ].equipment[ CYPRESS.COLUMN.NAME ];
 		},
 		/**
 		 * UIから検索する（描写はしない）。
