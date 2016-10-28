@@ -72,7 +72,7 @@ CYPRESS.EQUIPMENT_STYLE = {
 		FLAGS:               [ "SELL", "TRADE", "STOLEN", "BLESSED", "CURSED", "BIND" ]
 	},
 	REGEXP: { // 条件分岐用正規表現
-		DISABLE_FORGE:               /^Legend$|^Artifact$/,
+		DISABLE_FORGE:               /^Legend$|^Artifact$|^Other$/,
 		RANGED_WEAPONS:              /^弓$|^銃$/,
 		SHOTS:                       /^矢$|^銃弾$/,
 		ACCESSORIES:                 /^指輪$|^耳飾り$|^首飾り$|^ベルト$/,
