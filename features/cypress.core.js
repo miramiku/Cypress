@@ -10,7 +10,7 @@ var CYPRESS = {};
 CYPRESS.CONSTS = {
 	/** 現状キャップ */
 	CAPS: {
-		GRADE: 25,
+		GRADE: 26,
 		LEVEL: 90
 	},
 	/** 職業マスク */
