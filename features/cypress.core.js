@@ -103,7 +103,7 @@ CYPRESS.COLUMN = {
 CYPRESS.EQUIPMENT = ( function () {
 	"use strict";
 
-	var DB_URL = "features/equipments.json",
+	var DB_URL = "https://miramiku.github.io/Cypress/features/equipments.json",
 		RARITIES = {
 			1: "Poor",
 			2: "Normal",
