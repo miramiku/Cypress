@@ -103,7 +103,7 @@ CYPRESS.COLUMN = {
 CYPRESS.EQUIPMENT = ( function () {
 	"use strict";
 
-	var DB_URL = "https://dl.dropboxusercontent.com/u/6164477/cypress/equipments.json",
+	var DB_URL = "features/equipments.json",
 		RARITIES = {
 			1: "Poor",
 			2: "Normal",

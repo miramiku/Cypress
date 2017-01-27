@@ -15,7 +15,7 @@ Wizardry Online の装備を検索または抽出を行います。
 
 といった願望から制作したものです。
 
-## Concept
+## Concepts
 * シンプル
 * 使いやすい
 * 簡単なことは手短でき、きめ細かな操作もできる
@@ -45,7 +45,7 @@ Wizardry Online の装備を検索または抽出を行います。
 * [folder] features
 	* cypress.core.js - Cypress で中核となるオブジェクトを定義
 	* cypress.retrieval.js - Cypress において HTML と UI の操作に関するオブジェクトを定義
-	* cypress.retrieva.min.js - 公開用 JavaScript 圧縮ファイル（ cypress.core や jQuery 本体およびプラグインを包含している）
+	* cypress.retrieval.min.js - 公開用 JavaScript 圧縮ファイル（ cypress.core や jQuery 本体およびプラグインを包含している）
 	* WizardryOnlineEquipmentJSONBuilder.java - Excel ファイルから JSON を生成するプログラムソース
 	* ZeroClipboard.swf - jquery.zeroclipboard で必要なファイル (Adobe Flash)
 	* そのほか jQuery および　jQuery Plugin 詳細は [Requirement](#Requirement) 参照
@@ -87,11 +87,11 @@ Wizardry Online の装備を検索または抽出を行います。
 		* slidebars.less - Slidebars
 * index.html - Cypress 本体ページ
 
-## Requirement
+## Requirements
 * [jQuery](https://jquery.com/)
 
-| jQuery plugin                                                                | 利用箇所                |
-| :--------------------------------------------------------------------------- | :--------------------- |
+| jQuery plugin | 利用箇所 |
+| :-- | :-- |
 | [Slidebars](http://plugins.adchsm.me/slidebars/)                             | 検索条件パネル           |
 | [rangeSlider](http://ionden.com/a/plugins/ion.rangeSlider/)                  | グレード・レベルの範囲指定 |
 | [iCheck](http://fronteed.com/iCheck/)                                        | チェック・ラジオボックス   |
