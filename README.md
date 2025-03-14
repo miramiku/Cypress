@@ -55,8 +55,8 @@ Wizardry Online の装備を検索または抽出を行います。
 	* 使い方で使われている画像
 		* usage.png - 装備カードを利用して左上に表示されているリボン
 		* list-item.png - リストの項目
-		* mail.png - みくのメールアドレス
-		* twitter-icon.png - みくのツイッターアイコン
+		* mail.png - せらのメールアドレス
+		* twitter-icon.png - せらのツイッターアイコン
 		* github-icon.png - リポジトリが GitHub を利用していることを示す
 	* 装備カードの左上に表示されているリボン
 		* poor.png
