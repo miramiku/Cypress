@@ -111,4 +111,4 @@ Wizardry Online の装備を検索または抽出を行います。
 [Cypress 変更履歴](https://miramiku.github.io/post/wizon/cypress/change-log/)
 
 ## Author
-[みく](https://github.com/miramiku)
+[せら (Serah)](https://github.com/miramiku)
