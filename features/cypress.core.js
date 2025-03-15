@@ -14,7 +14,7 @@ CYPRESS.CONSTS = {
 		LEVEL: 90
 	},
 	/** 職業マスク */
-	CLASSMASKS: {
+	CLASS_MASKS: {
 		FIG:   1,
 		THI:   2,
 		MAG:   4,
@@ -104,6 +104,7 @@ CYPRESS.EQUIPMENT = ( function () {
 	"use strict";
 
 	var DB_URL = "https://miramiku.github.io/Cypress/features/equipments.json",
+		// DB_URL = "/features/equipments.json",
 		RARITIES = {
 			1: "Poor",
 			2: "Normal",
