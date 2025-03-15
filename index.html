@@ -6,14 +6,13 @@
 	<title>Cypress - wizardry online equipment data retrieval system</title>
 
 	<!-- meta section -->
-	<meta name="Author" content="miku">
+	<meta name="Author" content="Serah">
 	<meta name="keywords" content="Wizardry Online,wizon,装備検索,鍛錬シミュレート">
 	<meta name="description" content="Wizardry Online の装備品データを検索・抽出するシステムです。また、簡単な装備の鍛錬シミュレート機能などもできます。">
 
 	<!-- scripts -->
-<!--
-	<script src="features/cypress.retrieval.min.js?ver=2.1.13"></script>
--->
+	<script src="features/cypress.retrieval.min.js?ver=2.2.0"></script>
+	<!--
 	<script src="features/jquery.min.js"></script>
 	<script src="features/slidebars.min.js"></script>
 	<script src="features/ion.rangeSlider.min.js"></script>
@@ -22,6 +21,7 @@
 	<script src="features/zeroclipboard.min.js"></script>
 	<script src="features/cypress.core.js"></script>
 	<script src="features/cypress.retrieval.js"></script>
+	-->
 
 	<!-- styles -->
 	<link href="styles/cypress-retrieval.css" rel="stylesheet" type="text/css">
@@ -38,7 +38,7 @@
 		</div>
 
 		<div id="logo">
-			<img src="images/cypress-logo-d.png" alt="Cypress">
+			<img src="images/cypress-logo.png" alt="Cypress">
 		</div>
 
 		<div id="usage-button-box" class="control-box buttons">
@@ -102,29 +102,30 @@
 						<ul>
 							<li>ソウルネーム： みくε（エストール）</li>
 							<li>Twitter:
-								<a href="https://twitter.com/miramiku"><img src="images/twitter-icon.png" alt="@miramiku"> @miramiku <span class="icon">&#xea91;</span></a>
+								<a href="https://twitter.com/miramiku">@miramiku <span class="icon">&#xea91;</span></a>
 							</li>
 							<li>メールアドレス：<img src="images/mail.png" alt="">（画像です）</li>
 						</ul>
 						<h4>Resources: リソース情報</h4>
 						<ul>
-							<li>Document: <a href="https://miramiku.github.io/post/wizon/cypress/">Cypress Docs <img src="images/recollection.png" alt="recollection"></a></li>
-							<li>Ripository: <a href="https://github.com/miramiku/Cypress">miramiku/Cypress <span class="icon">&#xeab4;</span></a></li>
+							<li>Document: <a href="https://miramiku.github.io/post/wizon/cypress/">Cypress Docs [broken]<img src="images/recollection.png" alt="recollection"></a></li>
+							<li>Repository: <a href="https://github.com/miramiku/Cypress">miramiku/Cypress <span class="icon">&#xeab4;</span></a></li>
 							<li>Processed Database: <a href="https://miramiku.github.io/Cypress/features/equipments.json">equipment.json</a></li>
 							<li>Original Database: <a href="https://onedrive.live.com/redir?resid=716b8a626fb713c5!2372&amp;authkey=!AFFFx02yh8Ck5Ss&amp;ithint=file%2cxlsm">equipment.db.xlsm (Read only)</a></li>
 						</ul>
 						<h4>Changelog: 変更履歴</h4>
 						<ul>
+							<li>[2025-03-16] [v2.2.0] スペルミス修正</li>
 							<li>[2017-01-28] [v2.1.13] データベースの固定化</li>
 							<li>[2016-11-08] [v2.1.12] グレード 26 装備品への対応</li>
 							<li>[2016-10-28] [v2.1.11] Other 品質の装備が鍛錬できてしまう不具合を修正 <a href="https://github.com/miramiku/Cypress/issues/110">#112</a></li>
 							<li>[2016-10-13] [v2.1.10] 細かな修正 (Issues <a href="https://github.com/miramiku/Cypress/issues/110">#110</a>, <a href="https://github.com/miramiku/Cypress/issues/111">#111</a>)</li>
 							<li>[2016-10-04] [v2.1.9] レベル 90 への対応</li>
-							<li>もっと見る：<a href="https://miramiku.github.io/post/wizon/cypress/change-log/">Cypress 変更履歴 <img src="images/recollection.png" alt="recollection"></a></li>
+							<li>もっと見る：<a href="https://miramiku.github.io/post/wizon/cypress/change-log/">Cypress 変更履歴 [broken]<img src="images/recollection.png" alt="recollection"></a></li>
 						</ul>
 						<h4>Advanced usage: 右のパネルではできない詳細な検索</h4>
 						<ul>
-							<li><a href="https://miramiku.github.io/post/wizon/cypress/advanced-usage/">高度な検索 <img src="images/recollection.png" alt="recollection"></a></li>
+							<li><a href="https://miramiku.github.io/post/wizon/cypress/advanced-usage/">高度な検索 [broken]<img src="images/recollection.png" alt="recollection"></a></li>
 						</ul>
 					</div><!-- #landing -->
 				</div><!-- .equipment-card-inner -->
@@ -137,13 +138,13 @@
 			<input id="catalog-order" type="radio" name="sort-category" data-label="装備分類" checked>
 		</div>
 		<div class="sort-checkbox-top-category">
-			<input id="lexicographic-order" type="radio" name="sort-category" data-category="LAXICOGRAPHIC" data-label="テキスト">
+			<input id="lexicographic-order" type="radio" name="sort-category" data-category="LEXICOGRAPHIC" data-label="テキスト">
 			<button id="lexicographic-sort-order-change" data-order="ASC" disabled><span class="icon">&#xe603;</span> 辞書順　</button>
 		</div>
 		<div id="lexicographic-sort-list">
-			<input type="radio" name="laxicographic-sort-order" data-key="NAME"          data-label="装備名" checked>
-			<input type="radio" name="laxicographic-sort-order" data-key="WHEN_EQUIPPED" data-label="装備時付与効果">
-			<input type="radio" name="laxicographic-sort-order" data-key="STATUS_CHANGE" data-label="状態異常">
+			<input type="radio" name="LEXICOGRAPHIC-sort-order" data-key="NAME"          data-label="装備名" checked>
+			<input type="radio" name="LEXICOGRAPHIC-sort-order" data-key="WHEN_EQUIPPED" data-label="装備時付与効果">
+			<input type="radio" name="LEXICOGRAPHIC-sort-order" data-key="STATUS_CHANGE" data-label="状態異常">
 		</div><!-- #lexicographic-sort-list -->
 
 		<div class="sort-checkbox-top-category">
@@ -382,7 +383,7 @@
 						</div><!-- #dialog-types -->
 					</div><!-- .colorbox-load-contents -->
 				</div><!-- .control-box.dialog -->
-			</div><!-- #qyery-types -->
+			</div><!-- #query-types -->
 
 			<div id="query-flags">
 				<span class="query-label">その他（フラグ）</span>
@@ -477,10 +478,10 @@
 						</div><!-- #dialog-flags -->
 					</div><!-- .colorbox-load-contents -->
 				</div><!-- .control-box.dialog -->
-			</div><!-- #qyery-flags -->
+			</div><!-- #query-flags -->
 
 			<div id="retrieval-button-box-main" class="control-box buttons">
-				<button id="reqiest-reset-button">条件リセット</button>
+				<button id="request-reset-button">条件リセット</button>
 				<button id="retrieval-button-main">検索</button>
 			</div><!-- #retrieval-button-box-main -->
 		</div><!-- #retrieval-queries -->
@@ -488,7 +489,7 @@
 
 	<footer>
 		<p>
-			Created by miku.
+			Created by Serah.
 			<br> "Wizardry(R)" of GMO Gamepot Inc. All rights reserved.
 			<br> Wizardry Renaissance(TM) (c)2009 GMO Gamepot Inc. All rights reserved.
 		</p>
