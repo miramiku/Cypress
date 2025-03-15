@@ -194,7 +194,7 @@ CYPRESS.forging = function ( equipment ) {
 		FORGE = equipment.forge,
 		RECORD = equipment.equipment,
 
-		WEIGHT_CLASSS = ( function () {
+		WEIGHT_CLASSES = ( function () {
 				   if ( WEIGHT < 0.20 ) {
 				return 0;
 			} else if ( WEIGHT < 0.40 ) {
@@ -213,7 +213,7 @@ CYPRESS.forging = function ( equipment ) {
 	RECORD[ COLUMN.NAME ]     = BASE[ COLUMN.NAME ] + ( 0 < FORGE ? "+" + FORGE : "" );
 	RECORD[ COLUMN.PHYSICAL ] = Math.floor( BASE[ COLUMN.PHYSICAL ] * FORGING_DATA.QUALITY[ FORGE ] );
 	RECORD[ COLUMN.MAGICAL ]  = Math.floor( BASE[ COLUMN.MAGICAL ]  * FORGING_DATA.QUALITY[ FORGE ] );
-	RECORD[ COLUMN.WEIGHT ]   = WEIGHT - FORGING_DATA.WEIGHT[ WEIGHT_CLASSS ][ FORGE ];
+	RECORD[ COLUMN.WEIGHT ]   = WEIGHT - FORGING_DATA.WEIGHT[ WEIGHT_CLASSES ][ FORGE ];
 
 	if ( !REGEXP.ACCESSORIES.test( TYPE ) ) {
 		RECORD[ COLUMN.DURABILITY ] = Math.floor( BASE[ COLUMN.DURABILITY ] * ( 1 + ( FORGE / 10 ) ) );
@@ -239,7 +239,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 
 		// consts
 	var COLUMN               = CYPRESS.COLUMN,
-		CLASSMASKS           = CYPRESS.CONSTS.CLASSMASKS,
+		CLASS_MASKS           = CYPRESS.CONSTS.CLASS_MASKS,
 		STANDARD_LEVEL_FLOOR = CYPRESS.CONSTS.STANDARD_LEVEL_FLOOR,
 		ORDERS               = CYPRESS.EQUIPMENT_STYLE.ORDERS,
 		REGEXP               = CYPRESS.EQUIPMENT_STYLE.REGEXP,
@@ -255,10 +255,10 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 		buildCard = {
 			card: "",
 
-			buildTransfarTagData: function ( column, content ) {
+			buildTransferTagData: function ( column, content ) {
 				this.card += "<span class=\"" + column + "\">" + ( record[ COLUMN[ column.toUpperCase() ] ] ? "" : content ) + "</span>";
 			},
-			buildSupplimentTagData: function ( column, text ) {
+			buildSupplementTagData: function ( column, text ) {
 				if ( record[ COLUMN[ column.toUpperCase() ] ] ) {
 					this.card += "<span class=\"" + column + "\"><img src=\"images/" + column + ".png\" alt=\"\">" + text + "</span>";
 				}
@@ -386,7 +386,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 			classRestriction: function () {
 				var cr = record[ COLUMN.CLASS ],
 					buildClassIcon = function ( cls ) {
-						return "<span class=\"" + cls.toLowerCase() + " " + ( cr & CLASSMASKS[ cls ] ? "equipable" : "non-equipable" ) + "\">" + cls + "</span>";
+						return "<span class=\"" + cls.toLowerCase() + " " + ( cr & CLASS_MASKS[ cls ] ? "equipable" : "non-equipable" ) + "\">" + cls + "</span>";
 					},
 					that = this;
 
@@ -407,17 +407,17 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 			},
 
 			// complex
-			transfarTags: function () {
-				this.buildTransfarTagData( "sell", "[売却不可]" );
-				this.buildTransfarTagData( "trade", "[トレード不可]" );
-				this.buildSupplimentTagData( "bind", "使用後トレード不可" );
-				this.buildTransfarTagData( "stolen", "<img src=\"images/stolen.png\" alt=\"略奪されない\">略奪されない" );
+			transferTags: function () {
+				this.buildTransferTagData( "sell", "[売却不可]" );
+				this.buildTransferTagData( "trade", "[トレード不可]" );
+				this.buildSupplementTagData( "bind", "使用後トレード不可" );
+				this.buildTransferTagData( "stolen", "<img src=\"images/stolen.png\" alt=\"略奪されない\">略奪されない" );
 
 				return this;
 			},
-			supplimentTags: function () {
-				this.buildSupplimentTagData( "blessed", "祝福されている" );
-				this.buildSupplimentTagData( "cursed", "呪われている" );
+			supplementTags: function () {
+				this.buildSupplementTagData( "blessed", "祝福されている" );
+				this.buildSupplementTagData( "cursed", "呪われている" );
 
 				return this;
 			},
@@ -695,14 +695,14 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 			.copy()
 			.group( "basic-information" )
 				.group( "property" )
-					.rarity().type().transfarTags()
+					.rarity().type().transferTags()
 				.end() // .property
 				.group( "restrictions" )
 					.level().grade()
 					.restriction()
 				.end() // .restrictions
 				.group( "name-box" )
-					.name().supplimentTags()
+					.name().supplementTags()
 				.end() // .name-box
 			.end() // .basic-information
 			.sectionDivider()
@@ -750,7 +750,7 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 
 		// consts
 	var COLUMN               = CYPRESS.COLUMN,
-		CLASSMASKS           = CYPRESS.CONSTS.CLASSMASKS,
+		CLASS_MASKS           = CYPRESS.CONSTS.CLASS_MASKS,
 		ORDERS               = CYPRESS.EQUIPMENT_STYLE.ORDERS,
 		REGEXP               = CYPRESS.EQUIPMENT_STYLE.REGEXP,
 
@@ -820,7 +820,7 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 
 				return this;
 			},
-			speciaEffects: function () {
+			specialEffects: function () {
 				var data = ( function () {
 						var data = [];
 
@@ -963,7 +963,7 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 							return "全職業 ";
 						} else {
 							$.each( ORDERS.CLASSES, function () {
-								classRestrictionText += cr & CLASSMASKS[ this ] ? this + " " : "";
+								classRestrictionText += cr & CLASS_MASKS[ this ] ? this + " " : "";
 							} );
 							return classRestrictionText;
 						}
@@ -1008,7 +1008,7 @@ CYPRESS.getEquipmentString = function ( equipment ) {
 	buildString
 		.basic()
 		.property()
-		.speciaEffects()
+		.specialEffects()
 		.magicAttributesOffsets()
 		.resistances()
 		.otherEffect()
@@ -1036,7 +1036,7 @@ CYPRESS.makeCompareFunction = function () {
 			"Other":    8
 		},
 		_compare = {
-			LAXICOGRAPHIC: function () {
+			LEXICOGRAPHIC: function () {
 					return function ( a, b ) {
 						return ( a.equipment[ COLUMN[ CONFIG.key ] ] > b.equipment[ COLUMN[ CONFIG.key ] ] ?  1 :
 								 a.equipment[ COLUMN[ CONFIG.key ] ] < b.equipment[ COLUMN[ CONFIG.key ] ] ? -1 :
@@ -1149,7 +1149,7 @@ CYPRESS.makeRequest = function () {
 		} () ),
 		/** 職業フィルタ */
 		_containsClasses = ( function () {
-			var classMask = CYPRESS.CONSTS.CLASSMASKS,
+			var classMask = CYPRESS.CONSTS.CLASS_MASKS,
 				requireMask = ( function () {
 					var mask = 0;
 
@@ -1662,7 +1662,7 @@ $( document ).ready( function () {
 				$( "#toolbox-button" ).removeClass( "close" );
 			} );
 
-			$( "#reqiest-reset-button" ).click( function () {
+			$( "#request-reset-button" ).click( function () {
 				$( "#equipment-name" ).val( "" );
 				$( "#grade-range" ).data( "ionRangeSlider" ).reset();
 				$( "#level-range" ).data( "ionRangeSlider" ).reset();
@@ -1749,7 +1749,7 @@ $( document ).ready( function () {
 	} () );
 
 	// initialize UIs
-	$( "#reqiest-reset-button" ).click();
+	$( "#request-reset-button" ).click();
 	$( "#usage-button" ).click();
 
 	$( "#equipment-name" ).prop( "placeholder", "例：" + CYPRESS.Manager.getEquipmentName() );

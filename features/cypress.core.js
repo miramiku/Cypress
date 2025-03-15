@@ -14,7 +14,7 @@ CYPRESS.CONSTS = {
 		LEVEL: 90
 	},
 	/** 職業マスク */
-	CLASSMASKS: {
+	CLASS_MASKS: {
 		FIG:   1,
 		THI:   2,
 		MAG:   4,
