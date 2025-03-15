@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
-using NPOI.XSSF.UserModel;
 using NPOI.SS.UserModel;
-using System.Diagnostics;
+using NPOI.XSSF.UserModel;
 
 namespace Cypress {
 
@@ -15,19 +15,19 @@ namespace Cypress {
 		/// <summary>
 		/// 出力する装備用 JSON ファイル名
 		/// </summary>
-		public const string OUTPUT_EQUIPS_FILE = @"C:\Users\miku\Dropbox\Public\cypress\equipments.json";
+		public const string OUTPUT_EQUIPS_FILE = @"C:\Users\miram\OneDrive\Workspace\Cypress\features\equipments.json";
 		/// <summary>
 		/// 出力するルビ用 JSON ファイル名
 		/// </summary>
-		public const string OUTPUT_RUBIES_FILE = @"C:\Users\miku\Dropbox\Public\cypress\rubies.json";
+		public const string OUTPUT_RUBIES_FILE = @"C:\Users\miram\OneDrive\Workspace\Cypress\features\rubies.json";
 		/// <summary>
 		/// 出力するバフ用 JSON ファイル名
 		/// </summary>
-		public const string OUTPUT_BUFFS_FILE = @"C:\Users\miku\Dropbox\Public\cypress\buffs.json";
+		public const string OUTPUT_BUFFS_FILE = @"C:\Users\miram\OneDrive\Workspace\Cypress\features\buffs.json";
 		/// <summary>
 		/// 生データが格納されているワークブックパス
 		/// </summary>
-		public const string INPUT_WORKBOOK_PATH = @"C:\Users\miku\SkyDrive\wizon\equipment.db.xlsm";
+		public const string INPUT_WORKBOOK_PATH = @"C:\Users\miram\OneDrive\wizon\equipment.db.xlsm";
 		/// <summary>
 		/// 生データが格納されているシート名
 		/// </summary>
@@ -229,7 +229,7 @@ namespace Cypress {
 			BuildBuffJson();
 
 			sw.Stop();
-			Console.WriteLine( "successed. {0} records ({1:#,0}ms)", records, sw.ElapsedMilliseconds );
+			Console.WriteLine( "succeeded. {0} records ({1:#,0}ms)", records, sw.ElapsedMilliseconds );
 
 			Console.Write( "\nPlease any key to close..." );
 			Console.ReadKey();
@@ -441,7 +441,7 @@ namespace Cypress {
 		}
 	}
 
-	public static class Extentions {
+	public static class Extensions {
 		/// <summary>
 		/// 真偽値データ（項目）を構築する
 		/// </summary>
