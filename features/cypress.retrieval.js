@@ -255,7 +255,7 @@ CYPRESS.getEquipmentCard = function ( equipment ) {
 		buildCard = {
 			card: "",
 
-			buildTransferTagData: function ( column, content ) {
+			buildTransfarTagData: function ( column, content ) {
 				this.card += "<span class=\"" + column + "\">" + ( record[ COLUMN[ column.toUpperCase() ] ] ? "" : content ) + "</span>";
 			},
 			buildSupplementTagData: function ( column, text ) {
